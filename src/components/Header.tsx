@@ -43,15 +43,8 @@ const Header = () => {
             })}
           </nav>
 
-          {/* 액션 버튼 */}
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              로그인
-            </Button>
-            <Button size="sm" className="bg-gradient-primary hover:shadow-glow">
-              시작하기
-            </Button>
-          </div>
+
+      
         </div>
       </div>
     </header>

@@ -1,201 +1,90 @@
+"use client";
+
 import Header from "@/components/Header";
 import { Card,CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, FileText, Mic, Video, TrendingUp, Briefcase } from "lucide-react";
 
-const Material = () => {
-  const materials = [
-    {
-      category: "Business English",
-      icon: Briefcase,
-      color: "bg-blue-500",
-      courses: [
-        "비즈니스 미팅 영어",
-        "프레젠테이션 스킬",
-        "이메일 작성법",
-        "네트워킹 영어"
-      ],
-      level: "중급-고급",
-      duration: "4주 과정"
-    },
-    {
-      category: "Current Affairs",
-      icon: TrendingUp,
-      color: "bg-green-500", 
-      courses: [
-        "경제 뉴스 토론",
-        "시사 이슈 분석",
-        "정치 토론",
-        "사회 문제 논의"
-      ],
-      level: "중급-고급",
-      duration: "8주 과정"
-    },
-    {
-      category: "Interview Prep",
-      icon: Mic,
-      color: "bg-purple-500",
-      courses: [
-        "면접 영어 완전정복",
-        "자기소개 마스터",
-        "상황별 질문 대응",
-        "모의 면접 실전"
-      ],
-      level: "초급-고급",
-      duration: "2주 과정"
-    },
-    {
-      category: "Academic English", 
-      icon: BookOpen,
-      color: "bg-red-500",
-      courses: [
-        "학술 논문 작성",
-        "프레젠테이션 기법",
-        "토론 및 발표",
-        "리서치 스킬"
-      ],
-      level: "중급-고급",
-      duration: "6주 과정"
-    },
-    {
-      category: "Conversation",
-      icon: Video,
-      color: "bg-yellow-500",
-      courses: [
-        "일상 회화 마스터",
-        "여행 영어",
-        "문화 교류",
-        "프리토킹 클래스"
-      ],
-      level: "초급-중급",
-      duration: "4주 과정"
-    },
-    {
-      category: "Writing Skills",
-      icon: FileText,
-      color: "bg-indigo-500",
-      courses: [
-        "에세이 라이팅",
-        "창작 글쓰기",
-        "보고서 작성",
-        "논리적 글쓰기"
-      ],
-      level: "중급-고급",
-      duration: "5주 과정"
-    }
-  ];
-
-  const features = [
-    "개인 맞춤형 커리큘럼",
-    "실시간 피드백",
-    "수업 녹화 파일 제공",
-    "과제 및 복습 자료",
-    "진도 추적 리포트",
-    "무제한 질문 가능"
-  ];
-
+export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
       <Header />
-      
-      <div className="py-16">
+
+      <main className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="text-primary">맞춤형</span> 교재 & 커리큘럼
+
+          {/* 기존 "맞춤형 교재 & 커리큘럼" 헤더 */}
+          <header className="text-center mb-16">
+            <h1 className="text-4xl lg:text-5xl font-bold">
+              About Us
             </h1>
-            <p className="text-xl text-foreground/70 max-w-3xl mx-auto">
-              개인의 목표와 수준에 맞는 체계적인 교재로 
-              효율적이고 재미있게 영어 실력을 향상시키세요
+            
+            <p className="mt-4 text-xl text-foreground/70">
+              
             </p>
-          </div>
+          </header>
 
-          {/* Features Section */}
-          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4 mb-16">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-sm font-medium text-primary">{feature}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Materials Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {materials.map((material, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                <div className={`h-2 ${material.color}`}></div>
-                
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-12 h-12 ${material.color} rounded-lg flex items-center justify-center`}>
-                      <material.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">{material.category}</h3>
-                      <div className="flex space-x-2 mt-1">
-                        <Badge variant="secondary" className="text-xs">
-                          {material.level}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {material.duration}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm">주요 과정</h4>
-                    <ul className="space-y-1">
-                      {material.courses.map((course, i) => (
-                        <li key={i} className="text-sm text-foreground/70 flex items-center">
-                          <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
-                          {course}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <Button className="w-full group-hover:bg-gradient-primary transition-all">
-                    수업 시작하기
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Custom Curriculum Section */}
-          <Card className="bg-gradient-primary text-white p-8">
-            <div className="text-center space-y-6">
-              <h2 className="text-3xl font-bold">
-                나만의 맞춤 커리큘럼이 필요하다면?
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+            {/* 왼쪽 칼럼: 강조 문구 + 본문 */}
+            <div className="space-y-6">
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-white">
+                Empowering cosmic discovery—one payload at a time.
               </h2>
-              <p className="text-lg opacity-90 max-w-2xl mx-auto">
-                개인의 특별한 목표나 요구사항이 있다면 
-                전문 상담을 통해 맞춤형 커리큘럼을 제공해드립니다
+              <p className="text-lg text-foreground/70 leading-relaxed">
+                Since ancient times, people have expressed a variety of interests, ranging from vague admiration
+                for the universe to a brief curiosity. Now, even space travel has reached a time when it is no
+                longer an imagination. Despite these times, and also in these times, people need more scientific
+                understanding of cosmic phenomena, which requires various kinds of observational data in outer
+                space. The Space Science Instrument Laboratory (SSIL) focuses on this research.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-primary hover:bg-white/90"
-                >
-                  맞춤 커리큘럼 상담받기
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="border-white/30 text-white hover:bg-white/10"
-                >
-                  샘플 교재 다운로드
-                </Button>
-              </div>
             </div>
-          </Card>
+            
+             <div>
+              <img
+                src="/images/professor.png"
+                alt="SSIL Lab overview"
+                className="w-full rounded-lg shadow-lg object-cover"
+              />
+               <p className="mt-2 text-sm text-center text-foreground/70">
+                    Dr. JongHo Seon<br/>
+                    
+                     </p>
+            </div>
+          </div>
+ <section className="prose prose-invert max-w-none">
+<p>
+Since ancient times, people have expressed a variety of interests, ranging from vague admiration for the universe to a brief curiosity. Now, even space travel has reached a time when it is no longer an imagination. Despite these times, and also in these times, people need more scientific understanding of cosmic phenomena, which requires various kinds of observational data in outer space. The Space Science Instrument Laboratory (SSIL) focuses on this research.
+Under the guidance of Professor Sun Jong-ho, the Space Science payload laboratory has been established at Kyung Hee University Observatory since 1975 to conduct basic research on astronomy and space science and development of satellite payloads for it. The satellite payload is one of the important roles in space science and space exploration research and is an important tool that enables direct observation in space. Therefore, the space science payload laboratory is focusing on the development of satellite payloads, especially particle detectors, through various international and domestic cooperation (NASA, Berkeley, IM, ESA, anti-collision, astronomical research, artificial research, satellite eye, etc.). Through this, we are acquiring and learning various space observation equipment technologies and conducting research on the interrelationships between the space environment and charged space particles.
+
+</p>
+
+<p>
+Recently, the Space Science payload lab has been involved in the Commercial Lunar Payload Service (CLPS) project, one of NASA's Artemis missions in the U.S. The Lunar Space Environment Monitor (LUSEM), which is in development and is participating in this project, will observe charged particles not only on the surface of the moon but also on their way from Earth to the moon. So it is expected to provide information on the interactions between the Earth's magnetic field and the moon, which are still unknown areas, and observations on high-energy particles on the moon's surface. And the most recently completed payloads, the Korea Space Environment Monitor (KSEM) and the Medium Energy Particle Detector (MEPD), were mounted on Geo-KOMPSAT-2A and Next Generation Small Satellite-1, NEXTSat-1, respectively, and were launched into space at one-day intervals in December 2018. The geo-orbit complex, more famously named Chollian, is a satellite equipped with the weather forecasting system we are currently receiving. Each payload developed in the Space Science payload lab has been successfully carrying out its original mission so far since its launch.
+
+</p>
+<p>
+Most of the people who have been with us in the Space Science Embedded Laboratory continue to work in the space science industry. Some go abroad for more essential research, some go to the industry where you can feel the vivid scene of space science development, and live your own lives after each other's time together, but one thing is for sure: everyone is together with constant interest and goal in defying space science. I hope that life in the space science payload laboratory will serve as a springboard for those who worked together.
+
+
+</p>
+ </section>
+
+          {/* ↓ 이 아래로 있던 카드 그리드, 커스텀 커리큘럼 섹션 등 모두 지우고… ↓ */}
+
+          {/* — 여기에 원하시는 줄글(단락) 내용을 넣어주세요 — */}
+          {/* 예시)
+
+          
+              <section className="prose prose-invert max-w-none">
+                <p>첫 번째 단락 내용…</p>
+                <p>두 번째 단락 내용…</p>
+                … 
+              </section>
+          */}
+
         </div>
-      </div>
+      </main>
     </div>
   );
-};
-
-export default Material;
+}
