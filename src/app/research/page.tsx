@@ -1,7 +1,9 @@
 // app/research/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 
 interface Project {
@@ -18,7 +20,7 @@ const researchData: Record<string, Project[]> = {
       subtitle: "Lunar Space Environment Monitor",
       description:
         "달 표면 및 지구에서 달까지 운반되는 고에너지 입자 관측 연구를 수행합니다.",
-      image: "/images/professor.png",
+      image: "/images/lusem.png",
     },
   ],
   Completed: [
@@ -47,11 +49,27 @@ const researchData: Record<string, Project[]> = {
 };
 
 export default function ResearchPage() {
-  const categories = Object.keys(researchData);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [selectedProjectIdx, setSelectedProjectIdx] = useState(0);
+  const params = useSearchParams();
+  const catParam = params.get("cat") || "Current";
+  const idxParam = parseInt(params.get("idx") || "0", 10);
 
-  const project = researchData[selectedCategory][selectedProjectIdx];
+  const categories = Object.keys(researchData);
+  const [selectedCategory, setSelectedCategory] = useState<string>(catParam);
+  const [selectedProjectIdx, setSelectedProjectIdx] = useState<number>(
+    isNaN(idxParam) ? 0 : idxParam
+  );
+
+  // URL 쿼리가 바뀔 때마다 state 동기화
+  useEffect(() => {
+    if (categories.includes(catParam)) {
+      setSelectedCategory(catParam);
+    }
+    setSelectedProjectIdx(isNaN(idxParam) ? 0 : idxParam);
+  }, [catParam, idxParam, categories]);
+
+  const project =
+    researchData[selectedCategory]?.[selectedProjectIdx] ||
+    researchData["Current"][0];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
@@ -59,16 +77,14 @@ export default function ResearchPage() {
 
       <main className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Page Header */}
+          {/* 페이지 헤더 */}
           <header className="text-center mb-12">
             <h1 className="text-4xl lg:text-5xl font-bold">Research</h1>
           </header>
 
           {/* 3-Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            {/* 1) Sidebar nav: categories + always-visible project lists */}
+            {/* 1) Sidebar */}
             <nav className="space-y-6">
               {categories.map((cat) => (
                 <div key={cat}>
@@ -77,34 +93,30 @@ export default function ResearchPage() {
                       setSelectedCategory(cat);
                       setSelectedProjectIdx(0);
                     }}
-                    className={`block w-full text-left py-2 px-4 rounded transition
-                      ${
-                        selectedCategory === cat
-                          ? "bg-primary/20 text-primary font-semibold"
-                          : "bg-primary/10 text-foreground/70 hover:bg-primary/20"
-                      }`}
+                    className={`block w-full text-left py-2 px-4 rounded transition ${
+                      selectedCategory === cat
+                        ? "bg-primary/20 text-primary font-semibold"
+                        : "bg-primary/10 text-foreground/70 hover:bg-primary/20"
+                    }`}
                   >
                     {cat}
                   </button>
 
-                  {/* always show the project list */}
+                  {/* 프로젝트 리스트: Link로 URL 업데이트 */}
                   <ul className="mt-2 ml-4 space-y-1">
                     {researchData[cat].map((p, idx) => (
                       <li key={p.title}>
-                        <button
-                          onClick={() => {
-                            setSelectedCategory(cat);
-                            setSelectedProjectIdx(idx);
-                          }}
-                          className={`block w-full text-left py-1 px-4 rounded text-sm transition
-                            ${
-                              cat === selectedCategory && idx === selectedProjectIdx
-                                ? "bg-primary/20 text-primary font-medium"
-                                : "text-foreground/70 hover:bg-primary/10"
-                            }`}
+                        <Link
+                          href={`/research?cat=${cat}&idx=${idx}`}
+                          className={`block w-full text-left py-1 px-4 rounded text-sm transition ${
+                            cat === selectedCategory &&
+                            idx === selectedProjectIdx
+                              ? "bg-primary/20 text-primary font-medium"
+                              : "text-foreground/70 hover:bg-primary/10"
+                          }`}
                         >
                           {p.title}
-                        </button>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -114,7 +126,9 @@ export default function ResearchPage() {
 
             {/* 2) Project Detail */}
             <div className="space-y-6">
-              <h2 className="text-2xl lg:text-3xl font-bold">{project.title}</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold">
+                {project.title}
+              </h2>
               {project.subtitle && (
                 <p className="text-lg text-foreground/70 italic">
                   {project.subtitle}
