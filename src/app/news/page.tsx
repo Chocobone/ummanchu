@@ -11,7 +11,7 @@ interface NewsItem {
   image: string;
   author: string;
   date: string;
-  link: string;
+  link: string; // ex: "/news/1"
 }
 
 const newsItems: NewsItem[] = [
@@ -68,22 +68,17 @@ export default function NewsPage() {
                 key={idx}
                 className="flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300"
               >
-                {/* 1) 썸네일 */}
                 <img
                   src={item.image}
                   alt={item.title}
                   className="w-full h-40 object-cover"
                 />
-
-                {/* 2) 본문 */}
                 <CardContent className="p-4 flex-grow space-y-2">
                   <h3 className="text-lg font-bold">{item.title}</h3>
                   <p className="text-sm text-foreground/70 line-clamp-2">
                     {item.preview}
                   </p>
                 </CardContent>
-
-                {/* 3) Footer: READ MORE + 구분선 + 저자·날짜 */}
                 <CardFooter className="px-4 pt-0 pb-4 flex flex-col">
                   <Link
                     href={item.link}
