@@ -25,7 +25,7 @@ const Header = () => {
             SSIL
           </Link>
 
-          <nav className="hidden md:flex space-x-6">
+        <nav className="hidden md:flex items-center space-x-6">
             {navItems.map((item) =>
               item.name !== "research" ? (
                 <Link
@@ -40,7 +40,7 @@ const Header = () => {
                   {item.name}
                 </Link>
               ) : (
-                <div key="research" className="relative group">
+                <div key="research" className="relative group flex items-center">
                   <Link
                     href="/research"
                     className={`text-sm font-medium transition-colors hover:text-primary ${
@@ -52,7 +52,7 @@ const Header = () => {
                     research
                   </Link>
                   {/* ── 드롭다운: 4개 프로젝트 링크만 수동 나열 */}
-                  <div className="absolute left-0 mt-2 w-56 bg-background shadow-lg rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute left-0 top-full mt-2 w-56 bg-background shadow-lg rounded opacity-0 group-hover:opacity-100 transition-opacity">
                     <Link
                       href="/research?cat=Current&idx=0"
                       className="block px-4 py-2 text-sm hover:bg-primary/10"
