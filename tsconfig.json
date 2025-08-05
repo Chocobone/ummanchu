@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 최신 문법 대상으로
+    "module": "NodeNext", // Node.js ESM 해석 모드
+    "moduleResolution": "NodeNext",
+    "jsx": "preserve", // .tsx 안의 JSX 허용
+    "baseUrl": ".", // @ 경로 기준
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }, // "@/foo" → "src/foo"
+    "allowJs": true, // .js/.jsx 파일도 로드
+    "checkJs": false, // JS는 타입 검사 하지 않음
+    "skipLibCheck": true // 외부 타입 검사 건너뜀
+    ,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.js",
+    "postcss.config.js", // .ts, .tsx, .js, .jsx 전부 커버
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tailwind.config.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
