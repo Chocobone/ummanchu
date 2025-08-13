@@ -1,9 +1,9 @@
 "use client";
-
+import { researchData } from "@/app/research/data";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import React, { useState, useEffect } from "react";
-
+import Link from "next/link";
 // 이미지 경로
 const images = ["/images/main1.jpg", "/images/main2.jpg", "/images/main3.jpg"];
 
@@ -89,32 +89,8 @@ const CTASection = () => {
         </div>
       </section>
 
-      {/* Research Section */}
-      <section id="research"  className="bg-[#111111] text-white py-24 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
-          <div className="w-full lg:w-1/4 space-y-4">
-            <h3 className="font-semibold">Current</h3>
-            <ul className="text-gray-400">
-              <li className="text-white">LUSEM</li>
-            </ul>
-            <h3 className="font-semibold mt-8">Completed</h3>
-            <ul className="text-gray-400 space-y-1">
-              <li>CINEMA</li>
-              <li>MEPD</li>
-              <li>KSEM</li>
-            </ul>
-          </div>
-          <div className="w-full lg:w-3/4 mt-10 lg:mt-0 lg:pl-12">
-            <h2 className="text-3xl font-bold mb-2">LUSEM</h2>
-            <p className="italic text-gray-400 mb-4">Lunar Space Environment Monitor</p>
-            <p className="text-white mb-6">
-              달 표면 및 지구에서 달까지 운반되는 고에너지 입자 관측 연구를 수행합니다.
-            </p>
-            <img src="/images/lusem.jpg" alt="LUSEM" className="h-40 object-contain" />
-          </div>
-        </div>
-      </section>
-
+   {/* Research Section */ }
+  <ResearchSection /> 
       {/* News Section */}
       <section id="news" className="bg-[#181818] text-white py-24 px-4">
         <div className="max-w-7xl mx-auto">
@@ -181,4 +157,81 @@ const CTASection = () => {
   );
 };
 
+// ResearchSection
+const ResearchSection = () => {
+   const allProjects = [...researchData.Current, ...researchData.Completed];
+  const [index, setIndex] = useState(0);
+  const total = allProjects.length;
+
+  const next = () => setIndex((index + 1) % total);
+  const prev = () => setIndex((index - 1 + total) % total);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((index) => (index + 1) % total);
+    }, 6000); // 6초마다 자동 전환
+    return () => clearInterval(interval);
+  }, [total]);
+
+  const current = allProjects[index];
+
+  return (
+    <section id="research" className="bg-[#111111] text-white py-24 px-4">
+      <div className="max-w-6xl mx-auto relative overflow-hidden rounded-lg">
+        {/* 슬라이드 배경 이미지 */}
+        <div className="relative h-[500px] w-full">
+          <img
+            src={current.image || "/images/placeholder.jpg"}
+            alt={current.title}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+          <div className="absolute inset-0 bg-black/50 z-10" />
+
+          {/* 텍스트 */}
+          <div className="absolute bottom-12 left-12 z-20 max-w-md">
+            <Link href={`/research?cat=${current.category}&idx=${current.index}`}>
+            <h2 className="text-yellow-400 text-3xl font-bold mb-2">
+              {current.title}
+            </h2>
+            </Link>
+            {current.subtitle && (
+                 <Link href={`/research?cat=${current.category}&idx=${current.index}`}>
+              <h3 className="text-xl text-white font-semibold italic mb-4">
+                {current.subtitle}
+              </h3>
+              </Link>
+            )}
+            <p className="text-white text-base">{current.description}</p>
+          </div>
+
+          {/* 화살표 */}
+          <button
+            onClick={prev}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
+          >
+            <ArrowLeft className="w-6 h-6 text-white" />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
+          >
+            <ArrowRight className="w-6 h-6 text-white" />
+          </button>
+
+          {/* 인디케이터 */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+            {allProjects.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full ${
+                  i === index ? "bg-yellow-400" : "bg-gray-400/50"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 export default CTASection;
