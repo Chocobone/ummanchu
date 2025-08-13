@@ -74,7 +74,7 @@ const CTASection = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="bg-black text-white py-24 px-4">
+      <section id="about"  className="bg-[#111111] text-white py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Empowering cosmic discovery—one payload at a time.</h2>
           <p className="text-lg text-gray-400">
@@ -90,7 +90,7 @@ const CTASection = () => {
       </section>
 
       {/* Research Section */}
-      <section id="research" className="bg-black text-white py-24 px-6">
+      <section id="research"  className="bg-[#111111] text-white py-24 px-6">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
           <div className="w-full lg:w-1/4 space-y-4">
             <h3 className="font-semibold">Current</h3>
@@ -116,7 +116,7 @@ const CTASection = () => {
       </section>
 
       {/* News Section */}
-      <section id="news" className="bg-black text-white py-24 px-4">
+      <section id="news" className="bg-[#181818] text-white py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold mb-2">NEWS</h2>
           <p className="mb-8 text-gray-400">SSIL의 최신 소식과 공지사항을 확인하세요.</p>
@@ -153,10 +153,11 @@ const CTASection = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="bg-black text-white py-24 px-4">
+      <section id="contact"  className="bg-[#0f0f0f] text-white py-24 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-blue-400 mb-8">
-            우주과학탐재체연구실 (SSIL) 연락처
+     
+          <h2 className="text-3xl font-bold text-orange-400 mb-8">
+            contact
           </h2>
 
           <div className="mb-6">
@@ -173,11 +174,7 @@ const CTASection = () => {
             </p>
           </div>
 
-          <img
-            src="/images/map.png"
-            alt="경희대 지도"
-            className="w-full h-96 object-cover rounded-lg border border-gray-700"
-          />
+       
         </div>
       </section>
     </>
