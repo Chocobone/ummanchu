@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PeopleAdminEditor from "@/components/PeopleAdminEditor";
+import AdminEditor from "@/components/AdminEditor"; // 외부 AdminEditor.tsx 사용
 
 export default function AdminPage() {
   const [username, setUsername] = useState("");
@@ -59,39 +59,8 @@ export default function AdminPage() {
           </div>
         </div>
       ) : (
-        <AdminEditor />
+        <AdminEditor /> // ✅ 외부 컴포넌트
       )}
     </main>
-  );
-}
-
-//  로그인 성공 시 보여줄 관리자 기능 페이지 컴포넌트
-function AdminEditor() {
-  return (
-    <div className="w-full max-w-3xl bg-[#1a1a1a] p-10 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-yellow-300"> 로그인 성공</h2>
-      <p className="mb-6 text-gray-300">
-        안녕하세요 관리자님!
-      </p>
-
-      <div className="space-y-4">
-        <label className="block text-sm text-gray-400">페이지 제목 수정</label>
-        <input
-          type="text"
-          defaultValue="기존 제목"
-          className="w-full px-4 py-2 rounded bg-black border border-gray-600 text-white focus:outline-none"
-        />
-
-        <label className="block text-sm text-gray-400">본문 내용 수정</label>
-        <textarea
-          defaultValue="기존 본문 내용입니다..."
-          className="w-full h-40 px-4 py-2 rounded bg-black border border-gray-600 text-white focus:outline-none"
-        />
-
-        <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
-          저장하기
-        </button>
-      </div>
-    </div>
   );
 }
