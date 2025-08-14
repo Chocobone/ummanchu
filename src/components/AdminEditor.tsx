@@ -4,7 +4,7 @@ import { useState } from "react";
 import PeopleAdminEditor from "@/components/PeopleAdminEditor";
 
 function AdminEditor() {
-  const tabs = ["Main", "Research", "People"] as const;
+  const tabs = ["Main", "Research", "People", "News", "Contact"] as const;
   const [selectedTab, setSelectedTab] = useState<(typeof tabs)[number]>("People");
 
   return (
@@ -34,6 +34,11 @@ function AdminEditor() {
       )}
       {selectedTab === "Research" && (
         <div className="text-white">🔧 Research 에디터 준비 중입니다.</div>
+      )}
+       {selectedTab === "News" && (
+        <div className="text-white">🔧 News 에디터 준비 중입니다.</div>
+      )} {selectedTab === "Contact" && (
+        <div className="text-white">🔧 Contact 에디터 준비 중입니다.</div>
       )}
       {selectedTab === "People" && <PeopleAdminEditor />}
     </div>
