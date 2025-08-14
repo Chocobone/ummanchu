@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PeopleAdminEditor from "@/components/PeopleAdminEditor";
 
 export default function AdminPage() {
   const [username, setUsername] = useState("");
@@ -64,13 +65,13 @@ export default function AdminPage() {
   );
 }
 
-// ✅ 로그인 성공 시 보여줄 관리자 기능 페이지 컴포넌트
+//  로그인 성공 시 보여줄 관리자 기능 페이지 컴포넌트
 function AdminEditor() {
   return (
     <div className="w-full max-w-3xl bg-[#1a1a1a] p-10 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-yellow-300">✅ 로그인 성공</h2>
+      <h2 className="text-2xl font-bold mb-4 text-yellow-300"> 로그인 성공</h2>
       <p className="mb-6 text-gray-300">
-        당신은 웹페이지를 수정할 수 있는 권한이 있습니다.
+        안녕하세요 관리자님!
       </p>
 
       <div className="space-y-4">
