@@ -1,5 +1,5 @@
 "use client";
-import { researchData } from "@/app/research/data";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import React, { useState, useEffect } from "react";
@@ -7,7 +7,7 @@ import Link from "next/link";
 // 이미지 경로
 const images = ["/images/main1.jpg", "/images/main2.jpg", "/images/main3.jpg"];
 
-const CTASection = () => {
+const CTASection = ({ researchData }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const CTASection = () => {
       </section>
 
    {/* Research Section */ }
-  <ResearchSection /> 
+  <ResearchSection researchData={researchData} /> 
       {/* News Section */}
       <section id="news" className="bg-[#181818] text-white py-24 px-4">
         <div className="max-w-7xl mx-auto">
@@ -157,23 +157,34 @@ const CTASection = () => {
   );
 };
 
-// ResearchSection
-const ResearchSection = () => {
-   const allProjects = [...researchData.Current, ...researchData.Completed];
+const ResearchSection = ({ researchData }) => {
+  // researchData가 없거나 비어있을 경우 렌더링하지 않음
+  if (!researchData || (!researchData.Current?.length && !researchData.Completed?.length)) {
+    return null;
+  }
+
+  const allProjects = [...researchData.Current, ...researchData.Completed];
   const [index, setIndex] = useState(0);
   const total = allProjects.length;
 
-  const next = () => setIndex((index + 1) % total);
-  const prev = () => setIndex((index - 1 + total) % total);
+  const next = () => setIndex((prevIndex) => (prevIndex + 1) % total);
+  const prev = () => setIndex((prevIndex) => (prevIndex - 1 + total) % total);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((index) => (index + 1) % total);
-    }, 6000); // 6초마다 자동 전환
+    if (total === 0) return;
+    const interval = setInterval(next, 6000); // 6초마다 자동 전환
     return () => clearInterval(interval);
   }, [total]);
 
+  if (total === 0) {
+    return null;
+  }
+
   const current = allProjects[index];
+  
+  // 상세 페이지로 연결하기 위한 카테고리와 인덱스 계산
+  const category = current.status === 'IN_PROGRESS' ? 'Current' : 'Completed';
+  const projectIndexInList = researchData[category].findIndex(p => p.id === current.id);
 
   return (
     <section id="research" className="bg-[#111111] text-white py-24 px-4">
@@ -181,7 +192,7 @@ const ResearchSection = () => {
         {/* 슬라이드 배경 이미지 */}
         <div className="relative h-[500px] w-full">
           <img
-            src={current.image || "/images/placeholder.jpg"}
+            src={current.image || "/images/main2.jpg"} // DB에 이미지가 없으므로, 일단 기본 이미지로 대체
             alt={current.title}
             className="absolute inset-0 w-full h-full object-cover z-0"
           />
@@ -189,19 +200,19 @@ const ResearchSection = () => {
 
           {/* 텍스트 */}
           <div className="absolute bottom-12 left-12 z-20 max-w-md">
-            <Link href={`/research?cat=${current.category}&idx=${current.index}`}>
-            <h2 className="text-yellow-400 text-3xl font-bold mb-2">
-              {current.title}
-            </h2>
+            <Link href={`/research?cat=${category}&idx=${projectIndexInList}`}>
+              <h2 className="text-yellow-400 text-3xl font-bold mb-2 cursor-pointer hover:underline">
+                {current.title}
+              </h2>
             </Link>
-            {current.subtitle && (
-                 <Link href={`/research?cat=${current.category}&idx=${current.index}`}>
-              <h3 className="text-xl text-white font-semibold italic mb-4">
+            {current.subtitle && ( // subtitle은 현재 DB에 없으므로 렌더링되지 않음
+                 <Link href={`/research?cat=${category}&idx=${projectIndexInList}`}>
+              <h3 className="text-xl text-white font-semibold italic mb-4 cursor-pointer hover:underline">
                 {current.subtitle}
               </h3>
               </Link>
             )}
-            <p className="text-white text-base">{current.description}</p>
+            <div className="text-white text-base prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: current.description }} />
           </div>
 
           {/* 화살표 */}
