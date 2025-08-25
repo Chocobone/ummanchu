@@ -1,9 +1,8 @@
-// src/components/RichEditor.tsx
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useQuill } from "react-quilljs";
+import React, { useEffect, useRef } from 'react';
 
+// Quill and its modules will be imported dynamically inside useEffect
 
 interface Props {
   initialValue?: string;
@@ -11,31 +10,96 @@ interface Props {
 }
 
 export default function RichEditor({ initialValue = "", onChange }: Props) {
-  // theme: 'snow' 을 Quill 옵션에 넘깁니다
-  const { quill, quillRef } = useQuill({ theme: "snow" });
+  const quillRef = useRef(null);
+  const quillInstance = useRef(null);
+  const isQuillInitialized = useRef(false); // Ref to prevent re-initialization
 
-  // quill 인스턴스가 준비되면 초기값을 세팅하고, 변경 이벤트를 구독
   useEffect(() => {
-    // 초기값 설정하고 그 후에 안바꾸기 
-      if (!quill) return;
-    quill.clipboard.dangerouslyPasteHTML(initialValue);
-  }, [quill]);
-  
+    const initializeQuill = async () => {
+      if (typeof window !== 'undefined' && !isQuillInitialized.current) {
+        isQuillInitialized.current = true; // Mark as initialized
+
+        const Quill = (await import('quill')).default;
+        const ImageUploader = (await import('quill-image-uploader')).default;
+        await import('quill/dist/quill.snow.css');
+
+        Quill.register('modules/imageUploader', ImageUploader);
+
+        const toolbarOptions = [
+          [{ 'header': [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['link', 'image', 'video'],
+          ['blockquote', 'code-block'],
+          ['clean'],
+        ];
+
+        quillInstance.current = new Quill(quillRef.current, {
+          modules: {
+            toolbar: toolbarOptions,
+            imageUploader: {
+              upload: file => {
+                return new Promise((resolve, reject) => {
+                  const formData = new FormData();
+                  formData.append("file", file);
+
+                  fetch("/api/upload", {
+                    method: "POST",
+                    body: formData
+                  })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.error) {
+                      reject(data.error);
+                    } else {
+                      resolve(data.url);
+                    }
+                  })
+                  .catch(err => {
+                    reject("Upload failed");
+                    console.error("Error:", err);
+                  });
+                });
+              }
+            }
+          },
+          theme: "snow",
+          placeholder: 'Start writing...',
+        });
+      }
+    };
+
+    initializeQuill();
+  }, []); // Run only once
+
+  // Effect for handling initialValue and onChange
   useEffect(() => {
+    const quill = quillInstance.current;
     if (!quill) return;
-    const handler = () => {
-      onChange?.(quill.root.innerHTML);
+
+    // Set initial value
+    if (initialValue && quill.root.innerHTML.trim() === '<p><br></p>') {
+        const newContent = quill.clipboard.convert(initialValue);
+        quill.setContents(newContent, 'silent');
+    }
+
+    // Set up change handler
+    const handler = (delta, oldDelta, source) => {
+      if (source === 'user') {
+        onChange?.(quill.root.innerHTML);
+      }
     };
-    quill.on("text-change", handler);
+    quill.on('text-change', handler);
+
     return () => {
-      quill.off("text-change", handler);
+      quill.off('text-change', handler);
     };
-  }, [quill, onChange]);
+  }, [initialValue, onChange]);
 
   return (
-    <div className="rich-editor">
-      {/* 이 div가 Quill 에디터 영역이 됩니다 */}
-      <div ref={quillRef} style={{ minHeight: 200 }} />
+    <div className="rich-editor-wrapper bg-white rounded-lg border border-gray-300">
+      <div ref={quillRef} style={{ minHeight: 300, border: 'none' }} />
     </div>
   );
 }

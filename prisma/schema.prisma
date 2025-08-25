@@ -22,7 +22,9 @@ enum ResearchStatus {
 model Research {
   id          String   @id @default(cuid())
   title       String
+  subtitle    String?
   description String   @db.Text
+  imageUrl    String?
   status      ResearchStatus @default(IN_PROGRESS)
   startDate   DateTime?
   endDate     DateTime?
@@ -39,4 +41,42 @@ model News {
   publishedAt DateTime  @default(now())
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+enum Role {
+  PROFESSOR
+  CURRENT
+  ALUMNI
+}
+
+model Person {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String
+  description String?  @db.Text
+  image       String?
+  email       String   @unique
+  degree      String?
+  role        Role
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HomePageContent {
+  id             Int    @id @default(1)
+  heroTitle      String
+  heroSubtitle   String
+  heroParagraph  String @db.Text
+  aboutTitle     String @db.Text
+  aboutParagraph String @db.Text
+  newsTitle      String
+  newsSubtitle   String
+}
+
+model SliderImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  altText   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
 }

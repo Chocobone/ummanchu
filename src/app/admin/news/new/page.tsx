@@ -2,8 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import RichEditor from '@/components/RichEditor';
+import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
+
+// Dynamically import the RichEditor to prevent SSR issues
+const RichEditor = dynamic(() => import('@/components/RichEditor'), { 
+  ssr: false,
+  loading: () => <p>Loading editor...</p>
+});
 
 export default function NewNewsPage() {
   const [title, setTitle] = useState('');

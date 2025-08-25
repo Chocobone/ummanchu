@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import next/image
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -88,7 +89,7 @@ export default function NewsAdminPage() {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Published At</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image URL</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -99,7 +100,7 @@ export default function NewsAdminPage() {
                 <td className="px-6 py-4 whitespace-nowrap">{new Date(item.publishedAt).toLocaleDateString()}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {item.imageUrl ? (
-                    <img src={item.imageUrl} alt="News Image" className="h-10 w-10 object-cover rounded" />
+                    <Image src={item.imageUrl} alt={item.title} width={40} height={40} className="object-cover rounded" />
                   ) : (
                     'N/A'
                   )}

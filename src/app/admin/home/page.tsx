@@ -1,0 +1,233 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image'; // Import next/image
+
+// Define types for our data
+interface HomePageContent {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroParagraph: string;
+  aboutTitle: string;
+  aboutParagraph: string;
+  newsTitle: string;
+  newsSubtitle: string;
+}
+
+interface SliderImage {
+  id: number;
+  imageUrl: string;
+  altText?: string;
+  order: number;
+}
+
+export default function ManageHomePage() {
+  // State for text content
+  const [content, setContent] = useState<Partial<HomePageContent>>({});
+  const [contentLoading, setContentLoading] = useState(true);
+  const [contentError, setContentError] = useState<string | null>(null);
+
+  // State for slider images
+  const [images, setImages] = useState<SliderImage[]>([]);
+  const [imagesLoading, setImagesLoading] = useState(true);
+  const [imagesError, setImagesError] = useState<string | null>(null);
+  const [newImageFile, setNewImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Fetch initial data
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const res = await fetch('/api/home/content');
+        if (!res.ok) throw new Error('Failed to fetch content');
+        const data = await res.json();
+        setContent(data);
+      } catch (err) {
+        setContentError(err.message);
+      } finally {
+        setContentLoading(false);
+      }
+    };
+
+    const fetchImages = async () => {
+      try {
+        const res = await fetch('/api/home/slider');
+        if (!res.ok) throw new Error('Failed to fetch images');
+        const data = await res.json();
+        setImages(data);
+      } catch (err) {
+        setImagesError(err.message);
+      } finally {
+        setImagesLoading(false);
+      }
+    };
+
+    fetchContent();
+    fetchImages();
+  }, []);
+
+  // Handlers for text content
+  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setContent((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleContentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContentLoading(true);
+    try {
+      const res = await fetch('/api/home/content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(content),
+      });
+      if (!res.ok) throw new Error('Failed to save content');
+      alert('Content saved successfully!');
+    } catch (err) {
+      setContentError(err.message);
+    } finally {
+      setContentLoading(false);
+    }
+  };
+
+  // Handlers for slider images
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleAddImage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newImageFile) {
+      setImagesError('Please select a file to upload.');
+      return;
+    }
+    
+    setIsUploading(true);
+    setImagesError(null);
+
+    const formData = new FormData();
+    formData.append('file', newImageFile);
+
+    try {
+      const res = await fetch('/api/home/slider', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to upload image');
+      }
+
+      const newImage = await res.json();
+      setImages([...images, newImage]);
+      setNewImageFile(null);
+      (e.target as HTMLFormElement).reset(); // Reset the file input
+    } catch (err) {
+      setImagesError(err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteImage = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this image?')) return;
+    try {
+      const res = await fetch(`/api/home/slider/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete image');
+      setImages(images.filter((img) => img.id !== id));
+    } catch (err) {
+      setImagesError(err.message);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 space-y-12">
+      <h1 className="text-3xl font-bold">Manage Home Page</h1>
+
+      {/* Text Content Section */}
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Text Content</h2>
+        {contentError && <p className="text-red-500">{contentError}</p>}
+        {contentLoading ? <p>Loading content...</p> : (
+          <form onSubmit={handleContentSubmit} className="space-y-4 bg-white p-6 shadow rounded">
+            {/* Text input fields remain the same */}
+            <div>
+              <label className="font-bold">Hero Title</label>
+              <input type="text" name="heroTitle" value={content.heroTitle || ''} onChange={handleContentChange} className="w-full p-2 border rounded" />
+            </div>
+            <div>
+              <label className="font-bold">Hero Subtitle</label>
+              <input type="text" name="heroSubtitle" value={content.heroSubtitle || ''} onChange={handleContentChange} className="w-full p-2 border rounded" />
+            </div>
+            <div>
+              <label className="font-bold">Hero Paragraph</label>
+              <textarea name="heroParagraph" value={content.heroParagraph || ''} onChange={handleContentChange} rows={5} className="w-full p-2 border rounded" />
+            </div>
+            <hr/>
+            <div>
+              <label className="font-bold">About Title</label>
+              <input type="text" name="aboutTitle" value={content.aboutTitle || ''} onChange={handleContentChange} className="w-full p-2 border rounded" />
+            </div>
+            <div>
+              <label className="font-bold">About Paragraph</label>
+              <textarea name="aboutParagraph" value={content.aboutParagraph || ''} onChange={handleContentChange} rows={5} className="w-full p-2 border rounded" />
+            </div>
+             <hr/>
+            <div>
+              <label className="font-bold">News Title</label>
+              <input type="text" name="newsTitle" value={content.newsTitle || ''} onChange={handleContentChange} className="w-full p-2 border rounded" />
+            </div>
+            <div>
+              <label className="font-bold">News Subtitle</label>
+              <input type="text" name="newsSubtitle" value={content.newsSubtitle || ''} onChange={handleContentChange} className="w-full p-2 border rounded" />
+            </div>
+            <button type="submit" disabled={contentLoading} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400">
+              {contentLoading ? 'Saving...' : 'Save Text Content'}
+            </button>
+          </form>
+        )}
+      </section>
+
+      {/* Slider Images Section */}
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Slider Images</h2>
+        {imagesError && <p className="text-red-500 py-2">{imagesError}</p>}
+        
+        {/* Add Image Form */}
+        <form onSubmit={handleAddImage} className="flex items-center gap-4 mb-4 bg-white p-6 shadow rounded">
+          <div>
+            <label htmlFor="file-upload" className="font-medium">Upload new image:</label>
+            <input 
+              id="file-upload"
+              type="file" 
+              onChange={handleFileChange}
+              accept="image/*"
+              className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+          </div>
+          <button type="submit" disabled={isUploading || !newImageFile} className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 disabled:bg-gray-400 self-end">
+            {isUploading ? 'Uploading...' : 'Upload Image'}
+          </button>
+        </form>
+
+        {/* Image List */}
+        {imagesLoading ? <p>Loading images...</p> : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {images.map(image => (
+              <div key={image.id} className="border rounded p-2">
+                <div className="relative w-full h-32 rounded overflow-hidden">
+                  <Image src={image.imageUrl} alt={image.altText || 'Slider image'} fill className="object-cover"/>
+                </div>
+                <p className="text-xs truncate mt-2" title={image.imageUrl}>{image.imageUrl}</p>
+                <button onClick={() => handleDeleteImage(image.id)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">X</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

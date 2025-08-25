@@ -25,7 +25,7 @@ const Header = () => {
             SSIL
           </Link>
 
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) =>
               item.name !== "research" ? (
                 <Link

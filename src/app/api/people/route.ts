@@ -1,61 +1,49 @@
-// File: app/api/people/route.ts
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // Prisma client
-
-export async function POST(req: NextRequest) {
+// GET - 모든 인물 정보 조회
+export async function GET() {
   try {
-    const data = await req.json();
-
-    // Loop through each tab category
-    const allTabs = ['Professor', 'Current', 'Alumni'] as const;
-
-    // 삭제 후 새로 저장 방식 (간단)
-    await prisma.person.deleteMany();
-
-    for (const tab of allTabs) {
-      const profiles = data[tab] || [];
-      for (const profile of profiles) {
-        await prisma.person.create({
-          data: {
-            name: profile.name,
-            category: tab,
-            position: profile.position,
-            description: profile.description,
-            email: profile.email,
-            phonenumber: profile.phonenumber,
-            degree: profile.degree,
-            career: profile.career,
-            image: profile.image,
-          },
-        });
-      }
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('[POST /api/people]', err);
-    return NextResponse.json({ error: 'Failed to save people' }, { status: 500 });
+    const people = await prisma.person.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return NextResponse.json(people);
+  } catch (error) {
+    console.error('Error fetching people:', error);
+    return NextResponse.json({ error: 'Failed to fetch people' }, { status: 500 });
   }
 }
 
-export async function GET() {
+// POST - 새 인물 정보 생성
+export async function POST(request: Request) {
   try {
-    const people = await prisma.person.findMany();
+    const data = await request.json();
+    const { name, position, description, image, email, degree, role } = data;
 
-    const result: Record<'Professor' | 'Current' | 'Alumni', any[]> = {
-      Professor: [],
-      Current: [],
-      Alumni: [],
-    };
-
-    for (const person of people) {
-      result[person.category].push(person);
+    if (!name || !position || !email || !role) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    return NextResponse.json(result);
-  } catch (err) {
-    console.error('[GET /api/people]', err);
-    return NextResponse.json({ error: 'Failed to load people' }, { status: 500 });
+    const newPerson = await prisma.person.create({
+      data: {
+        name,
+        position,
+        description,
+        image,
+        email,
+        degree,
+        role,
+      },
+    });
+    return NextResponse.json(newPerson, { status: 201 });
+  } catch (error) {
+    console.error('Error creating person:', error);
+    // P2002 is the Prisma code for a unique constraint violation
+    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+      return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
+    }
+    return NextResponse.json({ error: 'Failed to create person' }, { status: 500 });
   }
 }
