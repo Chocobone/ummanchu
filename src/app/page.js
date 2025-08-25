@@ -16,10 +16,18 @@ export default async function HomePage() {
     Completed: allResearch.filter(p => p.status === 'COMPLETED'),
   };
 
+  // Fetch news data on the server
+  const newsData = await prisma.news.findMany({
+    orderBy: {
+      publishedAt: 'desc',
+    },
+    take: 3, // Limit to 3 news items for the homepage display
+  });
+
   return (
     <>
       <HeroSection />
-      <CTASection researchData={researchData} />
+      <CTASection researchData={researchData} newsData={newsData} />
     </>
   );
 }

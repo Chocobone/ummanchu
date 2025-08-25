@@ -7,7 +7,7 @@ import Link from "next/link";
 // 이미지 경로
 const images = ["/images/main1.jpg", "/images/main2.jpg", "/images/main3.jpg"];
 
-const CTASection = ({ researchData }) => {
+const CTASection = ({ researchData, newsData }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -97,33 +97,21 @@ const CTASection = ({ researchData }) => {
           <h2 className="text-4xl font-bold mb-2">NEWS</h2>
           <p className="mb-8 text-gray-400">SSIL의 최신 소식과 공지사항을 확인하세요.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "SSIL, 차세대 우주장비 연구 착수",
-                desc: "우주과학탐재체연구실(SSIL)이 새로운 우주장비 프로토타입 개발 프로젝트를 시작했습니다….",
-                img: "/images/news1.jpg",
-              },
-              {
-                title: "천문대 공개 관측 행사 안내",
-                desc: "경희대 국제캠퍼스 천문대에서 8월 15일 공개 관측 행사를 엽니다. 누구나 무료로 참여 가능하며,…",
-                img: "/images/news2.jpg",
-              },
-              {
-                title: "우주탐사 X-프로젝트 중간 결과 발표",
-                desc: "국제 우주탐사 X-프로젝트의 중간 보고서가 공개되었습니다. 주요 성과는 …",
-                img: "/images/news3.jpg",
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="border border-gray-700 rounded-lg overflow-hidden">
-                <img src={item.img} alt={item.title} className="w-full h-48 object-cover" />
-                <div className="p-4">
-                  <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-300 mb-2">{item.desc}</p>
-                  <p className="text-yellow-400 font-semibold text-sm">READ MORE »</p>
-                  <p className="text-xs mt-2 text-gray-500">Igen Soske · May 6, 2025</p>
+            {newsData && newsData.length > 0 ? ( // Check if newsData exists and has items
+              newsData.map((item) => (
+                <div key={item.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                  <img src={item.imageUrl || "/images/news_placeholder.jpg"} alt={item.title} className="w-full h-48 object-cover" />
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                    <div className="text-sm text-gray-300 mb-2 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.description }} />
+                    <Link href={`/news/${item.id}`} className="text-yellow-400 font-semibold text-sm">READ MORE »</Link>
+                    <p className="text-xs mt-2 text-gray-500">{new Date(item.publishedAt).toLocaleDateString()}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="col-span-3 text-center text-gray-400">No news available.</p>
+            )}
           </div>
         </div>
       </section>
