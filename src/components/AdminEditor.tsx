@@ -10,7 +10,7 @@ function AdminEditor() {
   return (
     <div className="w-full max-w-6xl bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-yellow-300">관리자 대시보드</h2>
-
+        {/* 디자인 변경 필요하면 말씀해주세요 */}
       {/* 탭 버튼 */}
       <div className="flex space-x-4 mb-6">
         {tabs.map((tab) => (
@@ -38,7 +38,7 @@ function AdminEditor() {
        {selectedTab === "News" && (
         <div className="text-white">🔧 News 에디터 준비 중입니다.</div>
       )} {selectedTab === "Contact" && (
-        <div className="text-white">🔧 Contact 에디터 준비 중입니다.</div>
+        <div className="text-white">🔧 Contact 에디터 준비 중입니다.</div> 
       )}
       {selectedTab === "People" && <PeopleAdminEditor />}
     </div>

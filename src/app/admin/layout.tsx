@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import "./globals.css"; 
 const adminPages = [
   { name: 'Home', path: '/admin/home' },
   { name: 'About', path: '/admin/about' },

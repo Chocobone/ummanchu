@@ -24,7 +24,7 @@ export default async function NewsPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary-rgb/20">
         <main className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Page Header */}
@@ -32,7 +32,7 @@ export default async function NewsPage() {
               <h1 className="text-4xl lg:text-5xl font-bold mb-4">
                 <span className="">NEWS</span>
               </h1>
-              <p className="text-xl text-white/80">
+              <p className="text-xl text-foreground-rgb/80">
                 SSIL의 최신 소식과 공지사항을 확인하세요.
               </p>
             </header>
@@ -42,7 +42,7 @@ export default async function NewsPage() {
               {newsItems.map((item) => (
                 <Card
                   key={item.id}
-                  className="flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 bg-card/20 border-white/10"
+                 className="flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 bg-card-rgb/20 border border-border-rgb/10"
                 >
                   <div className="relative w-full h-48">
                     <Image
@@ -53,19 +53,19 @@ export default async function NewsPage() {
                     />
                   </div>
                   <CardContent className="p-4 flex-grow space-y-2">
-                    <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                    <p className="text-sm text-white/70 line-clamp-3">
+                     <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
+                     <p className="text-sm text-foreground-rgb/70 line-clamp-3">
                       {createPreview(item.description)}
                     </p>
                   </CardContent>
                   <CardFooter className="p-4 pt-0 mt-auto">
                     <div className="w-full">
-                      <div className="text-xs text-white/50 mb-2">
+                       <div className="text-xs text-foreground-rgb/50 mb-2">
                         {new Date(item.publishedAt).toLocaleDateString()}
                       </div>
-                      <Link
+                                           <Link
                         href={`/news/${item.id}`}
-                        className="text-yellow-400 font-semibold text-sm hover:underline"
+                        className="text-primary font-semibold text-sm hover:text-primary-rgb/90 hover:underline"
                       >
                         READ MORE »
                       </Link>

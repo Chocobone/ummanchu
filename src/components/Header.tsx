@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React ,{ useEffect, useState } from "react";
 
 const Header = () => {
   const pathname = usePathname();
@@ -13,12 +13,32 @@ const Header = () => {
     { name: "research", path: "/research" },
     { name: "news", path: "/news" },
     { name: "contact", path: "/contact" },
-    { name: "people", path: "/people" },
-    {name: "blog-test", path: "/test"}
+    { name: "people", path: "/people" }
+
   ];
+const [isDark, setIsDark] = useState(false);
+ useEffect(() => {
+    // localStorage에 저장된 테마 불러오기
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") {
+      setIsDark(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
 
   return (
-    <header className="bg-background/80 backdrop-blur-md border-b sticky top-0 z-50">
+    <header className="bg-background-rgb/80 backdrop-blur-md border-b sticky top-0 z-50">
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-2xl font-bold text-primary">
@@ -31,10 +51,10 @@ const Header = () => {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                  className={`text-sm font-medium transition-colors hover:text-primary-rgb/100 ${
                     pathname === item.path
                       ? "text-primary"
-                      : "text-foreground/70"
+                      : "text-foreground-rgb/70"
                   }`}
                 >
                   {item.name}
@@ -43,10 +63,10 @@ const Header = () => {
                 <div key="research" className="relative group flex items-center">
                   <Link
                     href="/research"
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
+                    className={`text-sm font-medium transition-colors hover:text-primary-rgb/100 ${
                       pathname.startsWith("/research")
                         ? "text-primary"
-                        : "text-foreground/70"
+                        : "text-foreground-rgb/70"
                     }`}
                   >
                     research
@@ -55,25 +75,25 @@ const Header = () => {
                 <div className="absolute left-0 top-full mt-2 w-56 bg-background shadow-lg rounded opacity-0 group-hover:opacity-100 transition-opacity">
                     <Link
                       href="/research?cat=Current&idx=0"
-                      className="block px-4 py-2 text-sm hover:bg-primary/10"
+                      className="block px-4 py-2 text-sm hover:bg-primary-rgb/10"
                     >
                       Current – LUSEM
                     </Link>
                     <Link
                       href="/research?cat=Completed&idx=0"
-                      className="block px-4 py-2 text-sm hover:bg-primary/10"
+                      className="block px-4 py-2 text-sm hover:bg-primary-rgb/10"
                     >
                       Completed – CINEMA
                     </Link>
                     <Link
                       href="/research?cat=Completed&idx=1"
-                      className="block px-4 py-2 text-sm hover:bg-primary/10"
+                      className="block px-4 py-2 text-sm hover:bg-primary-rgb/10"
                     >
                       Completed – MEPD
                     </Link>
                     <Link
                       href="/research?cat=Completed&idx=2"
-                      className="block px-4 py-2 text-sm hover:bg-primary/10"
+                      className="block px-4 py-2 text-sm hover:bg-primary-rgb/10"
                     >
                       Completed – KSEM
                     </Link>
@@ -81,6 +101,13 @@ const Header = () => {
                 </div>
               )
             )}
+           {/* 다크모드 토글 버튼 */}
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="ml-4 text-sm font-medium px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 dark:text-white"
+            >
+              {isDark ? "🌙 Dark" : "☀️ Light"}
+            </button>
           </nav>
         </div>
       </div>
