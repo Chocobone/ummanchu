@@ -80,3 +80,12 @@ model SliderImage {
   order     Int      @default(0)
   createdAt DateTime @default(now())
 }
+model Contact {
+  id          Int      @id @default(1)
+  labNameKo   String
+  labNameEn   String
+  addressKo   String
+  addressEn   String
+  mapEmbedUrl String
+  updatedAt   DateTime @updatedAt
+}
