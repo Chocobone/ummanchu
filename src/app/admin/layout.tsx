@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import "./globals.css"; 
+import Footer from "@/components/Footer";
 const adminPages = [
   { name: 'Home', path: '/admin/home' },
   { name: 'About', path: '/admin/about' },
@@ -29,6 +30,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <main className="flex-1 p-8 overflow-y-auto">
         {children}
       </main>
+       <Footer />
+       
+            
     </div>
   );
 }
