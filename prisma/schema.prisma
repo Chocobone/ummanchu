@@ -8,8 +8,8 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id       Int    @id @default(autoincrement())
+  email    String @unique
   password String
   role     String
 }
@@ -20,27 +20,27 @@ enum ResearchStatus {
 }
 
 model Research {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   title       String
   subtitle    String?
-  description String   @db.Text
+  description String         @db.Text
   imageUrl    String?
   status      ResearchStatus @default(IN_PROGRESS)
   startDate   DateTime?
   endDate     DateTime?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model News {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
-  description String    @db.Text
+  description String   @db.Text
   imageUrl    String?
-  publishedAt DateTime  @default(now())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {
@@ -80,12 +80,20 @@ model SliderImage {
   order     Int      @default(0)
   createdAt DateTime @default(now())
 }
+
 model Contact {
-  id          Int      @id @default(1)
+  id          Int      @id @default(autoincrement())
   labNameKo   String
   labNameEn   String
   addressKo   String
   addressEn   String
   mapEmbedUrl String
   updatedAt   DateTime @updatedAt
+}
+
+model AboutContent {
+  id        Int      @id @default(autoincrement())
+  page      String   @unique // "about", "home" 등
+  data      Json // 페이지 컨텐츠 JSON
+  updatedAt DateTime @updatedAt
 }

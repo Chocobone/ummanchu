@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma'
 
 // GET - 모든 인물 정보 조회
 export async function GET() {

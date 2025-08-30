@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma'
 import ResearchClientPage from './ResearchClientPage';
 
 export default async function ResearchPage() {

@@ -1,3 +1,6 @@
+// app/contact/page.tsx
+export const runtime = "nodejs";
+
 import Header from "@/components/Header";
 import { prisma } from "@/lib/prisma";
 
@@ -7,7 +10,7 @@ export default async function ContactPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary-rgb/20">
         <section className="py-16">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <h1 className="text-5xl font-bold text-center">SSIL Contact</h1>
@@ -16,14 +19,14 @@ export default async function ContactPage() {
               <>
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-xl font-semibold text-yellow-400">Labatory Name</h2>
+                    <h2 className="text-xl font-semibold text-brand">Labatory Name</h2>
                     <p className="mt-1 text-lg">
                       {contact.labNameKo} ({contact.labNameEn})
                     </p>
                   </div>
 
                   <div>
-                    <h2 className="text-xl font-semibold text-yellow-400">Labatory Location</h2>
+                    <h2 className="text-xl font-semibold text-brand">Labatory Location</h2>
                     <p className="mt-1 text-lg leading-relaxed whitespace-pre-line">
                       {contact.addressKo}
                       <br />

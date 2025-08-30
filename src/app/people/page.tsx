@@ -1,5 +1,5 @@
 // app/people/page.tsx (Server Component)
-import prisma from "@/lib/prisma";
+import { prisma } from '@/lib/prisma'
 import PeopleClientPage from "./PeopleClientPage";
 import { Role } from '@prisma/client'; // Import the Role enum
 

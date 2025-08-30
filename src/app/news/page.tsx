@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import prisma from "@/lib/prisma";
+import { prisma } from '@/lib/prisma'
 
 // Helper function to strip HTML and truncate text
 function createPreview(html: string, length: number = 100) {
