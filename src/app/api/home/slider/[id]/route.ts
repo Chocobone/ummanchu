@@ -1,25 +1,31 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 // DELETE - 특정 슬라이더 이미지 삭제
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: any) {
+  const { id } = context.params as { id: string };
+
   try {
-    const id = parseInt(params.id, 10);
-    if (isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    const numId = Number(id);
+    if (Number.isNaN(numId)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
     }
 
     await prisma.sliderImage.delete({
-      where: { id },
+      where: { id: numId },
     });
 
-    return new Response(null, { status: 204 }); // No Content
-  } catch (error) {
-    console.error(`Error deleting slider image with id: ${params.id}`, error);
-    // P2025 is the Prisma code for record to delete not found
-    if (error.code === 'P2025') {
-      return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+    return new NextResponse(null, { status: 204 });
+  } catch (error: any) {
+    console.error(`Error deleting slider image with id: ${id}`, error);
+
+    if (error.code === "P2025") {
+      return NextResponse.json({ error: "Image not found" }, { status: 404 });
     }
-    return NextResponse.json({ error: 'Failed to delete slider image' }, { status: 500 });
+
+    return NextResponse.json(
+      { error: "Failed to delete slider image" },
+      { status: 500 }
+    );
   }
 }

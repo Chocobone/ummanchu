@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import ResearchClientPage from './ResearchClientPage';
+import { Suspense } from 'react';
 
 export default async function ResearchPage() {
   // Fetch data from the database on the server
@@ -16,5 +17,9 @@ export default async function ResearchPage() {
   };
 
   // Render the client component with the fetched data
-  return <ResearchClientPage researchData={researchData} />;
+  return (
+    <Suspense fallback={<div>Loading research...</div>}>
+      <ResearchClientPage researchData={researchData} />
+    </Suspense>
+  );
 }

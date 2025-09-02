@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
+import type { ComponentProps } from 'react';
+import type RichEditorComponent from '@/components/RichEditor';
 
 // Dynamically import the RichEditor to prevent SSR issues
 const RichEditor = dynamic(() => import('@/components/RichEditor'), { 
   ssr: false,
   loading: () => <p>Loading editor...</p>
-});
+}) as React.ComponentType<ComponentProps<typeof RichEditorComponent>>;
 
 // Define the type for a news item
 interface NewsData {
@@ -134,7 +136,7 @@ export default function EditNewsPage() {
           <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Description</label>
           {!isLoading && (
             <RichEditor
-              initialValue={formData.description}
+              value={formData.description}
               onChange={handleDescriptionChange}
             />
           )}

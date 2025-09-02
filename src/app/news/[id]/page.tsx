@@ -4,8 +4,6 @@ import Header from "@/components/Header";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 
-type Props = { params: { id: string } };
-
 // SSG 시 필요한 파라미터 목록을 미리 생성
 export async function generateStaticParams() {
   const newsItems = await prisma.news.findMany({
@@ -17,7 +15,7 @@ export async function generateStaticParams() {
 }
 
 // 이 컴포넌트는 반드시 async 로 선언해야 합니다!
-export default async function NewsDetailPage({ params }: Props) {
+export default async function NewsDetailPage({ params }: any) {
   const { id } = params;
 
   const news = await prisma.news.findUnique({

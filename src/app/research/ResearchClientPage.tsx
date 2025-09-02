@@ -1,12 +1,11 @@
-// app/research/ResearchClientPage.tsx
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
-import { Research } from '@prisma/client'; // Import the correct type from Prisma
+import { Research } from '@prisma/client';
 
 interface ResearchData {
   Current: Research[];
@@ -24,15 +23,10 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
 
   const categories = Object.keys(researchData);
   const [selectedCategory, setSelectedCategory] = useState<string>(catParam);
-  const [selectedProjectIdx, setSelectedProjectIdx] = useState<number>(
-    isNaN(idxParam) ? 0 : idxParam
-  );
+  const [selectedProjectIdx, setSelectedProjectIdx] = useState<number>(isNaN(idxParam) ? 0 : idxParam);
 
-  // Sync state with URL params
   useEffect(() => {
-    if (categories.includes(catParam)) {
-      setSelectedCategory(catParam);
-    }
+    if (categories.includes(catParam)) setSelectedCategory(catParam);
     setSelectedProjectIdx(isNaN(idxParam) ? 0 : idxParam);
   }, [catParam, idxParam, categories]);
 
@@ -74,8 +68,7 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                           <Link
                             href={`/research?cat=${cat}&idx=${idx}`}
                             className={`block w-full text-left py-1 px-4 rounded text-sm transition ${
-                              cat === selectedCategory &&
-                              idx === selectedProjectIdx
+                              cat === selectedCategory && idx === selectedProjectIdx
                                 ? "bg-yellow-400/20 text-yellow-400 font-medium"
                                 : "text-white/70 hover:bg-yellow-400/10"
                             }`}
@@ -92,17 +85,19 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
               <div className="col-span-2 space-y-6">
                 {project ? (
                   <div className="text-white">
-                    <h2 className="text-2xl lg:text-3xl font-bold">
-                      {project.title}
-                    </h2>
-                    {project.subtitle && (
-                      <p className="text-lg text-white/70 italic mt-1">
-                        {project.subtitle}
-                      </p>
+                    <h2 className="text-2xl lg:text-3xl font-bold">{project.title}</h2>
+
+                    {/* description은 plain text 라면 그대로, 리치라면 contentHtml로 */}
+                    {project.description && (
+                      <p className="text-white/80 mt-2">{project.description}</p>
                     )}
-                    <div className="bg-card/20 p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
-                      <div dangerouslySetInnerHTML={{ __html: project.description }} />
-                    </div>
+
+                    {project.contentHtml && (
+                      <div className="bg-card/20 p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
+                        <div dangerouslySetInnerHTML={{ __html: project.contentHtml }} />
+                      </div>
+                    )}
+
                     {project.imageUrl && (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden mt-4">
                         <Image

@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 // GET - 특정 인물 정보 조회
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, context: any) {
+  const { params } = context;
   try {
     const person = await prisma.person.findUnique({
       where: { id: parseInt(params.id, 10) },
@@ -18,7 +19,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PUT - 특정 인물 정보 수정
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: any) {
+  const { params } = context;
   try {
     const data = await request.json();
     const { name, position, description, image, email, degree, role } = data;
@@ -47,7 +49,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE - 특정 인물 정보 삭제
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: any) {
+  const { params } = context;
   try {
     await prisma.person.delete({
       where: { id: parseInt(params.id, 10) },

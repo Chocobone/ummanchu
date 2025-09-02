@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
+import type { ComponentProps } from 'react';
+import type RichEditorComponent from '@/components/RichEditor';
 
 // Dynamically import the RichEditor to prevent SSR issues
 const RichEditor = dynamic(() => import('@/components/RichEditor'), { 
   ssr: false,
   loading: () => <p>Loading editor...</p>
-});
+}) as React.ComponentType<ComponentProps<typeof RichEditorComponent>>;
+
 
 export default function NewNewsPage() {
   const [title, setTitle] = useState('');
@@ -85,7 +88,7 @@ export default function NewNewsPage() {
         <div className="mb-4">
           <label htmlFor="description" className="block text-gray-700 font-bold mb-2">Description</label>
           <RichEditor
-            initialValue={description}
+            value={description}
             onChange={(html) => setDescription(html)}
           />
         </div>

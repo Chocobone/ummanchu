@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 interface Params {
   params: {
@@ -10,11 +10,11 @@ interface Params {
 }
 
 // GET a specific news item by ID
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, context: any) {
   // Acknowledge request to satisfy Next.js static analysis
   const _ = request.method;
   try {
-    const { id } = params;
+    const { id } = context.params;
     const news = await prisma.news.findUnique({
       where: { id },
     });
@@ -25,13 +25,13 @@ export async function GET(request: Request, { params }: Params) {
 
     return NextResponse.json(news);
   } catch (error) {
-    console.error(`Error fetching news ${params.id}:`, error);
+    console.error(`Error fetching news ${context.params.id}:`, error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
 // PUT (update) a specific news item by ID (Admin protected)
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(request: Request, context: any) {
   const session = await getServerSession(authOptions);
 
   if (!session || session.user?.role !== 'admin') {
@@ -47,7 +47,7 @@ export async function PUT(request: Request, { params }: Params) {
     }
 
     const updatedNews = await prisma.news.update({
-      where: { id: params.id },
+      where: { id: context.params.id },
       data: {
         title,
         description,
@@ -58,7 +58,7 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(updatedNews);
   } catch (error) {
-    console.error(`Error updating news ${params.id}:`, error);
+    console.error(`Error updating news ${context.params.id}:`, error);
     if (error.code === 'P2025') {
         return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
@@ -67,7 +67,7 @@ export async function PUT(request: Request, { params }: Params) {
 }
 
 // DELETE a specific news item by ID (Admin protected)
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request, context: any) {
   const session = await getServerSession(authOptions);
 
   if (!session || session.user?.role !== 'admin') {
@@ -77,14 +77,14 @@ export async function DELETE(request: Request, { params }: Params) {
   // Acknowledge request to satisfy Next.js static analysis
   const _ = request.method;
   try {
-    const { id } = params;
+    const { id } = context.params;
     await prisma.news.delete({
       where: { id },
     });
 
     return new NextResponse(null, { status: 204 }); // No Content
   } catch (error) {
-    console.error(`Error deleting news ${params.id}:`, error);
+    console.error(`Error deleting news ${context.params.id}:`, error);
     if (error.code === 'P2025') {
         return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }

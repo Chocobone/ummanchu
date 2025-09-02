@@ -22,9 +22,10 @@ enum ResearchStatus {
 model Research {
   id          String   @id @default(cuid())
   title       String
-  subtitle    String?
-  description String   @db.Text
+  description String?
+  contentHtml String?   @db.Text
   imageUrl    String?
+  published   Boolean  @default(false)
   status      ResearchStatus @default(IN_PROGRESS)
   startDate   DateTime?
   endDate     DateTime?
@@ -36,7 +37,8 @@ model Research {
 model News {
   id          String    @id @default(cuid())
   title       String
-  description String    @db.Text
+  description String    
+  contentHtml String? @db.Text
   imageUrl    String?
   publishedAt DateTime  @default(now())
   createdAt   DateTime  @default(now())
@@ -79,4 +81,24 @@ model SliderImage {
   altText   String?
   order     Int      @default(0)
   createdAt DateTime @default(now())
+}
+
+model Asset {
+  id           String   @id @default(cuid())
+  url          String
+  originalName String?
+  mime         String?
+  size         Int?
+  // 글 정보, 글 번호
+  ownerType    AssetOwnerType
+  ownerId      String
+  tag          String?
+  createdAt    DateTime @default(now())
+
+  @@index([ownerType, ownerId])
+}
+
+enum AssetOwnerType {
+  RESEARCH
+  NEWS
 }
