@@ -3,6 +3,9 @@ import "./globals.css";
 import "quill/dist/quill.snow.css";
 import AuthProvider from "@/components/AuthProvider";
 
+import Footer from "@/components/Footer";  
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,8 +27,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>{children} 
+      <Footer />
+        </AuthProvider>
       </body>
     </html>
+    
   );
 }

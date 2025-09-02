@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+
 const adminPages = [
   { name: 'Home', path: '/admin/home' },
   { name: 'About', path: '/admin/about' },

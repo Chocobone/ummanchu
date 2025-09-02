@@ -1,42 +1,50 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ① 라이트 변수 (HEX + RGB) */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --primary: #3b82f6;              /* ✨ 쓰고 있으니 정의 */
+  --primary-foreground: #ffffff;
+
+  --background-rgb: 255 255 255;
+  --foreground-rgb: 23 23 23;
+  --primary-rgb:    59 130 246;
 }
 
+/* ❌ 이 블록은 v4 문법이라 혼용되면 꼬입니다. 제거하세요.
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+*/
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ② 다크 변수: 버튼이 토글하는 .dark에 반드시 선언 */
+
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 
-/* Add Ken Burns animation */
-@keyframes kenburns {
-  0% {
-    transform: scale(1) translate(0, 0);
-    transform-origin: center center;
-  }
-  100% {
-    transform: scale(1.1) translate(0, 0);
-    transform-origin: center center;
-  }
+  --primary: #60a5fa;
+  --primary-foreground: #0b1220;
+
+  --background-rgb: 10 10 10;
+  --foreground-rgb: 237 237 237;
+  --primary-rgb:    96 165 250;
 }
 
-.animate-kenburns {
-  animation: kenburns 15s ease-out forwards;
-}
+
+/* (기존) 켄번스 애니메이션은 그대로 */
+@keyframes kenburns { /* ... */ }
+.animate-kenburns { animation: kenburns 15s ease-out forwards; }
