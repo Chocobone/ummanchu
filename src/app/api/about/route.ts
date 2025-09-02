@@ -20,7 +20,7 @@ const defaultAbout = {
 };
 
 export async function GET() {
-  const row = await prisma.pageContent.findUnique({ where: { page: "about" } });
+  const row = await prisma.aboutContent.findUnique({ where: { page: "about" } });
   const data = row?.data ? { ...defaultAbout, ...(row.data as any) } : defaultAbout;
   return NextResponse.json(data);
 }
@@ -30,7 +30,7 @@ export async function PUT(req: Request) {
   // 아주 간단한 검증 (필요하면 zod로 강화)
   const data = { ...defaultAbout, ...body };
 
-  await prisma.pageContent.upsert({
+  await prisma.aboutContent.upsert({
     where: { page: "about" },
     update: { data },
     create: { page: "about", data },
