@@ -1,69 +1,41 @@
-import type { AuthOptions } from "next-auth";
+// src/lib/auth.ts
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-export const authOptions: AuthOptions = {
+const prisma = new PrismaClient();
+
+export const authOptions: NextAuthOptions = {
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: {  label: "Password", type: "password" }
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Please enter an email and password');
-        }
-
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
-
-        if (!user || !user.password) {
-          throw new Error('No user found');
-        }
-
-        // 중요: 이 로직은 DB의 비밀번호가 해시되었다고 가정합니다.
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isPasswordValid) {
-          throw new Error('Incorrect password');
-        }
-
-        return {
-          id: user.id.toString(),
-          email: user.email,
-          role: user.role,
-        };
-      }
-    })
+        if (!credentials?.email || !credentials?.password) return null;
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+        if (!user) return null;
+        if (user.role !== "admin") return null;
+        const ok = await bcrypt.compare(credentials.password, user.password);
+        if (!ok) return null;
+        return { id: String(user.id), email: user.email, role: user.role };
+      },
+    }),
   ],
-  session: {
-    strategy: 'jwt',
-  },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-      }
+      if (user) token.role = (user as any).role;
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-      }
+      if (session.user) (session.user as any).role = token.role;
       return session;
-    }
+    },
   },
-  pages: {
-    signIn: '/admin/login',
-    error: '/admin/login', 
-  },
+  pages: { signIn: "/login" },
   secret: process.env.NEXTAUTH_SECRET,
 };
