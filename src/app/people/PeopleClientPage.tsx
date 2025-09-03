@@ -3,7 +3,7 @@
 import Header from "@/components/Header";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Person } from '@prisma/client'; // Import Person type from Prisma
+import { Person } from '@prisma/client';
 
 // Define the props for the client page
 interface PeopleClientPageProps {
@@ -16,9 +16,7 @@ interface PeopleClientPageProps {
 
 export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) {
   const tabs = ["Professor", "Current", "Alumni"] as const;
-  const [selectedTab, setSelectedTab] = useState<(typeof tabs)[number]>(
-    tabs[0]
-  );
+  const [selectedTab, setSelectedTab] = useState<(typeof tabs)[number]>(tabs[0]);
 
   const profiles = peopleData[selectedTab] || [];
 
@@ -33,7 +31,9 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Page Header */}
             <header className="text-center mb-12">
-              <h1 className="text-4xl lg:text-5xl font-bold text-white">People</h1>
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+                People
+              </h1>
             </header>
 
             {/* 4-Column Layout */}
@@ -46,8 +46,8 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
                     onClick={() => setSelectedTab(t)}
                     className={`w-full text-left py-2 px-4 rounded transition ${
                       selectedTab === t
-                        ? "bg-yellow-400/20 text-yellow-400 font-semibold"
-                        : "bg-white/10 text-white/70 hover:bg-white/20"
+                        ? "bg-primary/20 text-primary font-semibold"
+                        : "bg-background/10 text-foreground/70 hover:bg-background/20"
                     }`}
                   >
                     {t}
@@ -57,69 +57,73 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
 
               {/* 2) 중앙 칸: profiles 리스트 (col-span-2) */}
               <div className="col-span-2 space-y-10 overflow-y-auto">
-                {profiles.length > 0 ? profiles.map((profile) => (
-                  <section
-                    key={profile.id}
-                    className="flex flex-col lg:flex-row items-start gap-6"
-                  >
-                    {/* 이미지 */}
-                    <div className="flex-shrink-0 self-center lg:self-start">
-                      <Image
-                        src={profile.image || "/images/placeholder.png"}
-                        alt={profile.name}
-                        width={160}
-                        height={160}
-                        className="w-40 h-40 rounded-lg object-cover bg-muted block lg:hidden"
-                      />
-                      <Image
-                        src={profile.image || "/images/placeholder.png"}
-                        alt={profile.name}
-                        width={192}
-                        height={192}
-                        className="w-48 h-48 rounded-lg object-cover bg-muted hidden lg:block"
-                      />
-                    </div>
-
-                    {/* 텍스트 */}
-                    <div className="flex-1 space-y-4">
-                      <div>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-white">
-                          {profile.name}
-                        </h2>
-                        <p className="text-white/70 italic">
-                          {F(profile.position)}
-                        </p>
+                {profiles.length > 0 ? (
+                  profiles.map((profile) => (
+                    <section
+                      key={profile.id}
+                      className="flex flex-col lg:flex-row items-start gap-6"
+                    >
+                      {/* 이미지 */}
+                      <div className="flex-shrink-0 self-center lg:self-start">
+                        <Image
+                          src={profile.image || "/images/placeholder.png"}
+                          alt={profile.name}
+                          width={160}
+                          height={160}
+                          className="w-40 h-40 rounded-lg object-cover bg-muted block lg:hidden"
+                        />
+                        <Image
+                          src={profile.image || "/images/placeholder.png"}
+                          alt={profile.name}
+                          width={192}
+                          height={192}
+                          className="w-48 h-48 rounded-lg object-cover bg-muted hidden lg:block"
+                        />
                       </div>
 
-                      <div className="bg-card/30 rounded-lg p-4 text-white">
-                        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-                          <div>
-                            <dt className="text-sm text-white/60">Email</dt>
-                            <dd className="font-medium">
-                              {F(profile.email)}
-                            </dd>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <dt className="text-sm text-white/60">Degree</dt>
-                            <dd className="font-medium whitespace-pre-line">
-                              {F(profile.degree)}
-                            </dd>
-                          </div>
-                        </dl>
-                      </div>
+                      {/* 텍스트 */}
+                      <div className="flex-1 space-y-4">
+                        <div>
+                          <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+                            {profile.name}
+                          </h2>
+                          <p className="text-muted-foreground italic">
+                            {F(profile.position)}
+                          </p>
+                        </div>
 
-                      <div className="bg-card/20 p-4 rounded-lg text-white">
-                        <h3 className="text-sm text-white/60 mb-1">
-                          Description
-                        </h3>
-                        <p className="leading-relaxed">
-                          {F(profile.description)}
-                        </p>
+                        <div className="bg-card rounded-lg p-4 text-foreground">
+                          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                            <div>
+                              <dt className="text-sm text-muted-foreground">Email</dt>
+                              <dd className="font-medium">
+                                {F(profile.email)}
+                              </dd>
+                            </div>
+                            <div className="sm:col-span-2">
+                              <dt className="text-sm text-muted-foreground">Degree</dt>
+                              <dd className="font-medium whitespace-pre-line">
+                                {F(profile.degree)}
+                              </dd>
+                            </div>
+                          </dl>
+                        </div>
+
+                        <div className="bg-card/80 p-4 rounded-lg text-foreground">
+                          <h3 className="text-sm text-muted-foreground mb-1">
+                            Description
+                          </h3>
+                          <p className="leading-relaxed">
+                            {F(profile.description)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </section>
-                )) : (
-                  <p className="text-center text-white/70">No members in this category.</p>
+                    </section>
+                  ))
+                ) : (
+                  <p className="text-center text-muted-foreground">
+                    No members in this category.
+                  </p>
                 )}
               </div>
 

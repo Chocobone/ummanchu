@@ -1,66 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import AdminEditor from "@/components/AdminEditor"; // 외부 AdminEditor.tsx 사용
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AdminPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginFailed, setLoginFailed] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  const handleLogin = () => {
-    if (username === "admin" && password === "1234") {
-      setIsLoggedIn(true);
-      setLoginFailed(false);
-    } else {
-      setIsLoggedIn(false);
-      setLoginFailed(true);
+  useEffect(() => {
+    if (status === "loading") return; // 세션 체크 중일 때는 대기
+    if (!session || session.user?.role !== "admin") {
+      router.replace("/admin/login?callbackUrl=/admin");
     }
-  };
+  }, [session, status, router]);
+
+  if (status === "loading") {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-black text-white">
+        세션 확인 중...
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-black text-white p-10 flex items-center justify-center">
-      {!isLoggedIn ? (
-        <div className="w-full max-w-md bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
-          <h1 className="text-3xl font-bold mb-6 text-center">🔒 Admin Login</h1>
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-1 text-sm text-gray-400">아이디</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2 rounded bg-black border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="admin"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm text-gray-400">비밀번호</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 rounded bg-black border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                placeholder="••••••"
-              />
-            </div>
-
-            {loginFailed && (
-              <p className="text-red-500 text-sm">❗ 로그인에 실패했습니다.</p>
-            )}
-
-            <button
-              onClick={handleLogin}
-              className="w-full bg-yellow-400 text-black font-semibold py-2 rounded hover:bg-yellow-300 transition"
-            >
-              로그인
-            </button>
-          </div>
-        </div>
-      ) : (
-        <AdminEditor /> // ✅ 외부 컴포넌트
-      )}
+    <main className="min-h-screen flex items-center justify-center bg-black text-white p-10">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">관리자 전용 페이지</h1>
+        <p className="text-lg text-gray-300">
+          환영합니다, <span className="font-semibold">{session?.user?.email}</span> 님 🎉
+        </p>
+      </div>
     </main>
   );
 }

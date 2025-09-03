@@ -40,11 +40,15 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
         <main className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* 메인 타이틀 */}
             <header className="text-center mb-12">
-              <h1 className="text-4xl lg:text-5xl font-bold text-white">Research</h1>
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+                Research
+              </h1>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* 좌측 네비게이션 */}
               <nav className="space-y-6">
                 {categories.map((cat) => (
                   <div key={cat}>
@@ -55,8 +59,8 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                       }}
                       className={`block w-full text-left py-2 px-4 rounded transition ${
                         selectedCategory === cat
-                          ? "bg-yellow-400/20 text-yellow-400 font-semibold"
-                          : "bg-white/10 text-white/70 hover:bg-white/20"
+                          ? "bg-primary/20 text-primary font-semibold"
+                          : "bg-background/10 text-foreground/70 hover:bg-background/20"
                       }`}
                     >
                       {cat}
@@ -69,8 +73,8 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                             href={`/research?cat=${cat}&idx=${idx}`}
                             className={`block w-full text-left py-1 px-4 rounded text-sm transition ${
                               cat === selectedCategory && idx === selectedProjectIdx
-                                ? "bg-yellow-400/20 text-yellow-400 font-medium"
-                                : "text-white/70 hover:bg-yellow-400/10"
+                                ? "bg-primary/20 text-primary font-medium"
+                                : "text-foreground/70 hover:bg-primary/10"
                             }`}
                           >
                             {p.title}
@@ -82,22 +86,18 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                 ))}
               </nav>
 
+              {/* 본문 */}
               <div className="col-span-2 space-y-6">
                 {project ? (
-                  <div className="text-white">
-                    <h2 className="text-2xl lg:text-3xl font-bold">{project.title}</h2>
+                  <div className="text-foreground">
+                    {/* breadcrumb */}
+                    <div className="text-sm text-muted-foreground mb-4">
+                      <span>{selectedCategory}</span>
+                      <span className="mx-2">/</span>
+                      <span className="text-primary font-medium">{project.title}</span>
+                    </div>
 
-                    {/* description은 plain text 라면 그대로, 리치라면 contentHtml로 */}
-                    {project.description && (
-                      <p className="text-white/80 mt-2">{project.description}</p>
-                    )}
-
-                    {project.contentHtml && (
-                      <div className="bg-card/20 p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
-                        <div dangerouslySetInnerHTML={{ __html: project.contentHtml }} />
-                      </div>
-                    )}
-
+                    {/* 이미지 */}
                     {project.imageUrl && (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden mt-4">
                         <Image
@@ -108,12 +108,34 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                         />
                       </div>
                     )}
+
+                    {/* 프로젝트 타이틀 */}
+                    <h2 className="text-2xl lg:text-3xl font-bold">
+                      {project.title}
+                    </h2>
+
+                    {/* description */}
+                    {project.description && (
+                      <p className="text-muted-foreground mt-2">
+                        {project.description}
+                      </p>
+                    )}
+
+                    {/* contentHtml */}
+                    {project.contentHtml && (
+                      <div className="bg-card p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
+                        <div dangerouslySetInnerHTML={{ __html: project.contentHtml }} />
+                      </div>
+                    )}
+
+                    
                   </div>
                 ) : (
-                  <p className="text-white/70">Select a project to see the details.</p>
+                  <p className="text-muted-foreground">
+                    Select a project to see the details.
+                  </p>
                 )}
               </div>
-
             </div>
           </div>
         </main>

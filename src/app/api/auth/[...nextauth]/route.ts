@@ -15,7 +15,6 @@ const authOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      // ⬇⬇⬇ 여기! authorize 함수 ⬇⬇⬇
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
