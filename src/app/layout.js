@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "quill/dist/quill.snow.css";
 import AuthProvider from "@/components/AuthProvider";
-
+import Script from "next/script";
 import Footer from "@/components/Footer";  
 
 
@@ -23,7 +23,25 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
+       <head>
+       <meta name="color-scheme" content="dark light" />
+       <style
+  id="__theme_preload"
+  dangerouslySetInnerHTML={{
+    __html: "html{background:#0a0a0a;color:#ededed}"
+  }}
+/>
++        {/* 무조건 다크로 시작 (저장 X) */}
++      <Script id="debug-dark" strategy="afterInteractive">{`
+  (function(){
+    var html = document.documentElement;
+    new MutationObserver(function(){
+      console.log('[THEME]', 'html.className ->', html.className, 'at', new Error().stack);
+    }).observe(html, { attributes: true, attributeFilter: ['class'] });
+  })();
+`}</Script>
+ </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

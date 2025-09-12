@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header";
 import { Research } from '@prisma/client';
-
+export const dynamic = 'force-dynamic';
 interface ResearchData {
   Current: Research[];
   Completed: Research[];

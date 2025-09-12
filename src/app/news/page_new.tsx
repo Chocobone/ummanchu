@@ -6,7 +6,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { Post } from "@/types/post";
-
+export const dynamic = 'force-dynamic';
 export default function NewsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);

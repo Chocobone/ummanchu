@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-
+export const dynamic = 'force-dynamic';
 const contentId = 1;
 
 // GET - 홈 페이지 텍스트 콘텐츠 조회

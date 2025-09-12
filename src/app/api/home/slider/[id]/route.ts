@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
 // DELETE - 특정 슬라이더 이미지 삭제
 export async function DELETE(request: Request, context: any) {
   const { id } = context.params as { id: string };

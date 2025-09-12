@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Image from "next/image";
 import {prisma} from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
+import { unstable_noStore as noStore } from 'next/cache';
 const defaultAbout = {
   heading: "About Us",
   tagline: "Empowering cosmic discovery—one payload at a time.",
@@ -16,6 +17,7 @@ const defaultAbout = {
 };
 
 export default async function AboutPage() {
+  noStore();
   const row = await prisma.aboutContent.findUnique({ where: { page: "about" } });
   const c = row?.data ? { ...defaultAbout, ...(row.data as any) } : defaultAbout;
 

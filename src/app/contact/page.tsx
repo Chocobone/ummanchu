@@ -1,10 +1,11 @@
 // app/contact/page.tsx
 export const runtime = "nodejs";
-
+export const dynamic = 'force-dynamic';
 import Header from "@/components/Header";
 import { prisma } from "@/lib/prisma";
-
+import { unstable_noStore as noStore } from 'next/cache';
 export default async function ContactPage() {
+  noStore();
   const contact = await prisma.contact.findUnique({ where: { id: 1 } });
 
   return (
