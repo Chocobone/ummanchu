@@ -1,15 +1,120 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     String
+}
+
+enum ResearchStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Research {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  contentHtml String?   @db.Text
+  imageUrl    String?
+  published   Boolean  @default(false)
+  status      ResearchStatus @default(IN_PROGRESS)
+  startDate   DateTime?
+  endDate     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  description String    
+  contentHtml String? @db.Text
+  imageUrl    String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  PROFESSOR
+  CURRENT
+  ALUMNI
+}
+
+model Person {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String
+  description String?  @db.Text
+  image       String?
+  email       String   @unique
+  degree      String?
+  role        Role
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HomePageContent {
+  id             Int    @id @default(1)
+  heroTitle      String
+  heroSubtitle   String
+  heroParagraph  String @db.Text
+  aboutTitle     String @db.Text
+  aboutParagraph String @db.Text
+  newsTitle      String
+  newsSubtitle   String
+}
+
+model SliderImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  altText   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Asset {
+  id           String   @id @default(cuid())
+  url          String
+  originalName String?
+  mime         String?
+  size         Int?
+  // 글 정보, 글 번호
+  ownerType    AssetOwnerType
+  ownerId      String
+  tag          String?
+  createdAt    DateTime @default(now())
+
+  @@index([ownerType, ownerId])
+}
+
+enum AssetOwnerType {
+  RESEARCH
+  NEWS
+}
+model Contact {
+  id          Int      @id @default(autoincrement())
+  labNameKo   String
+  labNameEn   String
+  addressKo   String
+  addressEn   String
+  mapEmbedUrl String
+  updatedAt   DateTime @updatedAt
+}
+
+model AboutContent {
+  id        Int      @id @default(autoincrement())
+  page      String   @unique // "about", "home" 등
+  data      Json // 페이지 컨텐츠 JSON
+  updatedAt DateTime @updatedAt
 }
