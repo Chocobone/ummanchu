@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Person } from '@prisma/client';
-
+export const dynamic = 'force-dynamic';
 // Define the props for the client page
 interface PeopleClientPageProps {
   peopleData: {

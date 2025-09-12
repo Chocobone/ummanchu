@@ -1,7 +1,7 @@
 // app/api/contact/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
 export const runtime = "nodejs";
 
 // 기본값 (없을 때 자동 생성/머지용)

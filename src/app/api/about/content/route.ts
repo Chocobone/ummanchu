@@ -1,7 +1,7 @@
 // app/api/about/content/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
 // ▶ Prisma는 Node 런타임만
 export const runtime = "nodejs";
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import fs from 'fs/promises';
 import path from 'path';
-
+export const dynamic = 'force-dynamic';
 // GET - 모든 슬라이더 이미지 조회
 export async function GET() {
   try {

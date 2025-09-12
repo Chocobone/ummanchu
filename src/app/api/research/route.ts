@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-
+export const dynamic = 'force-dynamic';
 import fs from 'fs/promises';
 import path from 'path';
 import DOMPurify from 'isomorphic-dompurify';

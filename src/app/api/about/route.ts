@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {prisma} from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
 // 기본값 (DB에 없을 때 표시될 초기 컨텐츠)
 const defaultAbout = {
   heading: "About Us",
