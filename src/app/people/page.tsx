@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import PeopleClientPage from "./PeopleClientPage";
 import { Role } from '@prisma/client'; // Import the Role enum
 export const dynamic = 'force-dynamic';
-import { noStore } from 'next/cache';
+import { unstable_noStore as noStore } from 'next/cache';
 export default async function PeoplePage() {
 noStore();
   // 1. Fetch all people data from the database

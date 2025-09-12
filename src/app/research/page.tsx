@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import ResearchClientPage from './ResearchClientPage';
 import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
-import { noStore } from 'next/cache';
+import { unstable_noStore as noStore } from 'next/cache';
 export default async function ResearchPage() {
   noStore();
   // Fetch data from the database on the server

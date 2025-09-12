@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Image from "next/image";
 import {prisma} from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
-import { noStore } from 'next/cache';
+import { unstable_noStore as noStore } from 'next/cache';
 const defaultAbout = {
   heading: "About Us",
   tagline: "Empowering cosmic discovery—one payload at a time.",
