@@ -1,8 +1,9 @@
 import HeroSection from "@/components/Header";
 import CTASection from "@/components/CTASection";
 import prisma from "@/lib/prisma";
-
+import { unstable_noStore as noStore } from 'next/cache';
 export default async function HomePage() {
+    noStore();
   // Fetch research data
   const allResearch = await prisma.research.findMany({
     orderBy: { createdAt: 'desc' },
