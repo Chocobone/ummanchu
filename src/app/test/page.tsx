@@ -1,6 +1,6 @@
 // src/app/write/page.tsx
 "use client";
-
+// 추가하기
 import React, { useState } from "react";
 import Header from "@/components/Header";
 import RichEditor from "@/components/RichEditor";
