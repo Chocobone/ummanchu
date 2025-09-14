@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image'; // Import next/image
-
+import { unstable_noStore as noStore } from 'next/cache';
 // Define types for our data
 interface HomePageContent {
   heroTitle: string;
@@ -22,6 +22,7 @@ interface SliderImage {
 }
 
 export default function ManageHomePage() {
+  noStore();
   // State for text content
   const [content, setContent] = useState<Partial<HomePageContent>>({});
   const [contentLoading, setContentLoading] = useState(true);

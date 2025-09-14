@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import { unstable_noStore as noStore } from 'next/cache';
 interface Person {
   id: number;
   name: string;
@@ -13,6 +13,7 @@ interface Person {
 }
 
 export default function ManagePeoplePage() {
+  noStore();
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

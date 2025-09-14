@@ -27,8 +27,8 @@ export default function NewNewsPage() {
   // Redirect if not authenticated or not admin
   useEffect(() => {
     if (status === 'loading') return;
-    if (!session || session.user?.role !== 'admin') {
-      router.push('/admin/login?callbackUrl=/admin/news/new');
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/admin/news/new');
     }
   }, [session, status, router]);
 
@@ -65,7 +65,7 @@ export default function NewNewsPage() {
     }
   };
 
-  if (status === 'loading' || !session || session.user?.role !== 'admin') {
+  if (status === 'unauthenticated') {
     return <div>Loading authentication...</div>;
   }
 

@@ -1,93 +1,73 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
+export const dynamic = 'force-dynamic';
 
-// GET a specific news item by ID
-export async function GET(request: Request, context: any) {
-  // Acknowledge request to satisfy Next.js static analysis
-  const _ = request.method;
+// GET /api/news/[id]
+export async function GET(_req: Request, context: any) {
   try {
-    const { id } = context.params;
-    const news = await prisma.news.findUnique({
-      where: { id },
-    });
+    const id = context?.params?.id as string;
+    if (!id) return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
 
-    if (!news) {
-      return NextResponse.json({ error: 'News not found' }, { status: 404 });
-    }
+    const item = await prisma.news.findUnique({ where: { id } });
+    if (!item) return NextResponse.json({ error: 'News not found' }, { status: 404 });
 
-    return NextResponse.json(news);
-  } catch (error) {
-    console.error(`Error fetching news ${context.params.id}:`, error);
+    return NextResponse.json(item);
+  } catch (err) {
+    console.error('Error fetching news by id:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-// PUT (update) a specific news item by ID (Admin protected)
-export async function PUT(request: Request, context: any) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || session.user?.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
+// PUT /api/news/[id]
+export async function PUT(req: Request, context: any) {
   try {
-    const body = await request.json();
-    const { title, description, imageUrl, publishedAt } = body;
+    const id = context?.params?.id as string;
+    if (!id) return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
+
+    const body = await req.json();
+    const { title, description, imageUrl, publishedAt } = body ?? {};
 
     if (!title || !description) {
-      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Title and description are required' },
+        { status: 400 }
+      );
     }
 
-    const updatedNews = await prisma.news.update({
-      where: { id: context.params.id },
+    const updated = await prisma.news.update({
+      where: { id },
       data: {
         title,
         description,
-        imageUrl: imageUrl || null,
+        imageUrl: imageUrl ?? null,
         publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
       },
     });
 
-    return NextResponse.json(updatedNews);
-  } catch (error) {
-    console.error(`Error updating news ${context.params.id}:`, error);
-    if (error.code === 'P2025') {
-        return NextResponse.json({ error: 'News not found' }, { status: 404 });
+    return NextResponse.json(updated);
+  } catch (err: any) {
+    if (err?.code === 'P2025') {
+      return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
+    console.error('Error updating news:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-// DELETE a specific news item by ID (Admin protected)
-export async function DELETE(request: Request, context: any) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || session.user?.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
-  // Acknowledge request to satisfy Next.js static analysis
-  const _ = request.method;
+// DELETE /api/news/[id]
+export async function DELETE(_req: Request, context: any) {
   try {
-    const { id } = context.params;
-    await prisma.news.delete({
-      where: { id },
-    });
+    const id = context?.params?.id as string;
+    if (!id) return NextResponse.json({ error: 'Bad Request' }, { status: 400 });
 
-    return new NextResponse(null, { status: 204 }); // No Content
-  } catch (error) {
-    console.error(`Error deleting news ${context.params.id}:`, error);
-    if (error.code === 'P2025') {
-        return NextResponse.json({ error: 'News not found' }, { status: 404 });
+    await prisma.news.delete({ where: { id } });
+    return new NextResponse(null, { status: 204 });
+  } catch (err: any) {
+    if (err?.code === 'P2025') {
+      return NextResponse.json({ error: 'News not found' }, { status: 404 });
     }
+    console.error('Error deleting news:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -3,15 +3,17 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
+import { unstable_noStore as noStore } from 'next/cache';
+export const dynamic = 'force-dynamic';
 export default function AdminPage() {
+   noStore();
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return; // 세션 체크 중일 때는 대기
-    if (!session || session.user?.role !== "admin") {
-      router.replace("/admin/login?callbackUrl=/admin");
+    if (status === "loading") return;
+    if (!session) {
+      router.replace("/login?callbackUrl=/admin");
     }
   }, [session, status, router]);
 
