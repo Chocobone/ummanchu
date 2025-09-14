@@ -25,8 +25,8 @@ export default function NewsAdminPage() {
   // Redirect if not authenticated or not admin
   useEffect(() => {
     if (status === 'loading') return;
-    if (!session || session.user?.role !== 'admin') {
-      router.push('/admin/login?callbackUrl=/admin/news');
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/admin/news');
     }
   }, [session, status, router]);
 
@@ -47,7 +47,7 @@ export default function NewsAdminPage() {
   };
 
   useEffect(() => {
-    if (session?.user?.role === 'admin') {
+    if (status === 'authenticated') {
       fetchNews();
     }
   }, [session]);
@@ -70,7 +70,7 @@ export default function NewsAdminPage() {
     }
   };
 
-  if (status === 'loading' || !session || session.user?.role !== 'admin') {
+  if (status === 'unauthenticated') {
     return <div>Loading authentication...</div>;
   }
   if (loading) return <div>Loading news...</div>;
