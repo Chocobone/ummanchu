@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { unstable_noStore as noStore } from 'next/cache';
 type Contact = {
   labNameKo: string;
   labNameEn: string;
@@ -11,6 +11,7 @@ type Contact = {
 };
 
 export default function ManageContactPage() {
+   noStore();
   const [contact, setContact] = useState<Partial<Contact>>({});
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);

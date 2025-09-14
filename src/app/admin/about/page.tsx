@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-
+import { unstable_noStore as noStore } from 'next/cache';
 type AboutContent = {
   heading: string;
   tagline: string;
@@ -17,6 +17,7 @@ type AboutContent = {
 };
 
 export default function ManageAboutPage() {
+   noStore();
   const [content, setContent] = useState<Partial<AboutContent>>({});
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);

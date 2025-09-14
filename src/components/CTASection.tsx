@@ -99,32 +99,57 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
       <ResearchSection researchData={researchData} /> 
 
       {/* News Section */}
-      <hr className="border-t border-foreground/20 my-0" />
-      <section id="news" className="bg-background text-foreground-rgb py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-2">{content.newsTitle || 'NEWS'}</h2>
-          <p className="mb-8 text-foreground-rgb/60">{content.newsSubtitle || 'SSIL의 최신 소식과 공지사항을 확인하세요.'}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {newsData && newsData.length > 0 ? (
-              newsData.map((item) => (
-                <div key={item.id} className="border border-border-rgb/20 rounded-lg overflow-hidden">
-                  <div className="relative w-full h-48">
-                    <Image src={item.imageUrl || "/images/news_placeholder.jpg"} alt={item.title} fill className="object-cover" />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                    <div className="text-sm text-foreground-rgb/70 mb-2 prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.description }} />
-                    <Link href={`/news/${item.id}`} className="text-brand font-semibold text-sm hover:text-brand-rgb/90">READ MORE »</Link>
-                    <p className="text-xs mt-2 text-foreground-rgb/50">{new Date(item.publishedAt).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="col-span-3 text-center text-foreground-rgb/60">No news available.</p>
-            )}
+      {/* News Section */}
+<hr className="border-t border-foreground/20 my-0" />
+<section id="news" className="bg-background text-foreground-rgb py-24 px-4">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-4xl font-bold mb-2">{content.newsTitle || 'NEWS'}</h2>
+    <p className="mb-8 text-foreground-rgb/60">
+      {content.newsSubtitle || 'SSIL의 최신 소식과 공지사항을 확인하세요.'}
+    </p>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {Array.isArray(newsData) && newsData.length > 0 ? (
+        newsData.map((item) => (
+          <div key={item.id} className="border border-border-rgb/20 rounded-lg overflow-hidden">
+            <div className="relative w-full h-48">
+              {item.imageUrl ? (
+                <Image
+                  src={item.imageUrl}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-foreground/10" />
+              )}
+            </div>
+
+            <div className="p-4">
+              <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+              <div
+                className="text-sm text-foreground-rgb/70 mb-2 prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: item.description }}
+              />
+              <Link
+                href={`/news/${item.id}`}
+                className="text-brand font-semibold text-sm hover:text-brand-rgb/90"
+              >
+                READ MORE »
+              </Link>
+              <p className="text-xs mt-2 text-foreground-rgb/50">
+                {new Date(item.publishedAt).toLocaleDateString()}
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        ))
+      ) : (
+        <p className="col-span-3 text-center text-foreground-rgb/60">No news available.</p>
+      )}
+    </div>
+  </div>
+</section>
+
 
       
     </>

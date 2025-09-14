@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image'; // Import next/image
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-
+import { unstable_noStore as noStore } from 'next/cache';
 // Define the type for a news item based on our schema
 interface News {
   id: string;
@@ -15,6 +15,7 @@ interface News {
 }
 
 export default function NewsAdminPage() {
+  noStore();
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
