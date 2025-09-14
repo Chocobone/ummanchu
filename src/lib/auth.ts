@@ -1,10 +1,23 @@
 // src/lib/auth.ts
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
-const prisma = new PrismaClient();
+function safeEqual(a: string, b: string) {
+  const abuf = Buffer.from(a);
+  const bbuf = Buffer.from(b);
+  if (abuf.length !== bbuf.length) return false;
+  return crypto.timingSafeEqual(abuf, bbuf);
+}
+
+// ADMIN_PASSWORD가 bcrypt 해시면 bcrypt 비교, 아니면 안전한 평문 비교
+async function checkPassword(input: string, secret: string) {
+  if (secret.startsWith("$2a$") || secret.startsWith("$2b$") || secret.startsWith("$2y$")) {
+    return bcrypt.compare(input, secret);
+  }
+  return safeEqual(input, secret);
+}
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -16,23 +29,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-        if (!user) return null;
-        if (user.role !== "admin") return null;
-        const ok = await bcrypt.compare(credentials.password, user.password);
-        if (!ok) return null;
-        return { id: String(user.id), email: user.email, role: user.role };
+        if (!adminEmail || !adminPassword) return null;
+
+        const emailOK = safeEqual(credentials.email, adminEmail);
+        const pwOK = await checkPassword(credentials.password, adminPassword);
+        if (!emailOK || !pwOK) return null;
+
+        // role 없이 최소 정보만
+        return { id: "admin-1", email: adminEmail, name: "Administrator" } as any;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = (user as any).role;
-      return token;
+      if (user) {
+        token.email = (user as any).email;
+        token.name = (user as any).name;
+      }
+      return token as any;
     },
     async session({ session, token }) {
-      if (session.user) (session.user as any).role = token.role;
+      if (session.user) {
+        session.user.email = (token as any).email;
+      }
       return session;
     },
   },

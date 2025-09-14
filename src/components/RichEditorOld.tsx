@@ -41,7 +41,7 @@ export default function RichEditor({ initialValue = "", onChange }: Props) {
         });
       }
     })();
-  }, [onChange]);
+  }, [RichEditor, onChange]);
 
   // 2) 초기값 1회 세팅
   useEffect(() => {

@@ -98,16 +98,19 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                     </div>
 
                     {/* 이미지 */}
-                    {project.imageUrl && (
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden mt-4">
-                        <Image
-                          src={project.imageUrl}
-                          alt={project.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
+                 
+                  {project.imageUrl && (
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden mt-4">
+           <Image
+            src={project.imageUrl.startsWith('/') ? project.imageUrl : project.imageUrl}
+           alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 66vw, 100vw"
+                className="object-cover"
+       
+                 />
+             </div>
+              )}
 
                     {/* 프로젝트 타이틀 */}
                     <h2 className="text-2xl lg:text-3xl font-bold">

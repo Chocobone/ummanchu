@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* 본문 - 기본 글자색 검정으로 강제 */}
-      <main className="flex-1 p-8 overflow-y-auto text-black">
+     <main className="flex-1 p-8 overflow-y-auto text-black [color-scheme:light]">
         {children}
       </main>
     </div>

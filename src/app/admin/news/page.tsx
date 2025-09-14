@@ -26,9 +26,9 @@ export default function NewsAdminPage() {
   useEffect(() => {
     if (status === 'loading') return;
     if (status === 'unauthenticated') {
-      router.push('/login?callbackUrl=/admin/news');
+      router.replace('/login?callbackUrl=/admin/news');
     }
-  }, [session, status, router]);
+  }, [ status, router]);
 
   const fetchNews = async () => {
     try {
@@ -50,7 +50,7 @@ export default function NewsAdminPage() {
     if (status === 'authenticated') {
       fetchNews();
     }
-  }, [session]);
+  }, [status]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
