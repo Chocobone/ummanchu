@@ -32,8 +32,8 @@ export default function RootLayout({ children }) {
     __html: "html{background:#0a0a0a;color:#ededed}"
   }}
 />
-+        {/* 무조건 다크로 시작 (저장 X) */}
-+      <Script id="debug-dark" strategy="afterInteractive">{`
+       
+      <Script id="debug-dark" strategy="afterInteractive">{`
   (function(){
     var html = document.documentElement;
     new MutationObserver(function(){

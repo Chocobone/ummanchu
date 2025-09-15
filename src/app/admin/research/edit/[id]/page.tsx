@@ -35,6 +35,8 @@ export default function EditResearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -53,6 +55,7 @@ export default function EditResearchPage() {
           endDate: data.endDate ? new Date(data.endDate).toISOString().split('T')[0] : '',
         });
         setContentHtml(data.contentHtml ?? '');
+        setImageUrl(data.imageUrl || '');
       } catch (err: any) {
         setError(err.message ?? 'Unknown error');
       } finally {
@@ -64,6 +67,29 @@ export default function EditResearchPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setIsUploading(true);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Failed to upload image');
+      const data = await res.json();
+      setImageUrl(data.url); // 업로드 후 받은 url 저장
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   async function handleSubmit(e: React.FormEvent) {
@@ -79,7 +105,7 @@ export default function EditResearchPage() {
           title: formData.title || '',
           description: formData.description || null,
           contentHtml: contentHtml || null,
-          imageUrl: formData.imageUrl || null,           // ✅ URL만 전송
+          imageUrl: imageUrl || null,           // ✅ URL만 전송
           status: (formData.status as ResearchStatus) || 'IN_PROGRESS',
           startDate: formData.startDate || null,
           endDate: formData.endDate || null,
@@ -118,15 +144,31 @@ export default function EditResearchPage() {
           <RichEditor value={contentHtml} onChange={setContentHtml} />
         </div>
 
-        {/* ✅ URL 입력 + 미리보기 */}
+        {/* Thumbnail Upload */}
         <div>
-          <label htmlFor="imageUrl" className="block text-gray-700 font-bold mb-2">Image URL</label>
-          <input id="imageUrl" name="imageUrl" value={(formData.imageUrl as string) || ''} onChange={handleChange} className="w-full p-2 border rounded" placeholder="/images/foo.jpg 또는 https://example.com/foo.jpg" />
-          {(formData.imageUrl as string) ? (
-            <div className="relative mt-3 h-40 w-full max-w-md overflow-hidden rounded">
-              <Image src={formData.imageUrl as string} alt="Preview" fill className="object-cover" />
+          <label className="block text-gray-700 font-bold mb-2">썸네일 이미지 (Optional)</label>
+          {imageUrl ? (
+            <div className="space-y-2">
+              <img src={imageUrl} alt="Thumbnail preview" className="w-48 h-32 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => setImageUrl(null)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Change Image
+              </button>
             </div>
-          ) : null}
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={isUploading}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                         file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
+                         hover:file:bg-blue-100"
+            />
+          )}
         </div>
 
         <div>

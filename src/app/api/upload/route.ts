@@ -7,10 +7,11 @@ import path from 'path';
 import { prisma } from '@/lib/prisma';
 
 export const runtime = 'nodejs';
-
+const UPLOAD_PATH = process.env.UPLOAD_PATH
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.role !== 'admin') {
+  if (!session || session.user?.email !== ADMIN_EMAIL) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -29,16 +30,16 @@ export async function POST(request: Request) {
     const m = String(now.getMonth() + 1).padStart(2, '0');
 
     const safeName = file.name.replace(/[^\w.\-]/g, '_');
-    const filename = `${Date.now()}_${safeName}`;
+    const filename = `${Date.now()}-${safeName}`;
 
     // /public/uploads/RESEARCH/2025/08
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', ownerType, String(y), String(m));
-    await fs.mkdir(uploadDir, { recursive: true });
+    // const uploadDir = path.join(UPLOAD_PATH, 'public', filename);
+    // await fs.mkdir(uploadDir, { recursive: true });
 
-    const savePath = path.join(uploadDir, filename);
+    const savePath = path.join(UPLOAD_PATH, filename);
     await fs.writeFile(savePath, buffer);
 
-    const url = `/uploads/${ownerType}/${y}/${m}/${filename}`;
+    const url = `/api/files/${filename}`;
 
     // 🔹 DB 매핑(선택) — ownerId가 있을 때만 기록(수정 페이지에서 유용)
     if (ownerId && (ownerType === 'RESEARCH' || ownerType === 'NEWS')) {

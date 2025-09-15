@@ -21,6 +21,7 @@ export default function NewNewsPage() {
   const [publishedAt, setPublishedAt] = useState(new Date().toISOString().split('T')[0]); // Default to today
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -31,6 +32,29 @@ export default function NewNewsPage() {
       router.push('/login?callbackUrl=/admin/news/new');
     }
   }, [session, status, router]);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setIsUploading(true);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Failed to upload image');
+      const data = await res.json();
+      setImageUrl(data.url); // 업로드 후 받은 url 저장
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,16 +117,33 @@ export default function NewNewsPage() {
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="imageUrl" className="block text-gray-700 font-bold mb-2">Image URL (Optional)</label>
-          <input
-            id="imageUrl"
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+        {/* Thumbnail Upload */}
+        <div>
+          <label className="block text-gray-700 font-bold mb-2">썸네일 이미지 (Optional)</label>
+          {imageUrl ? (
+            <div className="space-y-2">
+              <img src={imageUrl} alt="Thumbnail preview" className="w-48 h-32 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => setImageUrl(null)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Change Image
+              </button>
+            </div>
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={isUploading}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                         file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
+                         hover:file:bg-blue-100"
+            />
+          )}
         </div>
+
 
         <div className="mb-4">
           <label htmlFor="publishedAt" className="block text-gray-700 font-bold mb-2">Published Date</label>

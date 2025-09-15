@@ -9,7 +9,6 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
   const [current, setCurrent] = useState(0);
   
   const images = sliderImages?.map(img => img.imageUrl) || [];
-
   const next = useCallback(() => {
     setCurrent(c => (c + 1) % (images.length || 1));
   }, [images.length]);

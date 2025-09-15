@@ -3,6 +3,9 @@ import prisma from '@/lib/prisma';
 import fs from 'fs/promises';
 import path from 'path';
 export const dynamic = 'force-dynamic';
+
+const UPLOAD_PATH = process.env.UPLOAD_PATH
+
 // GET - 모든 슬라이더 이미지 조회
 export async function GET() {
   try {
@@ -33,16 +36,16 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Generate a unique filename
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const filename = `slider-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
     
     // Define the path to save the file
-    const savePath = path.join(process.cwd(), 'public/slider', filename);
+    const savePath = path.join(UPLOAD_PATH, filename);
 
     // Save the file to the filesystem
     await fs.writeFile(savePath, buffer);
 
     // Create a record in the database
-    const imageUrl = `/slider/${filename}`; // The public URL path
+    const imageUrl = `/api/files/${filename}`; // The public URL path
     const newImage = await prisma.sliderImage.create({
       data: {
         imageUrl,
