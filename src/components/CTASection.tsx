@@ -98,13 +98,13 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
       <ResearchSection researchData={researchData} /> 
 
       {/* News Section */}
-      {/* News Section */}
+   
 
 <section id="news" className="bg-background text-foreground-rgb py-24 px-4">
   <div className="max-w-7xl mx-auto">
     <h2 className="text-4xl font-bold mb-2">{content.newsTitle || 'NEWS'}</h2>
     <p className="mb-8 text-foreground-rgb/60">
-      {content.newsSubtitle || 'SSIL의 최신 소식과 공지사항을 확인하세요.'}
+      {content.newsSubtitle || 'Check out our latest news and announcements.'}
     </p>
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -186,6 +186,12 @@ const ResearchSection = ({ researchData }) => {
 
   return (
     <section id="research" className="bg-background text-foreground py-24 px-4">
+         <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl font-bold mb-2">Our Mission</h2>
+        <p className="mb-8 text-foreground-rgb/60">
+        Recent highlights from SSIL’s research and missions.
+        </p>
+           </div>
       <div className="max-w-6xl mx-auto relative overflow-hidden rounded-lg">
         <div className="relative h-[500px] w-full">
           <Image src={current.imageUrl || "/images/main2.jpg"} alt={current.title} fill className="object-cover z-0" />
