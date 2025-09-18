@@ -8,12 +8,12 @@ import React ,{ useEffect, useState } from "react";
 const Header = () => {
   const pathname = usePathname();
   const navItems = [
-    { name: "home", path: "/" },
-    { name: "about", path: "/about" },
-    { name: "research", path: "/research" },
-    { name: "news", path: "/news" },
-    { name: "contact", path: "/contact" },
-    { name: "people", path: "/people" }
+    { name: "HOME", path: "/" },
+    { name: "ABOUT", path: "/about" },
+    { name: "RESEARCH", path: "/research" },
+    { name: "NEWS", path: "/news" },
+    { name: "CONTACT", path: "/contact" },
+    { name: "PEOPLE", path: "/people" }
 
   ];
 const [isDark, setIsDark] = useState(false);
