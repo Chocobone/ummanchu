@@ -221,9 +221,9 @@ export default function ManageHomePage() {
               <div key={image.id} className="border rounded p-2">
                 <div className="relative w-full h-32 rounded overflow-hidden">
                   <Image src={image.imageUrl} alt={image.altText || 'Slider image'} fill className="object-cover"/>
+                <button onClick={() => handleDeleteImage(image.id)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">X</button>
                 </div>
                 <p className="text-xs truncate mt-2" title={image.imageUrl}>{image.imageUrl}</p>
-                <button onClick={() => handleDeleteImage(image.id)} className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">X</button>
               </div>
             ))}
           </div>

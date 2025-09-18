@@ -66,14 +66,14 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
                       {/* 이미지 */}
                       <div className="flex-shrink-0 self-center lg:self-start">
                         <Image
-                          src={profile.image || "/images/placeholder.png"}
+                          src={profile.image || "/images/main2.jpg"}
                           alt={profile.name}
                           width={160}
                           height={160}
                           className="w-40 h-40 rounded-lg object-cover bg-muted block lg:hidden"
                         />
                         <Image
-                          src={profile.image || "/images/placeholder.png"}
+                          src={profile.image || "/images/main2.jpg"}
                           alt={profile.name}
                           width={192}
                           height={192}
