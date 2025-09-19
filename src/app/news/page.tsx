@@ -46,14 +46,23 @@ export default async function NewsPage() {
                   key={item.id}
                  className="flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 bg-card-rgb/20 border border-border-rgb/10"
                 >
-                  <div className="relative w-full h-48">
-                    <Image
-                      src={item.imageUrl || "/images/news_placeholder.jpg"}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                 <div className="relative w-full h-48">
+  {item.imageUrl ? (
+    <Image
+      src={item.imageUrl}
+      alt={item.title}
+      fill
+      className="object-cover"
+      // 필요 시: unoptimized // <- 원격 이미지 도메인 셋업 안했으면 임시로
+    />
+  ) : (
+    // 이미지가 없을 때: 회색 박스만 보여줌 (텍스트도 제거 가능)
+    <div className="absolute inset-0 flex items-center justify-center bg-muted/30 text-muted-foreground text-xs">
+      {/* 'No image' 문구도 싫으면 이 div를 빈 div로 두면 됨 */}
+      No image
+    </div>
+  )}
+</div>
                   <CardContent className="p-4 flex-grow space-y-2">
                      <h3 className="text-lg font-bold text-foreground">{item.title}</h3>
                      <p className="text-sm text-foreground-rgb/70 line-clamp-3">
