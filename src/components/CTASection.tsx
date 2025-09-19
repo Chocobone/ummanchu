@@ -33,48 +33,53 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
 
   return (
     <>
-      {/* Hero Section - Left Aligned */}
-      <section className="relative h-screen w-full flex items-center text-foreground overflow-hidden">
-        {/* Background Image Slider */}
-        {images.length > 0 && (
-          <Image
-            key={current}
-            src={images[current]}
-            alt={sliderImages[current]?.altText || `slide-${current}`}
-            fill
-            priority
-            className="object-cover z-10 animate-kenburns"
-          />
-        )}
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-overlay-rgb/60 z-20"></div>
+   {/* Hero Section - Left Aligned */}
+<section className="relative h-screen w-full flex items-start text-foreground overflow-hidden pt-[120px]">
+  {/* Background Image Slider */}
+  {images.length > 0 && (
+    <Image
+      key={current}
+      src={images[current]}
+      alt={sliderImages[current]?.altText || `slide-${current}`}
+      fill
+      priority
+      className="object-cover z-10 animate-kenburns brightness-[.65] contrast-110"
+    />
+  )}
 
-        {/* Text Content */}
-        <div className="relative z-30 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24 text-left space-y-6">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}>
-            {content.heroTitle || 'SSIL'}
-            <br />
-            <span className="text-brand">
-              {content.heroSubtitle || 'Space Science Instrument Laboratory'}
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-foreground-rgb/90 max-w-2xl" style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}>
-            {content.heroParagraph || 'From time immemorial, people have expressed a wide spectrum of interest in outer space... The Space Science Instrument Laboratory (SSIL) is dedicated to research precisely focused on meeting this need.'}
-          </p>
-        </div>
+  {/* 장식 이미지: 섹션 경계 내에서만 보이게 */}
+  <div className="absolute inset-0 z-10 pointer-events-none">
+    <Image
+      src="/main/HomepageMain.png"
+      alt=""
+      fill
+       className="object-cover brightness-[.65] contrast-110"
+      priority
+    />
+  </div>
 
-        {/* Slider Controls */}
-        {images.length > 1 && (
-          <>
-            <button onClick={prev} className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 p-3 bg-foreground-rgb/10 hover:bg-foreground-rgb/20 rounded-full backdrop-blur-sm">
-              <ArrowLeft className="w-6 h-6 text-foreground" />
-            </button>
-            <button onClick={handleNext} className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 p-3 bg-foreground-rgb/10 hover:bg-foreground-rgb/20 rounded-full backdrop-blur-sm">
-              <ArrowRight className="w-6 h-6 text-foreground" />
-            </button>
-          </>
-        )}
-      </section>
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 bg-black/55 z-20 "></div>
+
+  {/* Text Content  */}
+  <div className="relative z-30 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24 text-left space-y-6">
+    <h1
+      className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]"
+      style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
+    >
+      {content.heroTitle || 'SSIL'}
+      <br />
+      <span className="text-white">
+        {content.heroSubtitle || 'Space Science Instrument Laboratory'}
+      </span>
+    </h1>
+  </div>
+
+
+
+ 
+</section>
+
 
       {/* About Section */}
   
