@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 
 type ResearchNavItem = {
   label: string;
@@ -79,9 +80,15 @@ const Header = () => {
   return (
     <header className="bg-background-rgb/80 backdrop-blur-md border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-[105px]">
           <Link href="/" className="text-2xl font-bold text-primary">
-            SSIL
+           <Image
+    src={isDark ? "/main/logo_trans_03.png" : "/main/logo_trans_01.png"}
+    alt="SSIL Logo"
+    width={177}
+    height={88}
+    priority
+  />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
