@@ -1,6 +1,9 @@
 'use client';
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
 
+// import Quill from 'quill';
+// import 'quill/dist/quill.snow.css';
+
 export type RichEditorHandle = {
   getHTML: () => string;
   setHTML: (html: string) => void;
@@ -45,8 +48,11 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
     (async () => {
       const Quill = (await import('quill')).default;
       //await import('quill/dist/quill.snow.css');
-
+      const font_list = ['sans-serif', 'serif', 'monospace', 'arial', 'roboto', 'poppins', 'open-sans'];
+      const font = Quill.import('formats/font') as {whitelist : string[]};
+      font.whitelist = font_list;
       const toolbar = [
+        [{ font: font_list }],
         [{ header: [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ list: 'ordered' }, { list: 'bullet' }],
