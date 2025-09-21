@@ -1,37 +1,23 @@
-// src/middleware.ts
-import { withAuth } from "next-auth/middleware";
+// middleware.ts (프로젝트 루트 또는 src 중 한 군데만! — 딱 1개)
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export default withAuth(
-  function middleware(req: NextRequest) {
-    // 여기까지 들어온 건 모두 /admin 경로
-    const token = (req as any).nextauth?.token;
-    const isAdmin = token?.role === "admin";
+export async function middleware(req: NextRequest) {
+  // NextAuth와 동일한 SECRET 사용
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    // 로그인은 했지만 admin이 아니면 홈으로
-    if (!isAdmin) {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      // ★ /admin 은 "로그인 필수"
-      authorized: ({ token, req }) => {
-        if (req.nextUrl.pathname.startsWith("/admin")) {
-          return !!token; // 로그인 안되어 있으면 false -> 자동으로 /login?callbackUrl=... 로 보냄
-        }
-        return true;
-      },
-    },
-    pages: {
-      signIn: "/login", // 로그인 페이지
-    },
+  // 미로그인 → /login?callbackUrl=<현재경로+쿼리> (절대 URL로)
+  if (!token) {
+    const current = req.nextUrl.pathname + req.nextUrl.search;
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("callbackUrl", current);
+    return NextResponse.redirect(loginUrl);
   }
-);
 
-// '/admin' 루트와 하위 전부 매칭
+  return NextResponse.next();
+}
+
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };
