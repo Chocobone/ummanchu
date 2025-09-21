@@ -24,18 +24,27 @@ export default function LoginForm() {
     setIsSubmitting(true);
     setError(null);
 
-    const result = await signIn('credentials', {
-      redirect: false,
+    try {
+    const result = await signIn("credentials", {
       email,
       password,
+      callbackUrl,     // 반드시 전달
+      redirect: false // NextAuth가 url을 반환하도록
     });
 
     if (result?.error) {
-      setError('Invalid email or password. Please try again.');
-      setIsSubmitting(false);
-    } else if (result?.ok) {
-      router.push(callbackUrl);
+      setError("Invalid email or password. Please try again.");
+    } else {
+      // NextAuth가 알려준 목적지로 이동 (없으면 fallback)
+      router.replace(result?.url ?? callbackUrl);
+      router.refresh();
     }
+  } catch (_) {
+    setError("Unexpected error. Please try again.");
+  } finally {
+    // ★ 성공이든 실패든 로딩 해제 (무한로딩 방지)
+    setIsSubmitting(false);
+  }
   };
 
   return (
