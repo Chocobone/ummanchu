@@ -48,3 +48,77 @@ body {
 /* (기존) 켄번스 애니메이션은 그대로 */
 @keyframes kenburns { /* ... */ }
 .animate-kenburns { animation: kenburns 15s ease-out forwards; }
+
+
+/* 
+===============================
+  텍스트 에디터 글꼴 클래스 정의
+===============================
+*/
+.ql-snow .ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+.ql-snow .ql-font-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.ql-snow .ql-font-monospace {
+  font-family: 'Courier New', monospace;
+}
+.ql-snow .ql-font-sans-serif {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+.ql-snow .ql-font-roboto {
+  font-family: Roboto, sans-serif;
+}
+.ql-snow .ql-font-poppins {
+  font-family: Poppins, sans-serif;
+}
+.ql-snow .ql-font-open-sans {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* 폰트 드롭다운 메뉴에 폰트 이름을 표시합니다. */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+  content: 'Arial';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+  content: 'Serif';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+  content: 'Monospace';
+}
+
+/* 나머지 폰트도 이와 같은 방식으로 추가합니다. */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="sans-serif"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="sans-serif"]::before {
+  content: 'Sans Serif';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+  content: 'Roboto';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before {
+  content: 'Poppins';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="open-sans"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="open-sans"]::before {
+  content: 'Open Sans';
+}
+
+/* 기본 폰트도 설정해줘야 합니다. */
+.ql-snow .ql-picker.ql-font .ql-picker-label::before {
+  content: 'Sans Serif'; /* 기본 폰트 명칭 */
+}
+.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+  content: 'Sans Serif'; /* 기본 폰트 명칭 */
+}
+
