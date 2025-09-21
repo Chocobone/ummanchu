@@ -1,5 +1,5 @@
 'use client';
-
+console.log('[LoginForm] mounted'); 
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -21,6 +21,7 @@ export default function LoginForm() {
   }, [authError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('[submit] start');
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);

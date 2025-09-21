@@ -60,17 +60,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-      async redirect({ url, baseUrl }) {
-    // 같은 오리진의 상대/절대 경로만 허용
-      console.log("redirect 콜백")
-    if (url.startsWith("/")) return `${baseUrl}${url}`;
-    try {
-      const u = new URL(url);
-      if (u.origin === baseUrl) return url;
-    } catch {}
-    // 그 외는 기본
-    return baseUrl;
-  }
+ 
   },
   pages: { signIn: "/login" },
   secret: process.env.NEXTAUTH_SECRET,
