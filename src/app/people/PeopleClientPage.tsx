@@ -113,9 +113,9 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
                           <h3 className="text-sm text-muted-foreground mb-1">
                             Description
                           </h3>
-                          <p className="leading-relaxed">
-                            {F(profile.description)}
-                          </p>
+                          <p className="whitespace-pre-line leading-relaxed">
+                                  {(profile.description)}
+                             </p>
                         </div>
                       </div>
                     </section>
