@@ -131,10 +131,7 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
 
             <div className="p-4">
               <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-              <div
-                className="text-sm text-foreground-rgb/70 mb-2 prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: item.description }}
-              />
+
               <Link
                 href={`/news/${item.id}`}
                 className="text-brand font-semibold text-sm hover:text-brand-rgb/90"
