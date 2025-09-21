@@ -49,17 +49,20 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.email = (user as any).email;
         token.name = (user as any).name;
+          console.log("JWT 콜백")
       }
       return token as any;
     },
     async session({ session, token }) {
       if (session.user) {
+         console.log("세션 콜백")
         session.user.email = (token as any).email;
       }
       return session;
     },
       async redirect({ url, baseUrl }) {
     // 같은 오리진의 상대/절대 경로만 허용
+      console.log("redirect 콜백")
     if (url.startsWith("/")) return `${baseUrl}${url}`;
     try {
       const u = new URL(url);
