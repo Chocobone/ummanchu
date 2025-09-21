@@ -52,11 +52,13 @@ const authOptions: NextAuthOptions = {
       if (user) {
         token.email = (user as any).email;
         token.name = (user as any).name;
+            console.log("api route.ts jwt 콜백")
       }
       return token as any;
     },
     async session({ session, token }) {
       if (session.user) {
+            console.log("api route.ts 세션 콜백")
         session.user.email = (token as any).email;
      
       }
@@ -64,6 +66,7 @@ const authOptions: NextAuthOptions = {
     },
       async redirect({ url, baseUrl }) {
      // 상대 경로는 허용 → /admin/research OK
+       console.log("api route.ts 콜백")
      if (url.startsWith("/")) return `${baseUrl}${url}`;
      // 같은 오리진의 절대 URL도 허용
      try {

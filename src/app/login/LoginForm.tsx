@@ -17,6 +17,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (authError) setError('Invalid email or password. Please try again.');
+   console.log("이메일 혹은 패스워드가 틀림 다시 시도")
   }, [authError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,14 +34,17 @@ export default function LoginForm() {
     });
 
     if (result?.error) {
+       console.log("이메일 혹은 패스워드가 틀림 다시 시도")
       setError("Invalid email or password. Please try again.");
     } else {
       // NextAuth가 알려준 목적지로 이동 (없으면 fallback)
       router.replace(result?.url ?? callbackUrl);
+       console.log("NextAuth가 알려준 목적지로 가는중")
       router.refresh();
     }
   } catch (_) {
     setError("Unexpected error. Please try again.");
+     console.log("에러 남 로그인 폼 에러")
   } finally {
     // ★ 성공이든 실패든 로딩 해제 (무한로딩 방지)
     setIsSubmitting(false);
