@@ -62,6 +62,17 @@ const authOptions: NextAuthOptions = {
       }
       return session;
     },
+      async redirect({ url, baseUrl }) {
+     // 상대 경로는 허용 → /admin/research OK
+     if (url.startsWith("/")) return `${baseUrl}${url}`;
+     // 같은 오리진의 절대 URL도 허용
+     try {
+       const u = new URL(url);
+       if (u.origin === baseUrl) return url;
+     } catch {}
+     // 그 외는 기본 홈으로
+     return baseUrl;
+   }
   },
   pages: { signIn: "/login" },
   secret: process.env.NEXTAUTH_SECRET,
