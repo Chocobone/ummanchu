@@ -126,7 +126,7 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
 
                     {/* contentHtml */}
                     {project.contentHtml && (
-                      <div className="bg-card p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
+                      <div className="p-6 rounded-lg prose dark:prose-invert max-w-none mt-4">
                         <div dangerouslySetInnerHTML={{ __html: project.contentHtml }} />
                       </div>
                     )}
