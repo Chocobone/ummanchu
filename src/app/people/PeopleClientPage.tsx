@@ -56,7 +56,7 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
               </nav>
 
               {/* 2) 중앙 칸: profiles 리스트 (col-span-2) */}
-              <div className="col-span-2 space-y-10 overflow-y-auto">
+              <div className="col-span-3 space-y-10 overflow-y-auto">
                 {profiles.length > 0 ? (
                   profiles.map((profile) => (
                     <section
