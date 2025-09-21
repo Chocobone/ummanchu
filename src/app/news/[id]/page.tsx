@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
-
+export const dynamic = 'force-dynamic';
+import { unstable_noStore as noStore } from 'next/cache';
 // SSG 시 필요한 파라미터 목록을 미리 생성
 export async function generateStaticParams() {
   const newsItems = await prisma.news.findMany({
@@ -16,6 +17,7 @@ export async function generateStaticParams() {
 
 // 이 컴포넌트는 반드시 async 로 선언해야 합니다!
 export default async function NewsDetailPage({ params }: any) {
+  noStore();
   const { id } = params;
 
   const news = await prisma.news.findUnique({
@@ -33,8 +35,8 @@ export default async function NewsDetailPage({ params }: any) {
         <article className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           {/* 제목 + 메타 */}
           <header className="text-center space-y-2">
-            <h1 className="text-4xl font-bold text-white">{news.title}</h1>
-            <p className="text-sm text-white/70">
+            <h1 className="text-4xl font-bold text-foreground">{news.title}</h1>
+            <p className="text-sm text-foreground">
               Published on {new Date(news.publishedAt).toLocaleDateString()}
             </p>
           </header>
