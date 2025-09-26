@@ -78,18 +78,61 @@ const Header = () => {
     })();
   }, []);
 
+  const [isHidden, setIsHidden] = useState(false);
+  const lastYRef = useRef(0);
+  const tickingRef = useRef(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY || 0;
+      // requestAnimationFrame으로 스로틀링
+      if (!tickingRef.current) {
+        window.requestAnimationFrame(() => {
+          const lastY = lastYRef.current;
+          const delta = y - lastY;
+
+          // 상단 근처에서는 항상 보여주기
+          if (y < 80) {
+            setIsHidden(false);
+          } else {
+            // 드롭다운 열려있으면 숨기지 않음
+            if (!open) {
+              // 스크롤을 꽤 내리고 있을 때만 숨김 (민감도 조절: |delta| > 6)
+              if (delta > 6) setIsHidden(true);       // 아래로 스크롤 → 숨김
+              else if (delta < -6) setIsHidden(false); // 위로 스크롤 → 노출
+            }
+          }
+
+          lastYRef.current = y;
+          tickingRef.current = false;
+        });
+        tickingRef.current = true;
+      }
+    };
+
+    // 초기값
+    lastYRef.current = window.scrollY || 0;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [open]);
+
   return (
-    <header className="bg-background-rgb/80 backdrop-blur-md border-b sticky top-0 z-50">
+    <header
+      className={[
+        "backdrop-blur-md border-b sticky top-0 z-50 transition-transform duration-300 will-change-transform",
+        isHidden ? "-translate-y-full" : "translate-y-0",
+      ].join(" ")}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[105px]">
           <Link href="/" className="text-2xl font-bold text-primary">
-           <Image
-    src={isDark ? "/main/logo_trans_03.png" : "/main/logo_trans_01.png"}
-    alt="SSIL Logo"
-    width={177}
-    height={88}
-    priority
-  />
+            <Image
+              src={isDark ? "/main/logo_trans_03.png" : "/main/logo_trans_01.png"}
+              alt="SSIL Logo"
+              width={177}
+              height={88}
+              priority
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -98,9 +141,8 @@ const Header = () => {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`uppercase text-sm font-medium transition-colors hover:text-primary-rgb/100 ${
-                    pathname === item.path ? "text-primary" : "text-foreground-rgb/70"
-                  }`}
+                  className={`uppercase text-sm font-medium transition-colors hover:text-primary-rgb/100 ${pathname === item.path ? "text-primary" : "text-foreground-rgb/70"
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -114,9 +156,8 @@ const Header = () => {
                 >
                   <Link
                     href="/research"
-                    className={`uppercase text-sm font-medium transition-colors hover:text-primary-rgb/100 ${
-                      pathname.startsWith("/research") ? "text-primary" : "text-foreground-rgb/70"
-                    }`}
+                    className={`uppercase text-sm font-medium transition-colors hover:text-primary-rgb/100 ${pathname.startsWith("/research") ? "text-primary" : "text-foreground-rgb/70"
+                      }`}
                   >
                     RESEARCH
                   </Link>

@@ -2,8 +2,9 @@ import HeroSection from "@/components/Header";
 import CTASection from "@/components/CTASection";
 import prisma from "@/lib/prisma";
 import { unstable_noStore as noStore } from 'next/cache';
+import Footer from "@/components/Footer";
 export default async function HomePage() {
-    noStore();
+  noStore();
   // Fetch research data
   const allResearch = await prisma.research.findMany({
     orderBy: { createdAt: 'desc' },
@@ -32,12 +33,13 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <CTASection 
-        researchData={researchData} 
-        newsData={newsData} 
+      <CTASection
+        researchData={researchData}
+        newsData={newsData}
         homeContent={homeContent}
         sliderImages={sliderImages}
       />
+      <Footer />
     </>
   );
 }
