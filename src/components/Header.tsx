@@ -118,7 +118,7 @@ const Header = () => {
   return (
     <header
       className={[
-        "bg-background-rgb/80 backdrop-blur-md border-b sticky top-0 z-50 transition-transform duration-300 will-change-transform",
+        "backdrop-blur-md border-b sticky top-0 z-50 transition-transform duration-300 will-change-transform",
         isHidden ? "-translate-y-full" : "translate-y-0",
       ].join(" ")}
     >

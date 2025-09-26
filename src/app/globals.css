@@ -122,3 +122,19 @@ body {
   content: 'Sans Serif'; /* 기본 폰트 명칭 */
 }
 
+/* 스크롤 효과 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none !important; transform: none !important; opacity: 1 !important; }
+}
+.reveal {
+  opacity: 0;
+  transition: transform .7s ease, opacity .7s ease;
+  will-change: transform, opacity;
+}
+.reveal.from-left  { transform: translateX(-36px); }
+.reveal.from-right { transform: translateX( 36px); }
+/* 화면에 들어오면 보이기 */
+.reveal.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
