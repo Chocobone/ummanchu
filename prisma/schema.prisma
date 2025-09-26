@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum ResearchStatus {
   IN_PROGRESS
   COMPLETED
@@ -17,9 +16,9 @@ model Research {
   id          String         @id @default(cuid())
   title       String
   description String?
-  contentHtml String?   @db.Text
+  contentHtml String?        @db.Text
   imageUrl    String?
-  published   Boolean  @default(false)
+  published   Boolean        @default(false)
   status      ResearchStatus @default(IN_PROGRESS)
   startDate   DateTime?
   endDate     DateTime?
@@ -31,8 +30,8 @@ model Research {
 model News {
   id          String   @id @default(cuid())
   title       String
-  description String    
-  contentHtml String? @db.Text
+  description String
+  contentHtml String?  @db.Text
   imageUrl    String?
   publishedAt DateTime @default(now())
   createdAt   DateTime @default(now())
@@ -78,7 +77,7 @@ model SliderImage {
 }
 
 model Asset {
-  id           String   @id @default(cuid())
+  id           String         @id @default(cuid())
   url          String
   originalName String?
   mime         String?
@@ -87,7 +86,7 @@ model Asset {
   ownerType    AssetOwnerType
   ownerId      String
   tag          String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime       @default(now())
 
   @@index([ownerType, ownerId])
 }
@@ -96,6 +95,7 @@ enum AssetOwnerType {
   RESEARCH
   NEWS
 }
+
 model Contact {
   id          Int      @id @default(autoincrement())
   labNameKo   String
@@ -111,4 +111,19 @@ model AboutContent {
   page      String   @unique // "about", "home" 등
   data      Json // 페이지 컨텐츠 JSON
   updatedAt DateTime @updatedAt
+}
+
+model Publication {
+  id        Int      @id @default(autoincrement())
+  title     String
+  authors   String // "SON HYUN BIN"
+  venue     String? // "Nature", "ICML 2025" 등
+  year      Int
+  month     Int? // 1~12
+  url       String? // 외부 논문 링크
+  pdfUrl    String? // 직접 PDF 링크(옵션)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([year], map: "idx_publication_year")
 }
