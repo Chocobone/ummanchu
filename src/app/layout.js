@@ -3,8 +3,6 @@ import "./globals.css";
 import "quill/dist/quill.snow.css";
 import AuthProvider from "@/components/AuthProvider";
 import Script from "next/script";
-import Footer from "@/components/Footer";  
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,16 +26,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-       <head>
-       <meta name="color-scheme" content="dark light" />
-       <style
-  id="__theme_preload"
-  dangerouslySetInnerHTML={{
-    __html: "html{background:#0a0a0a;color:#ededed}"
-  }}
-/>
-       
-      <Script id="debug-dark" strategy="afterInteractive">{`
+      <head>
+        <meta name="color-scheme" content="dark light" />
+        <style
+          id="__theme_preload"
+          dangerouslySetInnerHTML={{
+            __html: "html{background:#0a0a0a;color:#ededed}"
+          }}
+        />
+
+        <Script id="debug-dark" strategy="afterInteractive">{`
   (function(){
     var html = document.documentElement;
     new MutationObserver(function(){
@@ -45,15 +43,13 @@ export default function RootLayout({ children }) {
     }).observe(html, { attributes: true, attributeFilter: ['class'] });
   })();
 `}</Script>
- </head>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <AuthProvider>{children} 
-      <Footer />
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
-    
+
   );
 }
