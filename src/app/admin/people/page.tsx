@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
+import Loading from '@/components/Loading';
 interface Person {
   id: number;
   name: string;
@@ -53,7 +54,7 @@ export default function ManagePeoplePage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
 
   return (

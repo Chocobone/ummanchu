@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import type { ComponentProps } from 'react';
 import type RichEditorComponent from '@/components/RichEditor';
+import Loading from '@/components/Loading';
 
 const RichEditor = dynamic(() => import('@/components/RichEditor'), {
   ssr: false,
@@ -121,7 +122,7 @@ export default function EditResearchPage() {
     }
   }
 
-  if (isLoading) return <div className="p-4">Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
