@@ -13,7 +13,6 @@ const adminPages = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* 사이드바 - 흰색 텍스트 유지 */}
       <aside className="w-64 bg-gray-800 text-white  flex flex-col justify-between">
         <div>
           <div className="p-4 text-2xl font-bold">Admin Panel</div>
@@ -37,7 +36,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* 본문 - 기본 글자색 검정으로 강제 */}
       <main className="flex-1 p-8 overflow-y-auto text-black [color-scheme:light]">
         {children}
       </main>
