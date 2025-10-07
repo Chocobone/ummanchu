@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { unstable_noStore as noStore } from 'next/cache';
+import Loading from "@/components/Loading";
 type AboutContent = {
   heading: string;
   tagline: string;
@@ -62,7 +63,7 @@ export default function ManageAboutPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) return <Loading />;
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-8">

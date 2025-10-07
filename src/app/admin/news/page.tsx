@@ -6,6 +6,7 @@ import Image from 'next/image'; // Import next/image
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { unstable_noStore as noStore } from 'next/cache';
+import Loading from '@/components/Loading';
 // Define the type for a news item based on our schema
 interface News {
   id: string;
@@ -73,7 +74,7 @@ export default function NewsAdminPage() {
   if (status === 'unauthenticated') {
     return <div>Loading authentication...</div>;
   }
-  if (loading) return <div>Loading news...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
 
   return (
