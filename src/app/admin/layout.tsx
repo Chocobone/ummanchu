@@ -7,7 +7,9 @@ const adminPages = [
   { name: 'News', path: '/admin/news' },
   { name: 'People', path: '/admin/people' },
   { name: 'Contact', path: '/admin/contact' },
-  {name : 'Publication', path: '/admin/publications'}
+  {name : 'Publication', path: '/admin/publications'},
+  {name : 'Tab Management', path: '/admin/board/tabs'},
+  {name : 'Post Management', path: '/admin/board/posts'},
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
