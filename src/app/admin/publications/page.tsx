@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/Loading';
 
 type Publication = {
   id: number;
@@ -47,7 +48,7 @@ export default function ManagePublicationPage() {
     }
   };
 
-  if (loading) return <div>Loading…</div>;
+  if (loading) return <Loading />;
   if (error)   return <div>Error: {error}</div>;
 
   return (

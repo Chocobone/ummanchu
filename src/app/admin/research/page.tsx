@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Loading from '@/components/Loading';
 
 type ResearchStatus = 'IN_PROGRESS' | 'COMPLETED';
 
@@ -47,7 +48,7 @@ export default function ResearchAdminPage() {
     }
   }
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div className="p-4">Error: {error}</div>;
 
   return (

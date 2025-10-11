@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import PersonForm from '@/components/PeopleForm';
+import Loading from '@/components/Loading';
 
 export default function EditPersonPage() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function EditPersonPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
   if (!initialData) return <div>Person not found.</div>
 

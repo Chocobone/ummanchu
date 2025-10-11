@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { unstable_noStore as noStore } from 'next/cache';
+import Loading from "@/components/Loading";
 type Contact = {
   labNameKo: string;
   labNameEn: string;
@@ -56,7 +57,7 @@ export default function ManageContactPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) return <Loading />;
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-8">
