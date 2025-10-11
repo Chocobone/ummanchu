@@ -127,3 +127,30 @@ model Publication {
 
   @@index([year], map: "idx_publication_year")
 }
+
+model BoardTab {
+  id          Int          @id @default(autoincrement())
+  name        String        @unique           // 탭 이름 (예: 공지사항)
+  slug        String        @unique           // URL-friendly 이름 (예: notice)
+  description String?       @db.Text
+  order       Int           @default(0)       // 탭 순서 제어용
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  posts       BoardPost[]                      // 1:N 관계
+}
+
+model BoardPost {
+  id          String       @id @default(cuid())
+  title       String
+  description String
+  contentHtml String?      @db.Text
+  imageUrl    String?
+  published   Boolean      @default(false)
+  publishedAt DateTime? 
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tabId       Int
+  tab         BoardTab     @relation(fields: [tabId], references: [id])
+}

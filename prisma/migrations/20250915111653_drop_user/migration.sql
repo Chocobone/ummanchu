@@ -5,4 +5,4 @@
 
 */
 -- DropTable
--- DROP TABLE "public"."User";
+DROP TABLE "public"."User";
