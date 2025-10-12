@@ -17,7 +17,7 @@ function createPreview(html: string, length: number = 100) {
 export default async function BoardCategoryPage({
   params,
 }: {
-  params: { slug: string };
+  params: any
 }) {
   noStore();
 

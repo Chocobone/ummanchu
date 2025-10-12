@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function BoardPostDetail({
   params,
 }: {
-  params: { slug: string; id: string };
+  params: any
 }) {
   const post = await prisma.boardPost.findUnique({
     where: { id: params.id },

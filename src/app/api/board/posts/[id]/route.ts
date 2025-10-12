@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth';
 // ✅ 단일 게시글 조회
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  params: any
 ) {
   try {
     const post = await prisma.boardPost.findUnique({
@@ -28,7 +28,7 @@ export async function GET(
 // ✅ 게시글 수정
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  params: any
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -58,7 +58,7 @@ export async function PUT(
 // ✅ 게시글 삭제
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  params: any
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
