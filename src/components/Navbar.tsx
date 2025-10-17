@@ -100,9 +100,8 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(item.path) ? "text-primary" : "text-muted-foreground"
-                }`}
+                className={`text-sm font-medium transition-colors hover:text-primary ${isActive(item.path) ? "text-primary" : "text-muted-foreground"
+                  }`}
               >
                 {item.label}
               </Link>
@@ -125,11 +124,10 @@ const Navbar = () => {
                     key={item.path}
                     href={item.path}
                     onClick={() => setOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary px-2 py-2 rounded-md ${
-                      isActive(item.path)
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground"
-                    }`}
+                    className={`text-sm font-medium transition-colors hover:text-primary px-2 py-2 rounded-md ${isActive(item.path)
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground"
+                      }`}
                   >
                     {item.label}
                   </Link>
@@ -138,7 +136,7 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
 
-          {isAdmin ? (
+          {isAdmin &&
             <Button
               variant="ghost"
               size="sm"
@@ -148,14 +146,7 @@ const Navbar = () => {
               <LogOut className="h-4 w-4" />
               <span className="ml-2">Logout</span>
             </Button>
-          ) : (
-            <Link href="/login" className="hidden md:block">
-              <Button variant="ghost" size="sm">
-                <LogIn className="h-4 w-4" />
-                <span className="ml-2">Login</span>
-              </Button>
-            </Link>
-          )}
+          }
 
           {mounted && (
             <Button
