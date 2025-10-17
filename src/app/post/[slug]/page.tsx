@@ -16,13 +16,13 @@ function createPreview(html: string, length: number = 100) {
 
 
 export default async function BoardCategoryPage(
-  params, context: any) {
-
+  context : any) {
+const slug = context?.params?.slug;
   noStore();
 
   // ✅ 탭(카테고리) + 게시글 가져오기
   const tab = await prisma.boardTab.findUnique({
-    where: { slug: context.params.slug },
+    where: { slug},
     include: {
       posts: {
         orderBy: { publishedAt: "desc" },
