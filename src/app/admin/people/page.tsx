@@ -19,6 +19,11 @@ export default function ManagePeoplePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+ 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState('ALL');
+  const [sortKey, setSortKey] = useState<keyof Person>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     const fetchPeople = async () => {
@@ -54,17 +59,87 @@ export default function ManagePeoplePage() {
     }
   };
 
+   //  검색 + 필터 적용된 결과
+  const filteredPeople = people.filter((p) => {
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.position.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole =
+      roleFilter === 'ALL' ? true : p.role.toUpperCase() === roleFilter;
+    return matchesSearch && matchesRole;
+  });
+    // 정렬 적용
+  const sortedPeople = [...filteredPeople].sort((a, b) => {
+    const valA = a[sortKey]?.toString().toLowerCase();
+    const valB = b[sortKey]?.toString().toLowerCase();
+    if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+    if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+
   if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
-
-  return (
+return (
     <div className="container mx-auto px-4">
-      <div className="flex justify-between items-center mb-6">
+      {/* 상단 컨트롤 바 */}
+      <div className="flex flex-wrap justify-between items-center mb-6 gap-2">
         <h1 className="text-3xl font-bold">Manage People</h1>
-        <Link href="/admin/people/new" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add New Person
-        </Link>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* 🔍 검색 */}
+          <input
+            type="text"
+            placeholder="Search by name or position"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border rounded px-3 py-2 text-sm"
+          />
+
+          {/* 🎚 Role 필터 */}
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="border rounded px-3 py-2 text-sm"
+          >
+            <option value="ALL">All Roles</option>
+            <option value="CURRENT">Current</option>
+            <option value="ALUMNI">Alumni</option>
+            <option value="PROFESSOR">Professor</option>
+          </select>
+
+          {/* 🔽 정렬 */}
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as keyof Person)}
+            className="border rounded px-3 py-2 text-sm"
+          >
+            <option value="name">Sort by Name</option>
+            <option value="position">Sort by Position</option>
+            <option value="role">Sort by Role</option>
+          </select>
+
+          {/* ⬆⬇ 정렬 방향 토글 */}
+          <button
+            onClick={() =>
+              setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+            }
+            className="border rounded px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200"
+          >
+            {sortOrder === 'asc' ? '▲ Asc' : '▼ Desc'}
+          </button>
+
+          {/* ➕ 추가 버튼 */}
+          <Link
+            href="/admin/people/new"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Add New Person
+          </Link>
+        </div>
       </div>
+
+      {/* 테이블 */}
       <div className="bg-white shadow-md rounded">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-200">
@@ -77,20 +152,36 @@ export default function ManagePeoplePage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {people.map((person) => (
+            {sortedPeople.map((person) => (
               <tr key={person.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{person.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{person.position}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{person.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{person.role}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button onClick={() => router.push(`/admin/people/edit/${person.id}`)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
-                  <button onClick={() => handleDelete(person.id)} className="text-red-600 hover:text-red-900">Delete</button>
+                  <button
+                    onClick={() => router.push(`/admin/people/edit/${person.id}`)}
+                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(person.id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {sortedPeople.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            No matching people found.
+          </div>
+        )}
       </div>
     </div>
   );
