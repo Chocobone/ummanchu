@@ -1,4 +1,4 @@
-import HeroSection from "@/components/Header";
+import HeroSection from "@/components/Navbar";
 import CTASection from "@/components/CTASection";
 import prisma from "@/lib/prisma";
 import { unstable_noStore as noStore } from 'next/cache';

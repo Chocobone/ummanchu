@@ -1,5 +1,5 @@
 // app/post/[slug]/[id]/page.tsx
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 

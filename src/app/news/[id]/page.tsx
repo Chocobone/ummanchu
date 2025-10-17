@@ -1,6 +1,6 @@
 // app/news/[id]/page.tsx
 import { notFound } from "next/navigation";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 export const dynamic = 'force-dynamic';

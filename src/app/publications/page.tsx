@@ -1,6 +1,6 @@
 // app/publication/page.tsx
 import { prisma } from "@/lib/prisma";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";

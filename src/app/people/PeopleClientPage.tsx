@@ -1,6 +1,6 @@
 'use client';
 
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Person } from '@prisma/client';
