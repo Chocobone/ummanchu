@@ -12,17 +12,52 @@ type ResearchNavItem = {
   cat: "Current" | "Completed";
 };
 
+interface DynamicTab {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 const Header = () => {
   const pathname = usePathname();
-  const navItems = [
+  // const navItems = [
+  //   { name: "HOME", path: "/" },
+  //   { name: "ABOUT", path: "/about" },
+  //   { name: "RESEARCH", path: "/research" },
+  //   {name: "PUBLICATION", path: "/publications"},
+  //   { name: "NEWS", path: "/news" },
+  //   { name: "CONTACT", path: "/contact" },
+  //   { name: "PEOPLE", path: "/people" },
+  // ];
+  const staticNav = [
     { name: "HOME", path: "/" },
     { name: "ABOUT", path: "/about" },
     { name: "RESEARCH", path: "/research" },
-    {name: "PUBLICATION", path: "/publications"},
+    { name: "PUBLICATION", path: "/publications" },
     { name: "NEWS", path: "/news" },
     { name: "CONTACT", path: "/contact" },
     { name: "PEOPLE", path: "/people" },
   ];
+
+  const [tabs, setTabs] = useState<DynamicTab[]>([]);
+
+  // ✅ 동적 탭 로드
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/nav-tabs");
+        const data = await res.json();
+        setTabs(data);
+      } catch (error) {
+        console.error("Error fetching dynamic tabs:", error);
+      }
+    })();
+  }, []);
+
+  // ✅ 병합: 고정 메뉴 + 동적 탭
+  // 기존 메뉴 순서는 그대로 두고, 동적 탭만 뒤에 붙임 (order 값 기준 정렬)
+  const navItems = [...staticNav, ...tabs.map(t => ({ name: t.name, path: `/post/${t.slug}` }))];
+  console.log(navItems);
 
   const [isDark, setIsDark] = useState(false);
   const [open, setOpen] = useState(false);
