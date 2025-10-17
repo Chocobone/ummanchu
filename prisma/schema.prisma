@@ -7,48 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum ResearchStatus {
-  IN_PROGRESS
-  COMPLETED
-}
-
 model Research {
   id          String         @id @default(cuid())
   title       String
   description String?
-  contentHtml String?        @db.Text
-  imageUrl    String?
-  published   Boolean        @default(false)
   status      ResearchStatus @default(IN_PROGRESS)
   startDate   DateTime?
   endDate     DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  imageUrl    String?
+  contentHtml String?
+  published   Boolean        @default(false)
 }
 
 model News {
   id          String   @id @default(cuid())
   title       String
   description String
-  contentHtml String?  @db.Text
   imageUrl    String?
   publishedAt DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-}
-
-enum Role {
-  PROFESSOR
-  CURRENT
-  ALUMNI
+  contentHtml String?
 }
 
 model Person {
   id          Int      @id @default(autoincrement())
   name        String
   position    String
-  description String?  @db.Text
+  description String?
   image       String?
   email       String   @unique
   degree      String?
@@ -61,9 +49,9 @@ model HomePageContent {
   id             Int    @id @default(1)
   heroTitle      String
   heroSubtitle   String
-  heroParagraph  String @db.Text
-  aboutTitle     String @db.Text
-  aboutParagraph String @db.Text
+  heroParagraph  String
+  aboutTitle     String
+  aboutParagraph String
   newsTitle      String
   newsSubtitle   String
 }
@@ -82,18 +70,12 @@ model Asset {
   originalName String?
   mime         String?
   size         Int?
-  // 글 정보, 글 번호
   ownerType    AssetOwnerType
   ownerId      String
   tag          String?
   createdAt    DateTime       @default(now())
 
   @@index([ownerType, ownerId])
-}
-
-enum AssetOwnerType {
-  RESEARCH
-  NEWS
 }
 
 model Contact {
@@ -108,20 +90,20 @@ model Contact {
 
 model AboutContent {
   id        Int      @id @default(autoincrement())
-  page      String   @unique // "about", "home" 등
-  data      Json // 페이지 컨텐츠 JSON
+  page      String   @unique
+  data      Json
   updatedAt DateTime @updatedAt
 }
 
 model Publication {
   id        Int      @id @default(autoincrement())
   title     String
-  authors   String // "SON HYUN BIN"
-  venue     String? // "Nature", "ICML 2025" 등
+  authors   String
+  venue     String?
   year      Int
-  month     Int? // 1~12
-  url       String? // 외부 논문 링크
-  pdfUrl    String? // 직접 PDF 링크(옵션)
+  month     Int?
+  url       String?
+  pdfUrl    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -129,28 +111,42 @@ model Publication {
 }
 
 model BoardTab {
-  id          Int          @id @default(autoincrement())
-  name        String        @unique           // 탭 이름 (예: 공지사항)
-  slug        String        @unique           // URL-friendly 이름 (예: notice)
-  description String?       @db.Text
-  order       Int           @default(0)       // 탭 순서 제어용
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  posts       BoardPost[]                      // 1:N 관계
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  slug        String      @unique
+  description String?
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  posts       BoardPost[]
 }
 
 model BoardPost {
-  id          String       @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String
-  contentHtml String?      @db.Text
+  contentHtml String?
   imageUrl    String?
-  published   Boolean      @default(false)
-  publishedAt DateTime? 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   tabId       Int
-  tab         BoardTab     @relation(fields: [tabId], references: [id])
+  tab         BoardTab  @relation(fields: [tabId], references: [id])
+}
+
+enum ResearchStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Role {
+  PROFESSOR
+  CURRENT
+  ALUMNI
+}
+
+enum AssetOwnerType {
+  RESEARCH
+  NEWS
 }

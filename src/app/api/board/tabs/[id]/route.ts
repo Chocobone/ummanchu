@@ -5,10 +5,12 @@ import { authOptions } from '@/lib/auth';
 // PUT: 탭 수정
 export async function PUT(
   req: Request,
-  params: any
+
+   context: any
+
 ) {
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(context.params.id, 10);
     const body = await req.json();
     const { name, slug, description, order } = body;
     
@@ -38,10 +40,12 @@ export async function PUT(
 // DELETE: 탭 삭제
 export async function DELETE(
   req: Request,
-  params: any
+
+    context: any
+
 ) {
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(context.params.id, 10);
     const session = await getServerSession(authOptions);
     
     // 세션이 없으면 로그인 안된 상태
