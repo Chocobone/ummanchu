@@ -14,8 +14,10 @@ function createPreview(html: string, length: number = 100) {
   return text.substring(0, length) + "…";
 }
 
+
 export default async function BoardCategoryPage(
   params, context: any) {
+
   noStore();
 
   // ✅ 탭(카테고리) + 게시글 가져오기

@@ -5,7 +5,9 @@ import { authOptions } from '@/lib/auth';
 // PUT: 탭 수정
 export async function PUT(
   req: Request,
+
    context: any
+
 ) {
   try {
     const id = parseInt(context.params.id, 10);
@@ -38,7 +40,9 @@ export async function PUT(
 // DELETE: 탭 삭제
 export async function DELETE(
   req: Request,
+
     context: any
+
 ) {
   try {
     const id = parseInt(context.params.id, 10);

@@ -7,7 +7,9 @@ import type { NextRequest } from 'next/server'
 // ✅ 단일 게시글 조회
 export async function GET(
   req: Request,
+
   context: any
+
 ) {
   try {
     const post = await prisma.boardPost.findUnique({
@@ -29,7 +31,11 @@ export async function GET(
 // ✅ 게시글 수정
 export async function PUT(
   req: Request,
+
    context: any
+
+
+
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -59,7 +65,10 @@ export async function PUT(
 // ✅ 게시글 삭제
 export async function DELETE(
   req: Request,
+
   context: any
+
+
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
