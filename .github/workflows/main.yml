@@ -1,9 +1,9 @@
 name: Deploy to NAS via ngrok
 
 on:
+  workflow_dispatch:  # 수동 실행 허용
   push:
-    branches: [ "main" ]   # main 브랜치 push 시 실행
-
+    branches: [ "main" ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
