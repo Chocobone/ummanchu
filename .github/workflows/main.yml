@@ -1,7 +1,7 @@
 name: Deploy to NAS via ngrok
 
 on:
-  workflow_dispatch:  # 수동 실행 허용
+  workflow_dispatch:
   push:
     branches: [ "main" ]
 
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Send webhook to NAS
         run: |
-          curl -X POST \
+          curl -v -X POST \
             -H "X-DEPLOY-TOKEN: my-secret-token" \
             -H "Content-Type: application/json" \
             -d '{"ref":"main"}' \
