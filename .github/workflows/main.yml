@@ -1,0 +1,17 @@
+name: Deploy to NAS via ngrok
+
+on:
+  push:
+    branches: [ "main" ]   # main 브랜치 push 시 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send webhook to NAS
+        run: |
+          curl -X POST \
+            -H "Authorization: my-secret-token" \
+            -H "Content-Type: application/json" \
+            -d '{"ref":"main"}' \
+            https://702af93e259c.ngrok-free.app/deploy
