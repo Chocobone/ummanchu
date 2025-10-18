@@ -4,14 +4,16 @@ on:
   workflow_dispatch:  # 수동 실행 허용
   push:
     branches: [ "main" ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Send webhook to NAS
         run: |
           curl -X POST \
-            -H "Authorization: my-secret-token" \
+            -H "X-DEPLOY-TOKEN: my-secret-token" \
             -H "Content-Type: application/json" \
             -d '{"ref":"main"}' \
             https://702af93e259c.ngrok-free.app/deploy
