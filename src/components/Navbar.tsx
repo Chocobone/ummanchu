@@ -117,7 +117,7 @@ const Navbar = () => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[240px]">
+            <SheetContent side="right" className={`w-[240px] ${tone}`}>
               <div className="flex flex-col gap-4 mt-8">
                 {navItems.map((item) => (
                   <Link
