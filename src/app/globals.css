@@ -2,17 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ① 라이트 변수 (HEX + RGB) */
 :root {
+  --background: 0 0% 100%;
   --foreground: 0 0% 10%;
   --primary: 28 96% 60%;
   --primary-foreground: 0 0% 100%;
 
   --muted-foreground: 0 0% 20%;
-
-  --background-rgb: 255 255 255;
-  --foreground-rgb: 23 23 23;
-  --primary-rgb:    251 146 60;
 }
 
 body {
