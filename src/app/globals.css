@@ -4,11 +4,11 @@
 
 /* ① 라이트 변수 (HEX + RGB) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground: 0 0% 10%;
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
 
-  --primary: #fb923c;
-  --primary-foreground: #ffffff;
+  --muted-foreground: 0 0% 20%;
 
   --background-rgb: 255 255 255;
   --foreground-rgb: 23 23 23;
@@ -21,11 +21,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: 0 0% 10%;
+  --foreground: 0 0% 90%;
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
 
-  --primary: #fb923c;
-  --primary-foreground: #0b1220;
+  --muted-foreground: 0 0% 60%;
 
   --background-rgb: 10 10 10;
   --foreground-rgb: 237 237 237;

@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata = {
   title: { default: "SSIL Lab", template: "%s | SSIL Lab" },
-  description: "…원하는 설명…",
+  description: "경희대학교 우주과학과 연구실(SSIL Lab) 홈페이지",
   icons: { icon: "/favicon.ico" },
 };
 

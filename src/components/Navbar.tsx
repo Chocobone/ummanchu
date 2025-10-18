@@ -59,7 +59,7 @@ const Navbar = () => {
     path === "/" ? pathname === "/" : pathname.startsWith(path);
 
   const lightBg =
-    "bg-white/80 supports-[backdrop-filter]:bg-white/60 backdrop-blur";
+    "bg-white/100 supports-[backdrop-filter]:bg-white/60 backdrop-blur";
   const darkBg =
     "bg-background/100 supports-[backdrop-filter]:bg-background/60 backdrop-blur";
   const tone = mounted && resolvedTheme === "light" ? lightBg : darkBg;
