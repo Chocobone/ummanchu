@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { Post } from "@/types/post";
 import { unstable_noStore as noStore } from 'next/cache';

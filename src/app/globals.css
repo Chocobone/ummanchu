@@ -2,30 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ① 라이트 변수 (HEX + RGB) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
 
-  --primary: #fb923c;              /* ✨ 쓰고 있으니 정의 */
-  --primary-foreground: #ffffff;
-
-  --background-rgb: 255 255 255;
-  --foreground-rgb: 23 23 23;
-  --primary-rgb:    251 146 60;
+  --muted-foreground: 0 0% 20%;
 }
-
-/* ❌ 이 블록은 v4 문법이라 혼용되면 꼬입니다. 제거하세요.
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-*/
-
-/* ② 다크 변수: 버튼이 토글하는 .dark에 반드시 선언 */
-
 
 body {
   background: var(--background);
@@ -33,11 +17,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: 0 0% 10%;
+  --foreground: 0 0% 90%;
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
 
-  --primary: #fb923c;
-  --primary-foreground: #0b1220;
+  --muted-foreground: 0 0% 60%;
 
   --background-rgb: 10 10 10;
   --foreground-rgb: 237 237 237;
@@ -77,7 +62,6 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-/* 폰트 드롭다운 메뉴에 폰트 이름을 표시합니다. */
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
   content: 'Arial';
@@ -93,7 +77,6 @@ body {
   content: 'Monospace';
 }
 
-/* 나머지 폰트도 이와 같은 방식으로 추가합니다. */
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="sans-serif"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="sans-serif"]::before {
   content: 'Sans Serif';
@@ -114,15 +97,10 @@ body {
   content: 'Open Sans';
 }
 
-/* 기본 폰트도 설정해줘야 합니다. */
 .ql-snow .ql-picker.ql-font .ql-picker-label::before {
-  content: 'Sans Serif'; /* 기본 폰트 명칭 */
-}
-.ql-snow .ql-picker.ql-font .ql-picker-item::before {
-  content: 'Sans Serif'; /* 기본 폰트 명칭 */
+  content: 'Sans Serif';
 }
 
-/* 스크롤 효과 */
 @media (prefers-reduced-motion: reduce) {
   .reveal { transition: none !important; transform: none !important; opacity: 1 !important; }
 }
@@ -133,7 +111,6 @@ body {
 }
 .reveal.from-left  { transform: translateX(-36px); }
 .reveal.from-right { transform: translateX( 36px); }
-/* 화면에 들어오면 보이기 */
 .reveal.in-view {
   opacity: 1;
   transform: translateX(0);

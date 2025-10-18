@@ -1,20 +1,9 @@
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import Image from "next/image";
 import {prisma} from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
 import { unstable_noStore as noStore } from 'next/cache';
-const defaultAbout = {
-  heading: "About Us",
-  tagline: "Empowering cosmic discovery—one payload at a time.",
-  body1: "Since ancient times, ...",
-  body2: "Most of the people ...",
-  professorName: "Dr. JongHo Seon",
-  professorImageUrl: "/images/professor.png",
-  highlightTitle: "",
-  highlight1: "Recently, the Space Science payload lab ...",
-  highlight2: "I hope that life in the space science ...",
-  groupPhotoUrl: "/images/group-photo.jpg",
-};
+import { defaultAbout } from "@/lib/aboutContent";
 
 export default async function AboutPage() {
   noStore();

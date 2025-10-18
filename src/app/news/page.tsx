@@ -1,7 +1,7 @@
 // app/news/page.tsx
 import Link from "next/link";
 import Image from "next/image";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic';

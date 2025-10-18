@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import { Research } from '@prisma/client';
 export const dynamic = 'force-dynamic';
 interface ResearchData {

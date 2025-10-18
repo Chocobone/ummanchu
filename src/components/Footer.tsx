@@ -34,7 +34,7 @@ export default async function Footer() {
   const contact = await getContact();
 
   return (
-    <footer className="bg-[#0f0f0f] text-white py-24 px-4">
+    <footer className="bg-[#0f0f0f] text-white py-14 px-4">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-orange-400 mb-8">Contact</h2>
 

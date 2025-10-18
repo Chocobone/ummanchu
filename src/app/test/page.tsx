@@ -2,7 +2,7 @@
 "use client";
 // 추가하기
 import React, { useState } from "react";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import RichEditor from "@/components/RichEditor";
 
 export default function WritePostPage() {
