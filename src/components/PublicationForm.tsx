@@ -40,17 +40,8 @@ export default function PublicationForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // 간단 검증
     if (!values.title.trim() || !values.authors.trim()) {
       alert('title, authors는 필수입니다.');
-      return;
-    }
-    if (!values.year || values.year < 1900 || values.year > 3000) {
-      alert('year가 올바르지 않습니다.');
-      return;
-    }
-    if (values.month != null && (values.month < 1 || values.month > 12)) {
-      alert('month는 1~12 사이여야 합니다.');
       return;
     }
 
@@ -63,8 +54,14 @@ export default function PublicationForm({
     });
   }
 
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 51 }, (_, i) => currentYear - i);
+
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-background/10 p-4 rounded">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-background/10 p-4 rounded"
+    >
       <input
         className="p-2 rounded bg-background/20"
         placeholder="Title *"
@@ -83,20 +80,38 @@ export default function PublicationForm({
         value={values.venue ?? ''}
         onChange={(e) => set('venue', e.target.value)}
       />
-      <input
-        type="number"
-        className="p-2 rounded bg-background/20"
-        placeholder="Year *"
-        value={values.year}
-        onChange={(e) => set('year', Number(e.target.value))}
-      />
-      <input
-        type="number"
-        className="p-2 rounded bg-background/20"
-        placeholder="Month (1-12)"
-        value={values.month ?? ''}
-        onChange={(e) => set('month', e.target.value ? Number(e.target.value) : null)}
-      />
+
+      <div className="relative">
+        <select
+          className="p-2 rounded bg-background/20 w-full appearance-none overflow-y-auto max-h-[200px]"
+          value={values.year}
+          onChange={(e) => set('year', Number(e.target.value))}
+          size={1}
+        >
+          {yearOptions.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="relative">
+        <select
+          className="p-2 rounded bg-background/20 w-full appearance-none overflow-y-auto max-h-[200px]"
+          value={values.month ?? ''}
+          onChange={(e) => set('month', e.target.value ? Number(e.target.value) : null)}
+          size={1}
+        >
+          <option value="">Month</option>
+          {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+            <option key={m} value={m}>
+              {m.toString().padStart(2, '0')}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <input
         className="p-2 rounded bg-background/20"
         placeholder="External URL"
