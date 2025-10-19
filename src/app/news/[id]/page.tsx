@@ -1,49 +1,47 @@
-// app/news/[id]/page.tsx
 import { notFound } from "next/navigation";
 import Header from "@/components/Navbar";
 import Image from "next/image";
-import prisma from "@/lib/prisma";
-export const dynamic = 'force-dynamic';
-import { unstable_noStore as noStore } from 'next/cache';
-// SSG 시 필요한 파라미터 목록을 미리 생성
+import { prisma } from "@/lib/prisma";
+import { unstable_noStore as noStore } from "next/cache";
+
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const newsItems = await prisma.news.findMany({
     select: { id: true },
   });
-  return newsItems.map((item) => ({
-    id: item.id,
-  }));
+  return newsItems.map((item) => ({ id: item.id }));
 }
 
-// 이 컴포넌트는 반드시 async 로 선언해야 합니다!
-export default async function NewsDetailPage({ params }: any) {
+export default async function NewsDetailPage({ params }: { params: { id: string } }) {
   noStore();
   const { id } = params;
 
   const news = await prisma.news.findUnique({
-    where: { id: id },
+    where: { id },
   });
 
-  if (!news) {
-    notFound();
-  }
+  if (!news) notFound();
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
-        <article className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          {/* 제목 + 메타 */}
+    <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
+      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
+        <Header />
+      </div>
+
+      <main className="pt-28 pb-20">
+        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          {/* 제목 */}
           <header className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-foreground">{news.title}</h1>
-            <p className="text-sm text-foreground">
+            <p className="text-sm text-muted-foreground">
               Published on {new Date(news.publishedAt).toLocaleDateString()}
             </p>
           </header>
 
-          {/* 대표 이미지 (높이 400px 고정) */}
+          {/* 대표 이미지 */}
           {news.imageUrl && (
-            <div className="relative w-full h-[400px] overflow-hidden rounded-lg">
+            <div className="relative w-full h-[400px] overflow-hidden rounded-lg shadow-sm">
               <Image
                 src={news.imageUrl}
                 alt={news.title}
@@ -54,13 +52,13 @@ export default async function NewsDetailPage({ params }: any) {
             </div>
           )}
 
-          {/* 본문 (max-w-4xl 로 이미지와 동일한 폭) */}
-          <div 
-            className="prose prose-invert mx-auto max-w-4xl"
-            dangerouslySetInnerHTML={{ __html: news.description }}
+          {/* 본문 */}
+          <div
+            className="prose prose-neutral dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: news.description || "" }}
           />
         </article>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
