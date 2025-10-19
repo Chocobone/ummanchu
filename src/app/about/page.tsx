@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import Header from "@/components/Navbar";
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
-import { defaultAbout } from "@/lib/aboutContent";
-import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@/contexts/AuthContext";
+import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { defaultAbout } from "@/lib/aboutContent";
+import { useAuth } from "@/contexts/AuthContext";
+import PageLayout from "@/components/PageLayout"; // ✅ 공통 레이아웃 추가
 
 export const dynamic = "force-dynamic";
 
@@ -27,19 +26,19 @@ export default function AboutPage() {
 
   if (!content) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
-        Loading...
-      </div>
+      <PageLayout>
+        <div className="min-h-[60vh] flex items-center justify-center text-muted-foreground">
+          Loading...
+        </div>
+      </PageLayout>
     );
   }
 
   const c = content || defaultAbout;
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors">
-      <Header />
-
-      <main className="py-20 relative">
+    <PageLayout>
+      <main className="relative pt-10">
         {isAdmin && (
           <div className="absolute top-6 right-6 z-20">
             <Link href="/admin/about">
@@ -56,7 +55,6 @@ export default function AboutPage() {
         )}
 
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
-          {/* 헤더 */}
           <header className="text-center mb-16">
             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4">
               {c.heading}
@@ -131,6 +129,6 @@ export default function AboutPage() {
           )}
         </div>
       </main>
-    </div>
+    </PageLayout>
   );
 }

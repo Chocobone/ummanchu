@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import Header from "@/components/Navbar";
 import { unstable_noStore as noStore } from "next/cache";
+import PageLayout from "@/components/PageLayout";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +28,7 @@ export default async function PublicationPage() {
   const byYear = groupByYear(pubs);
 
   return (
-    <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
-      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
-        <Header />
-      </div>
-
-      <main className="pt-28 pb-20">
+    <PageLayout>
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
           <header className="text-center mb-16">
             <h1 className="text-4xl lg:text-5xl font-bold mb-3 tracking-tight text-foreground">
@@ -124,7 +119,6 @@ export default async function PublicationPage() {
             </div>
           )}
         </div>
-      </main>
-    </div>
+    </PageLayout>
   );
 }

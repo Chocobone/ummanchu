@@ -1,8 +1,7 @@
-// app/contact/page.tsx
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-import Header from "@/components/Navbar";
+import PageLayout from "@/components/PageLayout";
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -11,12 +10,8 @@ export default async function ContactPage() {
   const contact = await prisma.contact.findUnique({ where: { id: 1 } });
 
   return (
-    <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
-      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
-        <Header />
-      </div>
-
-      <section className="pt-28 pb-20">
+    <PageLayout>
+      <section className="pb-20">
         <div className="max-w-3xl mx-auto px-6 md:px-10 lg:px-16 space-y-10">
           <h1 className="text-4xl lg:text-5xl font-bold text-center text-foreground">
             SSIL Contact
@@ -54,6 +49,6 @@ export default async function ContactPage() {
           )}
         </div>
       </section>
-    </div>
+    </PageLayout>
   );
 }

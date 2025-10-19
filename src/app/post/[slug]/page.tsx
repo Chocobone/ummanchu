@@ -1,4 +1,3 @@
-// app/post/[slug]/page.tsx
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Navbar";

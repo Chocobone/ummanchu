@@ -15,7 +15,7 @@ export default function PageLayout({ children, className = "" }: PageLayoutProps
         <Header />
       </div>
 
-      <main className="pt-28 pb-20">{children}</main>
+      <main className="pt-32 pb-20">{children}</main>
     </div>
   );
 }

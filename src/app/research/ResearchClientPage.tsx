@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import Header from "@/components/Navbar";
 import { Research } from "@prisma/client";
+import PageLayout from "@/components/PageLayout";
 
 interface ResearchData {
   Current: Research[];
@@ -51,117 +51,109 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
     null;
 
   return (
-    <>
-      <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
-        <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
-          <Header />
-        </div>
+    <PageLayout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header className="text-center mb-12">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+            Research
+          </h1>
+        </header>
 
-        <main className="pt-32 pb-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <header className="text-center mb-12">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-                Research
-              </h1>
-            </header>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* 좌측 네비게이션 */}
+          <nav className="space-y-6">
+            {categories.map((cat) => (
+              <div key={cat}>
+                <button
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`block w-full text-left py-2 px-4 rounded transition ${selectedCategory === cat
+                    ? "bg-primary/20 text-primary font-semibold"
+                    : "bg-background/10 text-foreground/70 hover:bg-background/20"
+                    }`}
+                >
+                  {cat}
+                </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* 좌측 네비게이션 */}
-              <nav className="space-y-6">
-                {categories.map((cat) => (
-                  <div key={cat}>
-                    <button
-                      onClick={() => handleCategoryClick(cat)}
-                      className={`block w-full text-left py-2 px-4 rounded transition ${selectedCategory === cat
-                          ? "bg-primary/20 text-primary font-semibold"
-                          : "bg-background/10 text-foreground/70 hover:bg-background/20"
-                        }`}
-                    >
-                      {cat}
-                    </button>
+                <ul className="mt-2 ml-4 space-y-1">
+                  {researchData[cat].map((p, idx) => (
+                    <li key={p.id}>
+                      <button
+                        onClick={() => handleProjectClick(cat, idx)}
+                        className={`block w-full text-left py-1 px-4 rounded text-sm transition ${cat === selectedCategory && idx === selectedProjectIdx
+                          ? "bg-primary/20 text-primary font-medium"
+                          : "text-foreground/70 hover:bg-primary/10"
+                          }`}
+                      >
+                        {p.title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
 
-                    <ul className="mt-2 ml-4 space-y-1">
-                      {researchData[cat].map((p, idx) => (
-                        <li key={p.id}>
-                          <button
-                            onClick={() => handleProjectClick(cat, idx)}
-                            className={`block w-full text-left py-1 px-4 rounded text-sm transition ${cat === selectedCategory && idx === selectedProjectIdx
-                                ? "bg-primary/20 text-primary font-medium"
-                                : "text-foreground/70 hover:bg-primary/10"
-                              }`}
-                          >
-                            {p.title}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+          {/* 우측 내용 */}
+          <div className="col-span-2 space-y-6">
+            {project ? (
+              <div className="text-foreground">
+                {/* breadcrumb */}
+                <div className="text-sm text-muted-foreground mb-4">
+                  <span>{selectedCategory}</span>
+                  <span className="mx-2">/</span>
+                  <span className="text-primary font-medium">
+                    {project.title}
+                  </span>
+                </div>
+
+                {/* 이미지 */}
+                {project.imageUrl && (
+                  <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
+                    <Image
+                      src={
+                        project.imageUrl.startsWith("/")
+                          ? project.imageUrl
+                          : project.imageUrl
+                      }
+                      alt={project.title}
+                      fill
+                      sizes="(min-width: 1024px) 66vw, 100vw"
+                      className="object-cover"
+                    />
                   </div>
-                ))}
-              </nav>
+                )}
 
-              {/* 우측 내용 */}
-              <div className="col-span-2 space-y-6">
-                {project ? (
-                  <div className="text-foreground">
-                    {/* breadcrumb */}
-                    <div className="text-sm text-muted-foreground mb-4">
-                      <span>{selectedCategory}</span>
-                      <span className="mx-2">/</span>
-                      <span className="text-primary font-medium">
-                        {project.title}
-                      </span>
-                    </div>
+                {/* 타이틀 */}
+                <h2 className="text-2xl lg:text-3xl font-bold mb-2">
+                  {project.title}
+                </h2>
 
-                    {/* 이미지 */}
-                    {project.imageUrl && (
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-4">
-                        <Image
-                          src={
-                            project.imageUrl.startsWith("/")
-                              ? project.imageUrl
-                              : project.imageUrl
-                          }
-                          alt={project.title}
-                          fill
-                          sizes="(min-width: 1024px) 66vw, 100vw"
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-
-                    {/* 타이틀 */}
-                    <h2 className="text-2xl lg:text-3xl font-bold mb-2">
-                      {project.title}
-                    </h2>
-
-                    {/* 설명 */}
-                    {project.description && (
-                      <p className="text-muted-foreground mb-4">
-                        {project.description}
-                      </p>
-                    )}
-
-                    {/* 내용 */}
-                    {project.contentHtml && (
-                      <div className="p-6 rounded-lg prose dark:prose-invert max-w-none mt-4 bg-card/50 border border-border">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: project.contentHtml,
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">
-                    Select a project to see the details.
+                {/* 설명 */}
+                {project.description && (
+                  <p className="text-muted-foreground mb-4">
+                    {project.description}
                   </p>
                 )}
+
+                {/* 내용 */}
+                {project.contentHtml && (
+                  <div className="p-6 rounded-lg prose dark:prose-invert max-w-none mt-4 bg-card/50 border border-border">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: project.contentHtml,
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <p className="text-muted-foreground">
+                Select a project to see the details.
+              </p>
+            )}
           </div>
-        </main>
+        </div>
       </div>
-    </>
+    </PageLayout>
   );
 }
