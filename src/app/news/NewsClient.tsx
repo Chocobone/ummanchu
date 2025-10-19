@@ -47,7 +47,7 @@ export default function NewsClient({ initialNews }: NewsClientProps) {
         <div className="text-right mb-8">
           <button
             onClick={() => setShowForm(true)}
-            className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
+            className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80 transition"
           >
             + Add News
           </button>
