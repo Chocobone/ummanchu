@@ -137,7 +137,7 @@ const Navbar = () => {
               variant="ghost"
               size="sm"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="hidden md:flex"
+              className="hidden md:flex rounded"
             >
               <LogOut className="h-4 w-4" />
               <span className="ml-2">Logout</span>
@@ -151,7 +151,7 @@ const Navbar = () => {
               onClick={() =>
                 setTheme(resolvedTheme === "dark" ? "light" : "dark")
               }
-              className="rounded-[15px]"
+              className="rounded-xl"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
