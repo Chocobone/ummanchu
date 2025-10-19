@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 import { unstable_noStore as noStore } from "next/cache";
 
 function createPreview(html: string, length: number = 100) {
-  const text = html.replace(/<[^>]*>/g, ""); // Strip HTML tags
+  const text = html.replace(/<[^>]*>/g, "");
   return text.length <= length ? text : text.substring(0, length) + "…";
 }
 
@@ -31,18 +31,16 @@ export default async function NewsPage() {
                 NEWS
               </h1>
               <p className="text-lg text-gray-600">
-                SSIL의 최신 소식과 공지사항을 확인하세요.
+                Stay up to date with the latest news and announcements from SSIL.
               </p>
             </header>
 
-            {/* News Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {newsItems.map((item) => (
                 <Card
                   key={item.id}
                   className="flex flex-col overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-2xl"
                 >
-                  {/* 이미지 영역 */}
                   <div className="relative w-full h-52 overflow-hidden">
                     {item.imageUrl ? (
                       <Image
@@ -58,7 +56,6 @@ export default async function NewsPage() {
                     )}
                   </div>
 
-                  {/* 내용 */}
                   <CardContent className="p-5 flex flex-col flex-grow space-y-3">
                     <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 hover:text-primary transition-colors">
                       {item.title}
@@ -68,7 +65,6 @@ export default async function NewsPage() {
                     </p>
                   </CardContent>
 
-                  {/* Footer */}
                   <CardFooter className="px-5 pb-5 pt-0 mt-auto">
                     <div className="w-full flex items-center justify-between text-sm">
                       <span className="text-gray-400">
