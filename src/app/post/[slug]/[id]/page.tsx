@@ -5,13 +5,12 @@ import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
-export default async function BoardPostDetail({
-  params,
-}: {
-  params: any
-}) {
+
+export default async function BoardPostDetail(
+  params, context: any) {
+
   const post = await prisma.boardPost.findUnique({
-    where: { id: params.id },
+    where: { id: context.params.id },
     include: { tab: true },
   });
 

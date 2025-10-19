@@ -2,15 +2,18 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import type { NextRequest } from 'next/server'
 
 // ✅ 단일 게시글 조회
 export async function GET(
   req: Request,
-  params: any
+
+  context: any
+
 ) {
   try {
     const post = await prisma.boardPost.findUnique({
-      where: { id: params.id },
+      where: { id: context.params.id },
       include: { tab: true },
     });
 
@@ -28,7 +31,11 @@ export async function GET(
 // ✅ 게시글 수정
 export async function PUT(
   req: Request,
-  params: any
+
+   context: any
+
+
+
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -38,7 +45,7 @@ export async function PUT(
     const { title, description, imageUrl, tabId, publishedAt } = body;
 
     const updated = await prisma.boardPost.update({
-      where: { id: params.id },
+      where: { id: context.params.id },
       data: {
         title,
         description,
@@ -58,13 +65,16 @@ export async function PUT(
 // ✅ 게시글 삭제
 export async function DELETE(
   req: Request,
-  params: any
+
+  context: any
+
+
 ) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    await prisma.boardPost.delete({ where: { id: params.id } });
+    await prisma.boardPost.delete({ where: { id: context.params.id } });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting post:', error);

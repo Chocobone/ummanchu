@@ -14,16 +14,15 @@ function createPreview(html: string, length: number = 100) {
   return text.substring(0, length) + "…";
 }
 
-export default async function BoardCategoryPage({
-  params,
-}: {
-  params: any
-}) {
+
+export default async function BoardCategoryPage(
+  context : any) {
+const slug = context?.params?.slug;
   noStore();
 
   // ✅ 탭(카테고리) + 게시글 가져오기
   const tab = await prisma.boardTab.findUnique({
-    where: { slug: params.slug },
+    where: { slug},
     include: {
       posts: {
         orderBy: { publishedAt: "desc" },
