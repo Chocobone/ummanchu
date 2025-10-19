@@ -1,4 +1,3 @@
-// app/publication/page.tsx
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/Navbar";
 import { unstable_noStore as noStore } from "next/cache";
@@ -12,7 +11,6 @@ function groupByYear<T extends { year: number }>(items: T[]) {
     arr.push(it);
     map.set(it.year, arr);
   }
-  // 내림차순 정렬된 [year, items] 배열로 반환
   return Array.from(map.entries()).sort((a, b) => b[0] - a[0]);
 }
 
@@ -30,43 +28,50 @@ export default async function PublicationPage() {
   const byYear = groupByYear(pubs);
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
-        <main className="pt-20 pb-16"> {/* 헤더 fixed라면 pt 조정 */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <header className="text-center mb-12">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">Publications</h1>
-              <p className="text-foreground/70 mt-2">
-                Peer-reviewed papers, conference proceedings, and preprints.
-              </p>
-            </header>
+    <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
+      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
+        <Header />
+      </div>
 
-            <div className="space-y-12">
-              {byYear.length === 0 && (
-                <p className="text-muted-foreground">No publications yet.</p>
-              )}
+      <main className="pt-28 pb-20">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+          <header className="text-center mb-16">
+            <h1 className="text-4xl lg:text-5xl font-bold mb-3 tracking-tight text-foreground">
+              Publications
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Peer-reviewed papers, conference proceedings, and preprints.
+            </p>
+          </header>
 
+          {byYear.length === 0 ? (
+            <p className="text-muted-foreground text-center">
+              No publications available yet.
+            </p>
+          ) : (
+            <div className="space-y-16">
               {byYear.map(([year, list]) => (
                 <section key={year}>
-                  <h2 className="text-2xl font-bold text-foreground mb-4">{year}</h2>
-                  <ul className="space-y-4">
+                  <h2 className="text-3xl font-bold text-primary mb-6 border-b border-border pb-2">
+                    {year}
+                  </h2>
+                  <ul className="space-y-6">
                     {list.map((p) => {
-                      const primaryLink = p.url || p.pdfUrl;
+                      const link = p.url || p.pdfUrl;
                       return (
                         <li
                           key={p.id}
-                          className="rounded-lg bg-background/10 hover:bg-background/20 transition p-4"
+                          className="rounded-xl border border-border bg-white dark:bg-neutral-900 hover:border-primary/40 transition p-6 shadow-sm"
                         >
-                          <div className="flex flex-col md:flex-row md:items-start md:gap-4">
+                          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                             <div className="flex-1">
-                              <h3 className="text-lg font-semibold text-foreground">
-                                {primaryLink ? (
+                              <h3 className="text-lg font-semibold leading-snug text-foreground">
+                                {link ? (
                                   <a
-                                    href={primaryLink}
+                                    href={link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hover:underline"
+                                    className="hover:text-primary transition-colors"
                                   >
                                     {p.title}
                                   </a>
@@ -74,22 +79,26 @@ export default async function PublicationPage() {
                                   p.title
                                 )}
                               </h3>
-                              <p className="text-foreground/80 mt-1">{p.authors}</p>
+                              <p className="text-muted-foreground mt-1">
+                                {p.authors}
+                              </p>
                               {(p.venue || p.month) && (
-                                <p className="text-muted-foreground text-sm mt-1">
+                                <p className="text-sm text-foreground/70 mt-1">
                                   {p.venue}
-                                  {p.month ? ` • ${String(p.month).padStart(2, "0")}/${p.year}` : ""}
+                                  {p.month
+                                    ? ` • ${String(p.month).padStart(2, "0")}/${p.year}`
+                                    : ""}
                                 </p>
                               )}
                             </div>
 
-                            <div className="flex gap-2 mt-3 md:mt-0">
+                            <div className="flex gap-2 shrink-0">
                               {p.pdfUrl && (
                                 <a
                                   href={p.pdfUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-background/30"
+                                  className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-primary/10 transition"
                                 >
                                   PDF
                                 </a>
@@ -99,7 +108,7 @@ export default async function PublicationPage() {
                                   href={p.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center rounded-md border px-3 py-1.5 text-sm hover:bg-background/30"
+                                  className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-primary/10 transition"
                                 >
                                   Link
                                 </a>
@@ -113,9 +122,9 @@ export default async function PublicationPage() {
                 </section>
               ))}
             </div>
-          </div>
-        </main>
-      </div>
-    </>
+          )}
+        </div>
+      </main>
+    </div>
   );
 }

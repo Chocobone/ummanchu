@@ -1,69 +1,134 @@
+"use client";
+
 import Header from "@/components/Navbar";
 import Image from "next/image";
-import {prisma} from "@/lib/prisma";
-export const dynamic = 'force-dynamic';
-import { unstable_noStore as noStore } from 'next/cache';
+import { prisma } from "@/lib/prisma";
 import { defaultAbout } from "@/lib/aboutContent";
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
 
-export default async function AboutPage() {
-  noStore();
-  const row = await prisma.aboutContent.findUnique({ where: { page: "about" } });
-  const c = row?.data ? { ...defaultAbout, ...(row.data as any) } : defaultAbout;
+export const dynamic = "force-dynamic";
+
+export default function AboutPage() {
+  const { isAdmin } = useAuth();
+  const [content, setContent] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      const res = await fetch("/api/about", { cache: "no-store" });
+      const data = await res.json();
+      setContent(data);
+    };
+    fetchAbout();
+  }, []);
+
+  if (!content) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Loading...
+      </div>
+    );
+  }
+
+  const c = content || defaultAbout;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary-rgb/20">
+    <div className="min-h-screen bg-background text-foreground transition-colors">
       <Header />
-      <main className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+      <main className="py-20 relative">
+        {isAdmin && (
+          <div className="absolute top-6 right-6 z-20">
+            <Link href="/admin/about">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Edit className="w-4 h-4" />
+                Edit
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+          {/* 헤더 */}
           <header className="text-center mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold">{c.heading}</h1>
-            <p className="mt-4 text-xl text-foreground-rgb/70"></p>
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+              {c.heading}
+            </h1>
+            {c.subheading && (
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {c.subheading}
+              </p>
+            )}
           </header>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+          {/* 교수 소개 섹션 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
             <div className="space-y-6">
-              <h2 className="text-2xl lg:text-3xl font-extrabold text-foreground">
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-primary">
                 {c.tagline}
               </h2>
-              <p className="text-lg text-foreground-rgb/70 leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 {c.body1}
               </p>
             </div>
 
-            <div>
+            <div className="flex flex-col items-center">
               <Image
                 src={c.professorImageUrl}
-                alt="SSIL Lab overview"
-                width={500}
-                height={500}
-                className="w-full h-auto rounded-lg shadow-lg object-cover"
+                alt="Professor"
+                width={450}
+                height={450}
+                className="rounded-2xl shadow-lg object-cover"
               />
-              <p className="mt-2 text-sm text-center text-foreground-rgb/70">
-                {c.professorName}
-              </p>
+              {c.professorName && (
+                <p className="mt-4 text-sm text-muted-foreground font-medium">
+                  {c.professorName}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="rounded-2xl p-8 mb-16 bg-brand-rgb/15 border border-brand-rgb/20">
+          {/* 하이라이트 */}
+          <div className="rounded-2xl p-10 mb-20 bg-primary/10 border border-primary/20">
             {c.highlightTitle && (
-              <h2 className="text-2xl lg:text-3xl font-bold text-brand mb-4">
+              <h2 className="text-2xl lg:text-3xl font-bold text-primary mb-4">
                 {c.highlightTitle}
               </h2>
             )}
-            <p className="text-lg leading-relaxed text-foreground mb-6">{c.highlight1}</p>
-            <p className="text-lg leading-relaxed text-foreground">{c.highlight2}</p>
+            {c.highlight1 && (
+              <p className="text-lg leading-relaxed text-foreground mb-6">
+                {c.highlight1}
+              </p>
+            )}
+            {c.highlight2 && (
+              <p className="text-lg leading-relaxed text-foreground">
+                {c.highlight2}
+              </p>
+            )}
           </div>
 
-          <div className="mt-16">
-            <Image
-              src={c.groupPhotoUrl}
-              alt="SSIL 팀 단체사진"
-              width={1200}
-              height={800}
-              className="w-full h-auto rounded-lg object-cover shadow-lg"
-            />
-          </div>
+          {/* 단체 사진 */}
+          {c.groupPhotoUrl && (
+            <div className="mb-24">
+              <Image
+                src={c.groupPhotoUrl}
+                alt="SSIL Group"
+                width={1200}
+                height={800}
+                className="w-full rounded-2xl shadow-xl object-cover"
+              />
+              <p className="mt-3 text-sm text-center text-muted-foreground">
+                SSIL Research Group
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>
