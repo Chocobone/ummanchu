@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import Header from "@/components/Navbar";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
+import PageLayout from "@/components/PageLayout";
 
 export const dynamic = "force-dynamic";
 
@@ -24,12 +24,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
   if (!news) notFound();
 
   return (
-    <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
-      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
-        <Header />
-      </div>
-
-      <main className="pt-28 pb-20">
+    <PageLayout>
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           {/* 제목 */}
           <header className="text-center space-y-2">
@@ -58,7 +53,6 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
             dangerouslySetInnerHTML={{ __html: news.description || "" }}
           />
         </article>
-      </main>
-    </div>
+    </PageLayout>
   );
 }
