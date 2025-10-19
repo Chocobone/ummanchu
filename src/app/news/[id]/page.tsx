@@ -3,6 +3,8 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 import PageLayout from "@/components/PageLayout";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,16 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
   return (
     <PageLayout>
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="flex justify-start mb-6">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to News
+          </Link>
+        </div>
+        
           {/* 제목 */}
           <header className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-foreground">{news.title}</h1>
