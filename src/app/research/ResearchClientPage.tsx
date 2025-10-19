@@ -52,11 +52,13 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
 
   return (
     <>
-      <Header />
-      <div className="min-h-screen bg-background text-foreground transition-colors">
-        <main className="py-16">
+      <div className="min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950">
+        <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
+          <Header />
+        </div>
+
+        <main className="pt-32 pb-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* 헤더 */}
             <header className="text-center mb-12">
               <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
                 Research
@@ -70,11 +72,10 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                   <div key={cat}>
                     <button
                       onClick={() => handleCategoryClick(cat)}
-                      className={`block w-full text-left py-2 px-4 rounded transition ${
-                        selectedCategory === cat
+                      className={`block w-full text-left py-2 px-4 rounded transition ${selectedCategory === cat
                           ? "bg-primary/20 text-primary font-semibold"
                           : "bg-background/10 text-foreground/70 hover:bg-background/20"
-                      }`}
+                        }`}
                     >
                       {cat}
                     </button>
@@ -84,11 +85,10 @@ export default function ResearchClientPage({ researchData }: ResearchClientPageP
                         <li key={p.id}>
                           <button
                             onClick={() => handleProjectClick(cat, idx)}
-                            className={`block w-full text-left py-1 px-4 rounded text-sm transition ${
-                              cat === selectedCategory && idx === selectedProjectIdx
+                            className={`block w-full text-left py-1 px-4 rounded text-sm transition ${cat === selectedCategory && idx === selectedProjectIdx
                                 ? "bg-primary/20 text-primary font-medium"
                                 : "text-foreground/70 hover:bg-primary/10"
-                            }`}
+                              }`}
                           >
                             {p.title}
                           </button>

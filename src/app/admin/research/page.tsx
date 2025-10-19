@@ -44,7 +44,7 @@ export default function ResearchAdminPage() {
       if (!res.ok) throw new Error((await res.json()).error || 'Failed to delete');
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Unknown error');
-      setResearch(prev); // rollback
+      setResearch(prev);
     }
   }
 
