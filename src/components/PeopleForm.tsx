@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface PersonFormData {
   name: string;
@@ -21,6 +20,9 @@ interface PersonFormProps {
 }
 
 export default function PersonForm({ initialData, onSubmit, isSubmitting, buttonText }: PersonFormProps) {
+  const [error, setError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(initialData?.image || '');
   const [formData, setFormData] = useState<PersonFormData>({
     name: initialData?.name || '',
     position: initialData?.position || '',
@@ -30,6 +32,31 @@ export default function PersonForm({ initialData, onSubmit, isSubmitting, button
     degree: initialData?.degree || '',
     role: initialData?.role || 'CURRENT',
   });
+  
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setIsUploading(true);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Failed to upload image');
+      const data = await res.json();
+      setImageUrl(data.url); // 업로드 후 받은 url 저장
+      setFormData((prev) => ({ ...prev, image: data.url }));
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -72,10 +99,32 @@ export default function PersonForm({ initialData, onSubmit, isSubmitting, button
         </select>
       </div>
 
-      <div>
-        <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-        <input type="text" name="image" id="image" value={formData.image} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-      </div>
+       {/* Thumbnail Upload */}
+        <div>
+          <label className="block text-gray-700 mb-2">Person Image</label>
+          {imageUrl ? (
+            <div className="space-y-2">
+              <img src={imageUrl} alt="Thumbnail preview" className="w-48 h-32 object-cover rounded" />
+              <button
+                type="button"
+                onClick={() => setImageUrl(null)}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                Change Image
+              </button>
+            </div>
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={isUploading}
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full 
+                         file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 
+                         hover:file:bg-blue-100"
+            />
+          )}
+        </div>
 
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>

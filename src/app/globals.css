@@ -2,49 +2,190 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ① 라이트 변수 (HEX + RGB) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
 
-  --primary: #fb923c;              /* ✨ 쓰고 있으니 정의 */
-  --primary-foreground: #ffffff;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
 
-  --background-rgb: 255 255 255;
-  --foreground-rgb: 23 23 23;
-  --primary-rgb:    251 146 60;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 215 20.2% 65.1%;
+
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
 }
 
-/* ❌ 이 블록은 v4 문법이라 혼용되면 꼬입니다. 제거하세요.
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: 0 0% 4%; 
+  --foreground: 0 0% 90%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+
+  --primary: 28 96% 60%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
 }
-*/
-
-/* ② 다크 변수: 버튼이 토글하는 .dark에 반드시 선언 */
-
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
 
-  --primary: #fb923c;
-  --primary-foreground: #0b1220;
 
-  --background-rgb: 10 10 10;
-  --foreground-rgb: 237 237 237;
-  --primary-rgb:    251 146 60;
+@keyframes kenburns { /* ... */ }
+.animate-kenburns { animation: kenburns 15s ease-out forwards; }
+
+
+.ql-snow .ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+.ql-snow .ql-font-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.ql-snow .ql-font-monospace {
+  font-family: 'Courier New', monospace;
+}
+.ql-snow .ql-font-sans-serif {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+.ql-snow .ql-font-roboto {
+  font-family: Roboto, sans-serif;
+}
+.ql-snow .ql-font-poppins {
+  font-family: Poppins, sans-serif;
+}
+.ql-snow .ql-font-open-sans {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+  content: 'Arial';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+  content: 'Serif';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
+  content: 'Monospace';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="sans-serif"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="sans-serif"]::before {
+  content: 'Sans Serif';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+  content: 'Roboto';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before {
+  content: 'Poppins';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="open-sans"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="open-sans"]::before {
+  content: 'Open Sans';
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label::before {
+  content: 'Sans Serif';
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none !important; transform: none !important; opacity: 1 !important; }
+}
+.reveal {
+  opacity: 0;
+  transition: transform .7s ease, opacity .7s ease;
+  will-change: transform, opacity;
+}
+.reveal.from-left  { transform: translateX(-36px); }
+.reveal.from-right { transform: translateX( 36px); }
+.reveal.in-view {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 
-/* (기존) 켄번스 애니메이션은 그대로 */
-@keyframes kenburns { /* ... */ }
-.animate-kenburns { animation: kenburns 15s ease-out forwards; }
+/* =============================== */
+/*  Quill 이미지 정렬 및 스타일 개선 */
+/* =============================== */
+/* 이미지 래퍼 + 핸들러 */
+.ql-custom-resize-wrapper {
+  position: relative;
+  display: inline-block;
+  border: 1px dashed #aaa;
+  padding: 2px;
+}
+
+.ql-custom-resize-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: nwse-resize;
+}
+
+.ql-custom-align-toolbar {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  gap: 6px;
+  padding: 2px 6px;
+}
+
+.ql-custom-align-toolbar button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ql-custom-align-toolbar button:hover {
+  color: #2563eb;
+}

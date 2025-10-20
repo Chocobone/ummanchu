@@ -1,13 +1,26 @@
-// app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-export const dynamic = 'force-dynamic';
-const prisma = new PrismaClient();
+import crypto from "crypto";
 
-const authOptions = {
-  session: { strategy: "jwt" as const },
+export const dynamic = "force-dynamic";
+
+function safeEqual(a: string, b: string) {
+  const abuf = Buffer.from(a);
+  const bbuf = Buffer.from(b);
+  if (abuf.length !== bbuf.length) return false;
+  return crypto.timingSafeEqual(abuf, bbuf);
+}
+
+async function checkPassword(input: string, secret: string) {
+  if (secret.startsWith("$2a$") || secret.startsWith("$2b$") || secret.startsWith("$2y$")) {
+    return bcrypt.compare(input, secret);
+  }
+  return safeEqual(input, secret);
+}
+
+const authOptions: NextAuthOptions = {
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -16,39 +29,46 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
         if (!credentials?.email || !credentials?.password) return null;
+        if (!adminEmail || !adminPassword) {
+          console.error("ADMIN_EMAIL / ADMIN_PASSWORD not set");
+          return null;
+        }
 
-        // 1) 이메일로 사용자 조회
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-        if (!user) return null;
+        const emailOK = safeEqual(credentials.email, adminEmail);
+        const pwOK = await checkPassword(credentials.password, adminPassword);
+        if (!emailOK || !pwOK) return null;
 
-        // 2) 관리자만 통과
-        if (user.role !== "admin") return null;
-
-        // 3) bcrypt로 해시 비교 (DB는 해시 저장됨)
-        const ok = await bcrypt.compare(credentials.password, user.password);
-        if (!ok) return null;
-
-        // 4) 세션/JWT에 넣을 최소 정보 리턴
-        return { id: String(user.id), email: user.email, role: user.role };
+        // 최소 정보만 세션에 담아 반환 (role 제거)
+        return { id: "admin-1", email: adminEmail, name: "Administrator" } as any;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = (user as any).role;
-      return token;
+      if (user) {
+        token.email = (user as any).email;
+        token.name = (user as any).name;
+            console.log("api route.ts jwt 콜백")
+      }
+      return token as any;
     },
     async session({ session, token }) {
-      if (session.user) (session.user as any).role = token.role;
+      if (session.user) {
+            console.log("api route.ts 세션 콜백")
+        session.user.email = (token as any).email;
+     
+      }
       return session;
     },
+  
   },
   pages: { signIn: "/login" },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions as any);
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image'; // Import next/image
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-
+import { unstable_noStore as noStore } from 'next/cache';
+import Loading from '@/components/Loading';
 // Define the type for a news item based on our schema
 interface News {
   id: string;
@@ -15,6 +16,7 @@ interface News {
 }
 
 export default function NewsAdminPage() {
+  noStore();
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,10 +26,10 @@ export default function NewsAdminPage() {
   // Redirect if not authenticated or not admin
   useEffect(() => {
     if (status === 'loading') return;
-    if (!session || session.user?.role !== 'admin') {
-      router.push('/admin/login?callbackUrl=/admin/news');
+    if (status === 'unauthenticated') {
+      router.replace('/login?callbackUrl=/admin/news');
     }
-  }, [session, status, router]);
+  }, [ status, router]);
 
   const fetchNews = async () => {
     try {
@@ -46,10 +48,10 @@ export default function NewsAdminPage() {
   };
 
   useEffect(() => {
-    if (session?.user?.role === 'admin') {
+    if (status === 'authenticated') {
       fetchNews();
     }
-  }, [session]);
+  }, [status]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
@@ -69,10 +71,10 @@ export default function NewsAdminPage() {
     }
   };
 
-  if (status === 'loading' || !session || session.user?.role !== 'admin') {
+  if (status === 'unauthenticated') {
     return <div>Loading authentication...</div>;
   }
-  if (loading) return <div>Loading news...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
 
   return (

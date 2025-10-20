@@ -1,5 +1,11 @@
 'use client';
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
+import ImageResize from 'quill-image-resize-module-plus';
+
+// 📦 모듈 등록
+Quill.register('modules/imageResize', ImageResize);
 
 export type RichEditorHandle = {
   getHTML: () => string;
@@ -44,15 +50,15 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
 
     (async () => {
       const Quill = (await import('quill')).default;
-      //await import('quill/dist/quill.snow.css');
 
       const toolbar = [
         [{ header: [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ align: [] }], // ✅ 정렬 기능 추가
         ['link', 'image', 'video'],
         ['clean'],
-      ] as any;
+      ];
 
       if (!containerRef.current) return;
       containerRef.current.innerHTML = '';
@@ -64,10 +70,11 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
         modules: {
           toolbar: readOnly ? false : { container: toolbar },
           clipboard: { matchVisual: false },
+          imageResize: { modules: ['Resize', 'DisplaySize', 'Toolbar'] },
         },
       });
 
-      // 이미지 업로드 핸들러 (그대로 유지)
+      // ✅ 이미지 업로드 핸들러
       if (!readOnly) {
         const toolbarModule = quillRef.current.getModule('toolbar');
         toolbarModule?.addHandler('image', async () => {
@@ -81,13 +88,31 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
               const fd = new FormData();
               fd.append('file', file);
               if (uploadExtra) Object.entries(uploadExtra).forEach(([k, v]) => fd.append(k, v));
+
               const res = await fetch(uploadEndpoint, { method: 'POST', body: fd });
               const data = await res.json();
               if (!res.ok) throw new Error(data?.error || 'Upload failed');
-              const range = quillRef.current.getSelection(true);
-              const index = range ? range.index : quillRef.current.getLength();
-              quillRef.current.insertEmbed(index, 'image', data.url, 'user');
-              quillRef.current.setSelection(index + 1, 0, 'silent');
+
+              // ✅ selection 안전 처리
+              let range = quillRef.current.getSelection(true);
+              if (!range) {
+                const len = quillRef.current.getLength();
+                range = { index: len - 1, length: 0 };
+              }
+
+              // ✅ 이미지 삽입
+              quillRef.current.insertEmbed(range.index, 'image', data.url, 'user');
+
+              // ✅ selection 복원 (비동기 안전)
+              setTimeout(() => {
+                try {
+                  const totalLength = quillRef.current.getLength() || 1;
+                  const safeIndex = Math.min(totalLength - 1, (range.index ?? 0) + 1);
+                  quillRef.current.setSelection(safeIndex, 0, 'silent');
+                } catch {
+                  console.warn('Selection skipped safely.');
+                }
+              }, 0);
             } catch (e) {
               console.error(e);
               alert('이미지 업로드에 실패했습니다.');
@@ -97,14 +122,14 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
         });
       }
 
-      // onChange: 사용자 입력만 반영
+      // ✅ onChange 이벤트
       quillRef.current.on('text-change', (_d: any, _o: any, source: 'user' | 'api') => {
         if (source === 'user' && onChange) {
           onChange(quillRef.current.root.innerHTML);
         }
       });
 
-      // ✅ 생성 직후 최신 value 주입 — delta 변환 대신 "그대로" 붙여넣기
+      // ✅ 초기 값 세팅
       const initial = latestValueRef.current || '';
       if (initial) {
         quillRef.current.clipboard.dangerouslyPasteHTML(0, initial, 'silent');
@@ -119,18 +144,12 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(function Ric
     };
   }, [readOnly, placeholder, uploadEndpoint, uploadExtra]);
 
-  // ✅ value 변경 시에도 항상 반영 (빈값 비교만)
+  // ✅ 외부 value 반영
   useEffect(() => {
     if (!quillRef.current) return;
     const incoming = typeof value === 'string' ? value : '';
     const current = quillRef.current.root.innerHTML;
-
-    const isEmpty = (s: string) =>
-      !s || /^\s*(<p><br><\/p>|<p>\s*<\/p>)\s*$/i.test(s);
-
-    if (isEmpty(current) && !isEmpty(incoming)) {
-      quillRef.current.clipboard.dangerouslyPasteHTML(0, incoming, 'silent');
-    } else if (current !== incoming) {
+    if (incoming !== current) {
       quillRef.current.clipboard.dangerouslyPasteHTML(0, incoming, 'silent');
     }
   }, [value, defaultValue]);

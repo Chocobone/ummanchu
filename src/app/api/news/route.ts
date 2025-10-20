@@ -1,51 +1,46 @@
 import { NextResponse } from 'next/server';
-import {prisma} from '@/lib/prisma';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
 export const dynamic = 'force-dynamic';
-// GET all news items
+
+// GET /api/news
 export async function GET() {
   try {
-    const news = await prisma.news.findMany({
-      orderBy: {
-        publishedAt: 'desc',
-      },
+    const items = await prisma.news.findMany({
+      orderBy: { publishedAt: 'desc' },
     });
-    return NextResponse.json(news);
-  } catch (error) {
-    console.error('Error fetching news:', error);
+    return NextResponse.json(items);
+  } catch (err) {
+    console.error('Error fetching news:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-// POST a new news item (Admin protected)
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || session.user?.role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
+// POST /api/news (인증 검사 없음)
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { title, description, imageUrl, publishedAt } = body;
+    const body = await req.json();
+    const { title, description, imageUrl, publishedAt } = body ?? {};
 
     if (!title || !description) {
-      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Title and description are required' },
+        { status: 400 }
+      );
     }
 
-    const newNews = await prisma.news.create({
+    const created = await prisma.news.create({
       data: {
         title,
         description,
-        imageUrl: imageUrl || null,
-        publishedAt: publishedAt ? new Date(publishedAt) : new Date(), // Use provided date or current date
+        imageUrl: imageUrl ?? null,
+        publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
       },
     });
 
-    return NextResponse.json(newNews, { status: 201 });
-  } catch (error) {
-    console.error('Error creating news:', error);
+    return NextResponse.json(created, { status: 201 });
+  } catch (err) {
+    console.error('Error creating news:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
