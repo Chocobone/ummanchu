@@ -22,7 +22,7 @@ export default function PageLayout({ children, className = "" }: PageLayoutProps
     >
       <Header />
       <main
-        className={`pt-[100px] pb-20 transform transition-transform duration-300 ease-in-out ${mainOffset}`}
+        className={`pt-[150px] pb-20 transform transition-transform duration-300 ease-in-out ${mainOffset}`}
       >
         {children}
       </main>
