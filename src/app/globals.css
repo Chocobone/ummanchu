@@ -142,3 +142,50 @@ body {
   opacity: 1;
   transform: translateX(0);
 }
+
+
+/* =============================== */
+/*  Quill 이미지 정렬 및 스타일 개선 */
+/* =============================== */
+/* 이미지 래퍼 + 핸들러 */
+.ql-custom-resize-wrapper {
+  position: relative;
+  display: inline-block;
+  border: 1px dashed #aaa;
+  padding: 2px;
+}
+
+.ql-custom-resize-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: nwse-resize;
+}
+
+.ql-custom-align-toolbar {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  gap: 6px;
+  padding: 2px 6px;
+}
+
+.ql-custom-align-toolbar button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.ql-custom-align-toolbar button:hover {
+  color: #2563eb;
+}
