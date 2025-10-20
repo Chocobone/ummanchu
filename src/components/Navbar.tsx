@@ -1,24 +1,22 @@
 "use client";
 
-import { Moon, Sun, LogOut, LogIn, Menu } from "lucide-react";
+import { Moon, Sun, LogOut, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
-  const { isAdmin, logout } = useAuth();
+  const { data: session, status } = useSession();
 
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  // 스크롤 방향 감지 (내릴 땐 숨기고, 올리면 보이기)
   const [hidden, setHidden] = useState(false);
   const lastYRef = useRef(0);
   const tickingRef = useRef(false);
@@ -28,11 +26,10 @@ const Navbar = () => {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
-
       if (!tickingRef.current) {
         window.requestAnimationFrame(() => {
           const goingDown = y > lastYRef.current;
-          const pastHeader = y > 10; // 살짝 스크롤했을 때만 동작
+          const pastHeader = y > 10;
           setHidden(goingDown && pastHeader);
           lastYRef.current = y;
           tickingRef.current = false;
@@ -40,7 +37,6 @@ const Navbar = () => {
         tickingRef.current = true;
       }
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -74,11 +70,7 @@ const Navbar = () => {
     >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            aria-label="SSIL Home"
-            className="text-xl font-bold text-primary"
-          >
+          <Link href="/" aria-label="SSIL Home" className="text-xl font-bold text-primary">
             {mounted && (
               <Image
                 key={resolvedTheme}
@@ -100,8 +92,11 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`text-sm font-medium transition-colors hover:text-primary ${isActive(item.path) ? "text-primary" : "text-muted-foreground"
-                  }`}
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  isActive(item.path)
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
               >
                 {item.label}
               </Link>
@@ -124,10 +119,11 @@ const Navbar = () => {
                     key={item.path}
                     href={item.path}
                     onClick={() => setOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary px-2 py-2 rounded-md ${isActive(item.path)
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground"
-                      }`}
+                    className={`text-sm font-medium transition-colors hover:text-primary px-2 py-2 rounded-md ${
+                      isActive(item.path)
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground"
+                    }`}
                   >
                     {item.label}
                   </Link>
@@ -136,17 +132,17 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
 
-          {isAdmin &&
+          {status === "authenticated" && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={logout}
-              className="hidden md:flex"
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="hidden md:flex rounded"
             >
               <LogOut className="h-4 w-4" />
               <span className="ml-2">Logout</span>
             </Button>
-          }
+          )}
 
           {mounted && (
             <Button
@@ -155,7 +151,7 @@ const Navbar = () => {
               onClick={() =>
                 setTheme(resolvedTheme === "dark" ? "light" : "dark")
               }
-              className="rounded-[15px]"
+              className="rounded-xl"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
