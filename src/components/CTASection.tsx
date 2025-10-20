@@ -99,7 +99,7 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
               newsData.map((item) => (
                 <div
                   key={item.id}
-                  className="border border-border/20 rounded-lg overflow-hidden"
+                  className="border border-border/50 rounded overflow-hidden"
                 >
                   <div className="relative w-full h-48">
                     {item.imageUrl ? (
