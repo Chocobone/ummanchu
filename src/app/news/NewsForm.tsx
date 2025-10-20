@@ -153,7 +153,7 @@ export default function NewsForm({ mode, newsId, defaultValues, onSuccess }: New
       <div className="flex justify-end gap-3">
         <button
           type="submit"
-          className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition disabled:opacity-50"
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition disabled:opacity-50"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Saving...' : mode === 'edit' ? 'Update' : 'Create'}

@@ -1,70 +1,49 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { unstable_noStore as noStore } from "next/cache";
 import PageLayout from "@/components/PageLayout";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import NewsDetailClient from "./_client";
 
 export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
-  const newsItems = await prisma.news.findMany({
-    select: { id: true },
-  });
+  const newsItems = await prisma.news.findMany({ select: { id: true } });
   return newsItems.map((item) => ({ id: item.id }));
 }
 
-export default async function NewsDetailPage({ params }: { params: { id: string } }) {
+export default async function NewsDetailPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { edit?: string };
+}) {
   noStore();
-  const { id } = params;
 
-  const news = await prisma.news.findUnique({
-    where: { id },
-  });
-
+  const news = await prisma.news.findUnique({ where: { id: params.id } });
   if (!news) notFound();
+
+  const publishedDateStr = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "UTC",
+  }).format(new Date(news.publishedAt));
 
   return (
     <PageLayout>
-        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="flex justify-start mb-6">
-          <Link
-            href="/news"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to News
-          </Link>
-        </div>
-        
-          {/* 제목 */}
-          <header className="text-center space-y-2">
-            <h1 className="text-4xl font-bold text-foreground">{news.title}</h1>
-            <p className="text-sm text-muted-foreground">
-              Published on {new Date(news.publishedAt).toLocaleDateString()}
-            </p>
-          </header>
-
-          {/* 대표 이미지 */}
-          {news.imageUrl && (
-            <div className="relative w-full h-[400px] overflow-hidden rounded-lg shadow-sm">
-              <Image
-                src={news.imageUrl}
-                alt={news.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
-
-          {/* 본문 */}
-          <div
-            className="prose prose-neutral dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: news.description || "" }}
-          />
-        </article>
+      <NewsDetailClient
+        startInEdit={searchParams?.edit === "1"}
+        initialItem={{
+          id: news.id,
+          title: news.title,
+          description: news.description ?? "",
+          contentHtml: (news as any).contentHtml ?? null,
+          imageUrl: news.imageUrl ?? null,
+          publishedAt: news.publishedAt.toISOString(),
+          publishedDateStr,
+        }}
+      />
     </PageLayout>
   );
 }

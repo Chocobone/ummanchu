@@ -133,7 +133,7 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages, section
                 >
                   {isAdmin && (
                     <Link
-                      href={`/admin/news/${item.id}`}
+                      href={`/news/${item.id}?edit=1`}
                       className="absolute right-2 top-2 z-20 inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-black/70 text-white hover:bg-black/90"
                     >
                       <Pencil className="w-3 h-3" />
