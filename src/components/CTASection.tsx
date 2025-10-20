@@ -4,9 +4,22 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Pencil } from "lucide-react";
+import { useSession } from "next-auth/react";
 
-const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
+const newsDateFormatter =
+  typeof Intl !== "undefined"
+    ? new Intl.DateTimeFormat("en-GB", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "UTC",
+    })
+    : null;
+
+const CTASection = ({ researchData, newsData, homeContent, sliderImages, section }) => {
+  const { data: session } = useSession();
+  const isAdmin = !!session;
   const [scrollY, setScrollY] = useState(0);
   const [current, setCurrent] = useState(0);
 
@@ -59,6 +72,16 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
 
         <div className="absolute inset-0 bg-black/55 z-20" />
 
+        {isAdmin && (
+          <Link
+            href="/admin/home"
+            className="absolute right-4 top-4 z-40 inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded bg-white/90 text-black hover:bg-white"
+          >
+            <Pencil className="w-4 h-4" />
+            Edit Home
+          </Link>
+        )}
+
         <div className="relative z-30 w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-24 text-center space-y-6">
           <h1
             className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]"
@@ -74,24 +97,31 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
             </span>
             <br />
             <span className="text-white">
-              {content.heroSubtitle ||
-                "Space Science Instrument Laboratory"}
+              {content.heroSubtitle || "Space Science Instrument Laboratory"}
             </span>
           </h1>
         </div>
       </section>
 
-      <AboutSection content={content} />
-      <ResearchSection researchData={researchData} />
+      <AboutSection content={content} isAdmin={isAdmin} />
+      <ResearchSection researchData={researchData} isAdmin={isAdmin} />
 
       <section id="news" className="bg-background text-foreground py-24 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-2">
-            {content.newsTitle || "NEWS"}
-          </h2>
+          <div className="flex items-end justify-between mb-2">
+            <h2 className="text-4xl font-bold">{content.newsTitle || "NEWS"}</h2>
+            {isAdmin && (
+              <Link
+                href="/admin/news"
+                className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded bg-foreground text-background hover:opacity-90"
+              >
+                <Pencil className="w-4 h-4" />
+                Manage News
+              </Link>
+            )}
+          </div>
           <p className="mb-8 text-foreground/70">
-            {content.newsSubtitle ||
-              "Check out our latest news and announcements."}
+            {content.newsSubtitle || "Check out our latest news and announcements."}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -99,9 +129,18 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
               newsData.map((item) => (
                 <div
                   key={item.id}
-                  className="border border-border/50 rounded overflow-hidden"
+                  className="relative rounded-xl border border-border/30 bg-background overflow-hidden shadow-sm hover:shadow-md transition"
                 >
-                  <div className="relative w-full h-48">
+                  {isAdmin && (
+                    <Link
+                      href={`/admin/news/${item.id}`}
+                      className="absolute right-2 top-2 z-20 inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-black/70 text-white hover:bg-black/90"
+                    >
+                      <Pencil className="w-3 h-3" />
+                      Edit
+                    </Link>
+                  )}
+                  <div className="relative w-full h-48 border-b border-border/20">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
@@ -123,8 +162,11 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
                       READ MORE »
                     </Link>
                     <p className="text-xs mt-2 text-foreground/50">
-                      {new Date(item.publishedAt).toLocaleDateString()}
+                      {newsDateFormatter
+                        ? newsDateFormatter.format(new Date(item.publishedAt))
+                        : new Date(item.publishedAt).toISOString().slice(0, 10)}
                     </p>
+
                   </div>
                 </div>
               ))
@@ -140,7 +182,7 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
   );
 };
 
-const AboutSection = ({ content }) => {
+const AboutSection = ({ content, isAdmin }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -156,55 +198,40 @@ const AboutSection = ({ content }) => {
     <section
       ref={ref}
       id="about"
-      className="bg-background text-foreground py-40 px-6 overflow-hidden"
+      className="bg-background text-foreground py-40 px-6 overflow-hidden relative"
     >
+      {isAdmin && (
+        <Link
+          href="/admin/home#about"
+          className="absolute right-4 top-4 inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded bg-foreground text-background hover:opacity-90"
+        >
+          <Pencil className="w-4 h-4" />
+          Edit About
+        </Link>
+      )}
       <div className="max-w-4xl mx-auto text-center">
         <motion.h2
           className="text-4xl font-bold mb-6"
-          style={{
-            x: h2X,
-            opacity: h2Opacity,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 80,
-            damping: 20,
-          }}
+          style={{ x: h2X, opacity: h2Opacity }}
+          transition={{ type: "spring", stiffness: 80, damping: 20 }}
         >
-          {content.aboutTitle ||
-            "Empowering cosmic discovery—one payload at a time."}
+          {content.aboutTitle || "Empowering cosmic discovery—one payload at a time."}
         </motion.h2>
         <motion.p
           className="text-lg text-foreground/70 max-w-3xl mx-auto"
-          style={{
-            x: pX,
-            opacity: pOpacity,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 80,
-            damping: 25,
-            delay: 0.05,
-          }}
+          style={{ x: pX, opacity: pOpacity }}
+          transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.05 }}
         >
-          Since ancient times, people have expressed a variety of interests,
-          ranging from vague admiration for the universe to a brief curiosity.
-          Now, even space travel has reached a time when it is no longer an
-          imagination. Despite these times, and also in these times, people need
-          more scientific understanding of cosmic phenomena, which requires
-          various kinds of observational data in outer space. The Space Science
-          Instrument Laboratory (SSIL) focuses on this research.
+          Since ancient times, people have expressed a variety of interests, ranging from vague admiration for the universe to a brief curiosity. Now, even space travel has reached a time when it is no longer an imagination. Despite these times, and also in these times, people need more scientific understanding of cosmic phenomena, which requires various kinds of observational data in outer space. The Space Science Instrument Laboratory (SSIL) focuses on this research.
         </motion.p>
       </div>
     </section>
   );
 };
 
-const ResearchSection = ({ researchData }) => {
+const ResearchSection = ({ researchData, isAdmin }) => {
   const [index, setIndex] = useState(0);
-  const allProjects = researchData
-    ? [...researchData.Current, ...researchData.Completed]
-    : [];
+  const allProjects = researchData ? [...researchData.Current, ...researchData.Completed] : [];
   const total = allProjects.length;
 
   const next = useCallback(() => {
@@ -227,17 +254,24 @@ const ResearchSection = ({ researchData }) => {
 
   const current = allProjects[index];
   const category = current.status === "IN_PROGRESS" ? "Current" : "Completed";
-  const projectIndexInList = researchData[category].findIndex(
-    (p) => p.id === current.id
-  );
+  const projectIndexInList = researchData[category].findIndex((p) => p.id === current.id);
 
   return (
     <section id="research" className="bg-background text-foreground py-24 px-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold mb-2">Our Mission</h2>
-        <p className="mb-8 text-foreground/70">
-          Recent highlights from SSIL’s research and missions.
-        </p>
+        <div className="flex items-end justify-between mb-2">
+          <h2 className="text-4xl font-bold">Our Mission</h2>
+          {isAdmin && (
+            <Link
+              href={`/admin/research?cat=${category}&id=${current.id}`}
+              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-foreground text-background hover:opacity-90"
+            >
+              <Pencil className="w-4 h-4" />
+              Edit This Project
+            </Link>
+          )}
+        </div>
+        <p className="mb-8 text-foreground/70">Recent highlights from SSIL’s research and missions.</p>
       </div>
       <div className="max-w-6xl mx-auto relative overflow-hidden rounded-lg">
         <div className="relative h-[500px] w-full">
@@ -268,13 +302,13 @@ const ResearchSection = ({ researchData }) => {
           </div>
           <button
             onClick={prev}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
           >
             <ArrowLeft className="w-6 h-6 text-foreground" />
           </button>
           <button
             onClick={next}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
           >
             <ArrowRight className="w-6 h-6 text-foreground" />
           </button>
@@ -282,9 +316,7 @@ const ResearchSection = ({ researchData }) => {
             {allProjects.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full ${
-                  i === index ? "bg-primary" : "bg-foreground/40"
-                }`}
+                className={`w-2 h-2 rounded-full ${i === index ? "bg-primary" : "bg-foreground/40"}`}
               />
             ))}
           </div>
