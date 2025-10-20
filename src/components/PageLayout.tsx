@@ -2,6 +2,7 @@
 
 import Header from "@/components/Navbar";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -9,13 +10,22 @@ interface PageLayoutProps {
 }
 
 export default function PageLayout({ children, className = "" }: PageLayoutProps) {
-  return (
-    <div className={`min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950 ${className}`}>
-      <div className="fixed inset-x-0 top-0 z-50 bg-white/90 dark:bg-neutral-950/90 backdrop-blur border-b border-border">
-        <Header />
-      </div>
+  const pathname = usePathname();
 
-      <main className="pt-32 pb-20">{children}</main>
+  // research는 그대로, 나머지는 아래로
+  const mainOffset =
+    pathname.startsWith("/research") ? "translate-y-0" : "translate-y-[100px]";
+
+  return (
+    <div
+      className={`min-h-screen bg-white text-foreground transition-colors dark:bg-neutral-950 ${className}`}
+    >
+      <Header />
+      <main
+        className={`pt-[100px] pb-20 transform transition-transform duration-300 ease-in-out ${mainOffset}`}
+      >
+        {children}
+      </main>
     </div>
   );
 }
