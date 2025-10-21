@@ -54,6 +54,7 @@ model HomePageContent {
   aboutParagraph String
   newsTitle      String
   newsSubtitle   String
+  fontFamily   String?  
 }
 
 model SliderImage {
@@ -89,10 +90,9 @@ model Contact {
 }
 
 model AboutContent {
-  id        Int      @id @default(autoincrement())
-  page      String   @unique
-  data      Json
-  updatedAt DateTime @updatedAt
+  page       String   @id
+  data       Json
+  updatedAt  DateTime @updatedAt
 }
 
 model Publication {
