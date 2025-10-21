@@ -29,6 +29,7 @@ function toUiContent(c: any) {
       "Since ancient times, people have expressed a variety of interests, ranging from vague admiration for the universe to a brief curiosity. Now, even space travel has reached a time when it is no longer an imagination. Despite these times, and also in these times, people need more scientific understanding of cosmic phenomena, which requires various kinds of observational data in outer space. The Space Science Instrument Laboratory (SSIL) focuses on this research.",
     newsTitle: x.newsTitle ?? "NEWS",
     newsSubtitle: x.newsSubtitle ?? "Check out our latest news and announcements.",
+    fontFamily: x.fontFamily ?? "MaruBuri", //default font이고 폰트 변경을 위해 추가함
   };
 }
 
@@ -41,6 +42,7 @@ function toApiPayload(ui: Partial<ReturnType<typeof toUiContent>>) {
   if ("aboutBody" in ui) p.aboutParagraph = ui.aboutBody;
   if ("newsTitle" in ui) p.newsTitle = ui.newsTitle;
   if ("newsSubtitle" in ui) p.newsSubtitle = ui.newsSubtitle;
+   if ("fontFamily" in ui) p.fontFamily = ui.fontFamily; //  추가
   return p;
 }
 
@@ -131,6 +133,8 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
 
   return (
     <>
+     <div style={{ fontFamily: home.fontFamily || "MaruBuri" }}>
+    
       <section className="relative h-screen w-full flex items-start text-foreground overflow-hidden pt-[120px]">
         {images.length > 0 && (
           <Image
@@ -339,8 +343,10 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
       {errorMsg && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 rounded-md bg-red-600 text-white px-4 py-2 shadow">
           {errorMsg}
-        </div>
+          </div>
+       
       )}
+      </div>
     </>
   );
 };

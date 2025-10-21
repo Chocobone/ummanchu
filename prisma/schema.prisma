@@ -54,6 +54,7 @@ model HomePageContent {
   aboutParagraph String
   newsTitle      String
   newsSubtitle   String
+  fontFamily   String?  
 }
 
 model SliderImage {
