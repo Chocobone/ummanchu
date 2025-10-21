@@ -3,7 +3,8 @@ import "./globals.css";
 import "quill/dist/quill.snow.css";
 import Providers from "./providers";
 import "@/styles/font.css";
-import "@/app/globals.css";
+import { FontProvider } from "@/context/FontContext"; // ✅ 추가
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="dark light" />
-        <style id="__theme_preload" dangerouslySetInnerHTML={{ __html: "html{background:#0a0a0a;color:#ededed}" }} />
+        <style
+          id="__theme_preload"
+          dangerouslySetInnerHTML={{ __html: "html{background:#0a0a0a;color:#ededed}" }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -36,7 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-          {children}
+          {/* ✅ FontProvider로 전역 감싸기 */}
+          <FontProvider>
+            {children}
+          </FontProvider>
         </Providers>
       </body>
     </html>
