@@ -135,7 +135,7 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
     <>
      <div style={{ fontFamily: home.fontFamily || "MaruBuri" }}>
     
-      <section className="relative h-screen w-full flex items-start text-foreground overflow-hidden pt-[120px]">
+      <section className="relative h-screen w-full flex items-start text-foreground overflow-hidden pt-[200px]">
         {images.length > 0 && (
           <Image
             key={current}
