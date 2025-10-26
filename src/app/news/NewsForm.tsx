@@ -91,10 +91,22 @@ export default function NewsForm({ mode, newsId, defaultValues, onSuccess }: New
         />
       </div>
 
+      {/* Published Date */}
+      <div>
+        <label className="block font-semibold mb-2 text-foreground">Published Date</label>
+        <input
+          type="date"
+          value={formData.publishedAt}
+          onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
+          className="border border-border rounded-md p-2 w-full bg-background text-foreground focus:ring-2 focus:ring-primary focus:outline-none"
+          required
+        />
+      </div>
+
       {/* Description */}
       <div>
         <label className="block font-semibold mb-2 text-foreground">Description</label>
-        <div className="rounded-md border border-border bg-background p-2">
+        <div className="rounded-md border border-border bg-background">
           <RichEditor
             value={formData.description}
             onChange={(html) => setFormData({ ...formData, description: html })}
@@ -132,18 +144,6 @@ export default function NewsForm({ mode, newsId, defaultValues, onSuccess }: New
                        cursor-pointer transition"
           />
         )}
-      </div>
-
-      {/* Published Date */}
-      <div>
-        <label className="block font-semibold mb-2 text-foreground">Published Date</label>
-        <input
-          type="date"
-          value={formData.publishedAt}
-          onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
-          className="border border-border rounded-md p-2 w-full bg-background text-foreground focus:ring-2 focus:ring-primary focus:outline-none"
-          required
-        />
       </div>
 
       {/* Error */}
