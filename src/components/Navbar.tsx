@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun, LogOut, Menu } from "lucide-react";
+import { Moon, Sun, LogOut, Menu, LayoutDashboard } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -209,12 +209,20 @@ const Navbar = () => {
               </div>
 
               {status === "authenticated" && (
-                <div className="border-t border-gray-300 dark:border-gray-700 mt-4 pt-4">
+                <div className="flex flex-col gap-2 border-t border-gray-300 dark:border-gray-700 mt-4 pt-2">
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20 py-2 rounded-xl transition-colors"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>to admin panel</span>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    className="w-full rounded-xl flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200"
+                    className="w-full rounded-xl flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20"
                   >
                     <LogOut className="h-4 w-4" />
                     <span>Logout</span>
