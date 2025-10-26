@@ -26,10 +26,10 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black text-white p-10">
+    <main className="min-h-screen flex items-center justify-center p-10">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">관리자 전용 페이지</h1>
-        <p className="text-lg text-gray-300">
+        <p className="text-lg">
           환영합니다, <span className="font-semibold">{session?.user?.email}</span> 님 🎉
         </p>
       </div>
