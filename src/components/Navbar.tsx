@@ -130,10 +130,7 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   href={item.path}
-                  className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive(item.path)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                    }`}
+                  className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive(item.path) && "text-primary"}`}
                 >
                   {item.label}
                 </Link>
@@ -146,10 +143,7 @@ const Navbar = () => {
                 >
                   <Link
                     href="/research"
-                    className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive("/research")
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                      }`}
+                    className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive("/research") && "text-primary"}`}
                   >
                     Research
                   </Link>
