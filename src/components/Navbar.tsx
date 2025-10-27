@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun, LogOut, Menu } from "lucide-react";
+import { Moon, Sun, LogOut, Menu, LayoutDashboard } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,6 @@ const Navbar = () => {
   const lastYRef = useRef(0);
   const tickingRef = useRef(false);
 
-  // ✅ Research dropdown 전용 상태
   const [researchOpen, setResearchOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [researchNav, setResearchNav] = useState<ResearchNavItem[]>([]);
@@ -42,11 +41,9 @@ const Navbar = () => {
 
   const closeSoon = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    // ✅ 3초 뒤에 닫힘
     closeTimer.current = setTimeout(() => setResearchOpen(false), 3000);
   };
 
-  // ✅ research-nav API 호출
   useEffect(() => {
     (async () => {
       try {
@@ -61,7 +58,6 @@ const Navbar = () => {
 
   useEffect(() => setMounted(true), []);
 
-  // ✅ 스크롤 시 Nav 숨김
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
@@ -92,128 +88,143 @@ const Navbar = () => {
 
   const isActive = (path: string) =>
     path === "/" ? pathname === "/" : pathname.startsWith(path);
-const lightBg =
+  const lightBg =
     "bg-white/100 supports-[backdrop-filter]:bg-white/60 backdrop-blur";
   const darkBg =
     "bg-background/100 supports-[backdrop-filter]:bg-background/60 backdrop-blur";
   const tone = mounted && resolvedTheme === "light" ? lightBg : darkBg;
 
   return (
- <nav
-  className={[
-    "fixed top-0 z-50 w-full h-[100px] border-b transition-transform duration-300 will-change-transform",
-    hidden ? "-translate-y-full" : "translate-y-0",
-    tone,
-  ].join(" ")}
-><div className="container flex h-full items-center justify-between px-6">
-  <div className="flex items-center gap-10">
-    <Link
-      href="/"
-      aria-label="SSIL Home"
-      className="flex items-center justify-center"
-    >
-      {mounted && (
-        <Image
-          key={resolvedTheme}
-          src={
-            resolvedTheme === "dark"
-              ? "/main/logo_trans_03.png"
-              : "/main/logo_trans_01.png"
-          }
-          alt="SSIL Logo"
-          width={160}
-          height={70}
-          priority
-        />
-      )}
-    </Link>
-
-    {/* ✅ 메뉴 높이 정렬 */}
-    <div className="flex items-center h-[72px] gap-8">
-      {navItems.map((item) =>
-        item.label !== "Research" ? (
+    <nav
+      className={[
+        "fixed top-0 z-50 w-full h-[100px] border-b transition-transform duration-300 will-change-transform",
+        hidden ? "-translate-y-full" : "translate-y-0",
+        tone,
+      ].join(" ")}
+    ><div className="container flex h-full items-center justify-between px-6">
+        <div className="flex items-center gap-10">
           <Link
-            key={item.path}
-            href={item.path}
-            className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
-              isActive(item.path)
-                ? "text-primary"
-                : "text-muted-foreground"
-            }`}
+            href="/"
+            aria-label="SSIL Home"
+            className="flex items-center justify-center"
           >
-            {item.label}
+            {mounted && (
+              <Image
+                key={resolvedTheme}
+                src={
+                  resolvedTheme === "dark"
+                    ? "/main/logo_trans_03.png"
+                    : "/main/logo_trans_01.png"
+                }
+                alt="SSIL Logo"
+                width={160}
+                height={70}
+                priority
+              />
+            )}
           </Link>
-        ) : (
-          <div
-            key="Research"
-            className="relative flex items-center"
-            onMouseEnter={openNow}
-            onMouseLeave={closeSoon}
-          >
-            <Link
-              href="/research"
-              className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
-                isActive("/research")
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              }`}
-            >
-              Research
-            </Link>
 
-            {researchOpen && researchNav.length > 0 && (
-              <div
-                className="absolute left-0 top-full mt-2 bg-white dark:bg-neutral-900 border rounded-md shadow-lg z-[9999]"
-                onMouseEnter={openNow}
-                onMouseLeave={closeSoon}
-              >
-                <ul className="min-w-[220px] p-2">
-                  {researchNav.map((r) => (
-                    <li key={r.href}>
-                      <Link
-                        href={r.href}
-                        className="block px-4 py-2 text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary transition"
-                      >
-                        {r.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="hidden md:flex flex items-center h-[72px] gap-8">
+            {navItems.map((item) =>
+              item.label !== "Research" ? (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive(item.path) && "text-primary"}`}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <div
+                  key="Research"
+                  className="relative flex items-center"
+                  onMouseEnter={openNow}
+                  onMouseLeave={closeSoon}
+                >
+                  <Link
+                    href="/research"
+                    className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive("/research") && "text-primary"}`}
+                  >
+                    Research
+                  </Link>
+
+                  {researchOpen && researchNav.length > 0 && (
+                    <div
+                      className="absolute left-0 top-full mt-2 bg-white dark:bg-neutral-900 border rounded-md shadow-lg z-[9999]"
+                      onMouseEnter={openNow}
+                      onMouseLeave={closeSoon}
+                    >
+                      <ul className="min-w-[220px] p-2">
+                        {researchNav.map((r) => (
+                          <li key={r.href}>
+                            <Link
+                              href={r.href}
+                              className="block px-4 py-2 text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary transition"
+                            >
+                              {r.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )
             )}
           </div>
-        )
-      )}
-    </div>
-  </div>
+        </div>
 
 
         <div className="flex items-center gap-2">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button variant="ghost" size="icon" className="md:hidden rounded-xl">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className={`w-[240px] ${tone}`}>
-              <div className="flex flex-col gap-4 mt-8">
+            <SheetContent side="right" className={`w-[240px] ${tone} flex flex-col`}>
+              <div className="flex-1 flex flex-col gap-4 mt-8 overflow-y-auto">
                 {navItems.map((item) => (
                   <Link
                     key={item.path}
                     href={item.path}
                     onClick={() => setOpen(false)}
-                    className={`text-sm font-medium transition-colors hover:text-primary px-2 py-2 rounded-md ${
-                      isActive(item.path)
-                        ? "text-primary bg-primary/10"
-                        : "text-muted-foreground"
-                    }`}
+                    className={`text-sm font-medium transition-colors px-2 py-2 rounded
+          hover:bg-gray-300 dark:hover:text-primary/80
+          ${isActive(item.path)
+                        ? "bg-gray-200 text-primary dark:bg-primary/10"
+                        : "text-gray-800 dark:text-muted-foreground"
+                      }`}
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
+
+              {status === "authenticated" && (
+                <div className="flex flex-col gap-2 border-t border-gray-300 dark:border-gray-700 mt-4 pt-2">
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20 py-2 rounded-xl transition-colors"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>to admin panel</span>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="w-full rounded-xl flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </Button>
+                </div>
+              )}
             </SheetContent>
+
           </Sheet>
 
           {status === "authenticated" && (

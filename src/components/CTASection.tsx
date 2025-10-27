@@ -97,12 +97,10 @@ const CTASection = ({ researchData, newsData, homeContent, sliderImages }) => {
 
 
     if (!putRes.ok) {
-      // 서버 에러 메시지를 그대로 띄워서 진단이 쉬움
       const txt = await putRes.text().catch(() => "");
       throw new Error(`PUT /api/home/content failed: ${putRes.status} ${txt}`);
     }
 
-    // 5) 성공 시 서버 응답을 UI 키로 동기화
     const updated = await putRes.json().catch(() => ({}));
     setHome((prev) => ({ ...prev, ...toUiContent(updated) }));
   };
@@ -367,9 +365,9 @@ const AboutSection = ({
     offset: ["start 90%", "center 60%"],
   });
 
-  const h2X = useTransform(scrollYProgress, [0, 1], ["-120px", "0px"]);
+  const h2X = useTransform(scrollYProgress, [0, 1], ["-300px", "0px"]);
   const h2Opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const pX = useTransform(scrollYProgress, [0, 1], ["120px", "0px"]);
+  const pX = useTransform(scrollYProgress, [0, 1], ["300px", "0px"]);
   const pOpacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
