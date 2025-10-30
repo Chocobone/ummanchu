@@ -12,7 +12,7 @@
 
 ### 스크린샷 (선택)
 변경사항에 대한 UI, Postman 등의 동작 내용을 첨부해주세요
->Befor  | After 
+>Before | After 
 -- | --
 |
 
