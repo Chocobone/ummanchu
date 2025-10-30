@@ -25,6 +25,7 @@ const fontOptions = [
   "Nanum Myungjo",
   "Holigas",
   "Mickerr",
+  "Space Grotesk",
 ];
 
 interface SliderImage {
