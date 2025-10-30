@@ -32,7 +32,7 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-          <nav className="space-y-3 lg:col-span-1">
+          <nav className="space-y-3 col-span-1">
             {tabs.map((t) => (
               <button
                 key={t}
@@ -47,7 +47,7 @@ export default function PeopleClientPage({ peopleData }: PeopleClientPageProps) 
             ))}
           </nav>
 
-          <div className="lg:col-span-3 space-y-10">
+          <div className="col-span-3 space-y-10">
             {profiles.length > 0 ? (
               profiles.map((profile) => (
                 <section
