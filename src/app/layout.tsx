@@ -3,14 +3,36 @@ import "./globals.css";
 import "quill/dist/quill.snow.css";
 import Providers from "./providers";
 import "@/styles/font.css";
-import { FontProvider } from "@/context/FontContext"; // ✅ 추가
+import { FontProvider } from "@/context/FontContext";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata = {
-  title: { default: "SSIL Lab", template: "%s | SSIL Lab" },
-  description: "경희대학교 우주과학과 연구실(SSIL Lab) 홈페이지",
+  title: {
+    default: "경희대학교 우주탑재체 연구실 SSIL | Space Science & Instrumentation Laboratory",
+    template: "%s | SSIL Lab",
+  },
+  description:
+    "경희대학교 응용과학대학 우주탑재체 연구실(SSIL, Space Science & Instrumentation Laboratory)은 위성 및 우주관측기기 개발을 중심으로 연구를 수행하고 있습니다. 연구 주제, 논문, 구성원, 장비 정보를 제공합니다.",
+  keywords: [
+    "경희대학교",
+    "우주탑재체 연구실",
+    "SSIL",
+    "Space Science and Instrumentation Laboratory",
+    "우주과학과",
+    "경희대 우주과학",
+  ],
+  authors: [{ name: "SSIL Lab, Kyung Hee University" }],
+  openGraph: {
+    title: "경희대학교 우주탑재체 연구실 SSIL",
+    description:
+      "경희대학교 응용과학대학 우주탑재체 연구실(SSIL)의 연구 및 프로젝트를 소개합니다.",
+    url: "https://ssil.khu.ac.kr",
+    siteName: "SSIL Lab",
+    locale: "ko_KR",
+    type: "website",
+  },
   icons: { icon: "/favicon.ico" },
 };
 
