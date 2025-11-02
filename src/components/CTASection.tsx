@@ -29,7 +29,7 @@ function toUiContent(c: any) {
       "Since ancient times, people have expressed a variety of interests, ranging from vague admiration for the universe to a brief curiosity. Now, even space travel has reached a time when it is no longer an imagination. Despite these times, and also in these times, people need more scientific understanding of cosmic phenomena, which requires various kinds of observational data in outer space. The Space Science Instrument Laboratory (SSIL) focuses on this research.",
     newsTitle: x.newsTitle ?? "NEWS",
     newsSubtitle: x.newsSubtitle ?? "Check out our latest news and announcements.",
-    fontFamily: x.fontFamily ?? "MaruBuri", //default font이고 폰트 변경을 위해 추가함
+    fontFamily: x.fontFamily ?? "MaruBuri",
   };
 }
 
@@ -42,7 +42,7 @@ function toApiPayload(ui: Partial<ReturnType<typeof toUiContent>>) {
   if ("aboutBody" in ui) p.aboutParagraph = ui.aboutBody;
   if ("newsTitle" in ui) p.newsTitle = ui.newsTitle;
   if ("newsSubtitle" in ui) p.newsSubtitle = ui.newsSubtitle;
-   if ("fontFamily" in ui) p.fontFamily = ui.fontFamily; //  추가
+   if ("fontFamily" in ui) p.fontFamily = ui.fontFamily;
   return p;
 }
 
@@ -524,19 +524,19 @@ const ResearchSection = ({ researchData, isAdmin }) => {
             onClick={prev}
             className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
           >
-            <ArrowLeft className="w-6 h-6 text-foreground" />
+            <ArrowLeft className="w-6 h-6 text-background dark:text-foreground" />
           </button>
           <button
             onClick={next}
             className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 bg-black/40 hover:bg-black/70 rounded-full"
           >
-            <ArrowRight className="w-6 h-6 text-foreground" />
+            <ArrowRight className="w-6 h-6 text-background dark:text-foreground" />
           </button>
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
             {allProjects.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full ${i === index ? "bg-primary" : "bg-foreground/40"}`}
+                className={`w-2 h-2 rounded-full ${i === index ? "bg-primary" : "bg-background/40 dark:bg-foreground/40"}`}
               />
             ))}
           </div>

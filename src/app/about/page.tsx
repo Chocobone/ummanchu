@@ -8,7 +8,6 @@ import Loading from "@/components/Loading";
 import PageLayout from "@/components/PageLayout";
 import { defaultAbout } from "@/lib/aboutContent";
 
-// ✅ RichEditor 동적 import
 const RichEditor = dynamic<{
   value: string;
   onChange: (value: string) => void;
