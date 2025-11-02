@@ -161,4 +161,7 @@ export const RichEditor = React.forwardRef<RichEditorHandle, Props>(
   }
 );
 
+// ✅ ESLint 'react/display-name' 경고 해결
+RichEditor.displayName = 'RichEditor';
+
 export default RichEditor;
