@@ -101,7 +101,7 @@ export default function GeneratorPage() {
               }}
             >
               <Image
-                src="/icons/cloud-upload.svg"
+                src="/images/icons.png"
                 alt="upload icon"
                 width={48}
                 height={48}
