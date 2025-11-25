@@ -2,9 +2,12 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import Image from "next/image";
+import { downsampleVideo } from "@/lib/downsampleVideo";
 
+import { analyzeVideoWithGemini } from "@/lib/geminiVideoAnalyzer";
 export default function GeneratorPage() {
   const [activeTab, setActiveTab] = useState<"youtube" | "upload">("youtube");
+const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   // Upload state
   const [dragActive, setDragActive] = useState(false);
@@ -12,17 +15,20 @@ export default function GeneratorPage() {
   const [progress, setProgress] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
 const router = useRouter();
-  const uploadFile = (file: File) => {
-    setFileName(file.name);
-    setProgress(0);
 
-    let p = 0;
-    const timer = setInterval(() => {
-      p += 5;
-      setProgress(p);
-      if (p >= 100) clearInterval(timer);
-    }, 100);
-  };
+const uploadFile = (file: File) => {
+  setUploadedFile(file); // 추가됨
+  setFileName(file.name);
+  setProgress(0);
+
+  let p = 0;
+  const timer = setInterval(() => {
+    p += 5;
+    setProgress(p);
+    if (p >= 100) clearInterval(timer);
+  }, 100);
+};
+
 
   return (
     <div className="max-w-4xl mx-auto py-16 px-4">
@@ -162,13 +168,31 @@ const router = useRouter();
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  <button
-                    onClick={() => router.push("/generator/generating")}
-                    className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
-                  >
-                    가사 없이 생성하기
-                  </button>
+<button
+  onClick={async () => {
+    if (!uploadedFile) return alert("파일이 없습니다.");
 
+    // 1. ffmpeg 최적화 (wasm)
+    const optimizedBlob = await downsampleVideo(uploadedFile);
+
+    // 2. Gemini로 분석 (wasm Blob → File 변환)
+    const optimizedFile = new File([optimizedBlob], "optimized.mp4", { type: "video/mp4" });
+
+    const analysis = await analyzeVideoWithGemini(
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY,
+      optimizedFile,
+      0
+    );
+
+    console.log("Gemini 분석 결과:", analysis);
+
+    // 3. 페이지 이동
+    router.push("/generator/generating");
+  }}
+  className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+>
+  가사 없이 생성하기
+</button>
                   <button
                     onClick={() => router.push("/generator/generating?lyrics=on")}
                     className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"

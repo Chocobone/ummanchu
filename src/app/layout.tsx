@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "quill/dist/quill.snow.css";
-import Providers from "./providers";
+
 import "@/styles/font.css";
 import { FontProvider } from "@/context/FontContext";
 import Navbar from "@/components/Navbar";
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
+       
           {/* ✅ FontProvider로 전역 감싸기 */}
           <FontProvider>
             {/* 🔥 공통 네비게이션 */}
@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
 
           </FontProvider>
-        </Providers>
+        
       </body>
     </html>
   );

@@ -1,12 +1,11 @@
 "use client";
 
-import { Moon, Sun, LogOut, Menu, LayoutDashboard } from "lucide-react";
+import { Moon, Sun, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,7 +18,6 @@ type ResearchNavItem = {
 const Navbar = () => {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
-  const { data: session, status } = useSession();
 
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -44,6 +42,7 @@ const Navbar = () => {
     closeTimer.current = setTimeout(() => setResearchOpen(false), 3000);
   };
 
+  // Research nav fetch
   useEffect(() => {
     (async () => {
       try {
@@ -58,6 +57,7 @@ const Navbar = () => {
 
   useEffect(() => setMounted(true), []);
 
+  // navbar hide/show on scroll
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
@@ -81,17 +81,14 @@ const Navbar = () => {
     { path: "/generator", label: "제네레이터" },
     { path: "/price", label: "가격" },
     { path: "/my", label: "내 계정" },
-    { path: "/login", label: "로그인" },
-    { path: "/start", label: "시작하기" },
-    
+    { path: "/start", label: "시작하기" }
   ];
 
   const isActive = (path: string) =>
     path === "/" ? pathname === "/" : pathname.startsWith(path);
-  const lightBg =
-    "bg-white/100 supports-[backdrop-filter]:bg-white/60 backdrop-blur";
-  const darkBg =
-    "bg-background/100 supports-[backdrop-filter]:bg-background/60 backdrop-blur";
+
+  const lightBg = "bg-white/100 supports-[backdrop-filter]:bg-white/60 backdrop-blur";
+  const darkBg = "bg-background/100 supports-[backdrop-filter]:bg-background/60 backdrop-blur";
   const tone = mounted && resolvedTheme === "light" ? lightBg : darkBg;
 
   return (
@@ -101,13 +98,11 @@ const Navbar = () => {
         hidden ? "-translate-y-full" : "translate-y-0",
         tone,
       ].join(" ")}
-    ><div className="container flex h-full items-center justify-between px-6">
+    >
+      <div className="container flex h-full items-center justify-between px-6">
         <div className="flex items-center gap-10">
-          <Link
-            href="/"
-            aria-label="SSIL Home"
-            className="flex items-center justify-center"
-          >
+          {/* LOGO */}
+          <Link href="/" aria-label="Home" className="flex items-center justify-center">
             {mounted && (
               <Image
                 key={resolvedTheme}
@@ -116,7 +111,7 @@ const Navbar = () => {
                     ? "/main/logo_trans_03.png?v=1"
                     : "/main/logo_trans_01.png?v=1"
                 }
-                alt="SSIL Logo"
+                alt="Logo"
                 width={160}
                 height={70}
                 priority
@@ -124,65 +119,32 @@ const Navbar = () => {
             )}
           </Link>
 
-        <div className="hidden md:flex items-center h-[72px] gap-8 ml-20">
-            {navItems.map((item) =>
-              item.label !== "Research" ? (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive(item.path) && "text-primary"}`}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <div
-                  key="Research"
-                  className="relative flex items-center"
-                  onMouseEnter={openNow}
-                  onMouseLeave={closeSoon}
-                >
-                  <Link
-                    href="/research"
-                    className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${isActive("/research") && "text-primary"}`}
-                  >
-                    Research
-                  </Link>
-
-                  {researchOpen && researchNav.length > 0 && (
-                    <div
-                      className="absolute left-0 top-full mt-2 bg-white dark:bg-neutral-900 border rounded-md shadow-lg z-[9999]"
-                      onMouseEnter={openNow}
-                      onMouseLeave={closeSoon}
-                    >
-                      <ul className="min-w-[220px] p-2">
-                        {researchNav.map((r) => (
-                          <li key={r.href}>
-                            <Link
-                              href={r.href}
-                              className="block px-4 py-2 text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary transition"
-                            >
-                              {r.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )
-            )}
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center h-[72px] gap-8 ml-20">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
+                  isActive(item.path) ? "text-primary" : ""
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
 
-
+        {/* Right Side Icons */}
         <div className="flex items-center gap-2">
+          {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden rounded-xl">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
+
             <SheetContent side="right" className={`w-[240px] ${tone} flex flex-col`}>
               <div className="flex-1 flex flex-col gap-4 mt-8 overflow-y-auto">
                 {navItems.map((item) => (
@@ -191,54 +153,21 @@ const Navbar = () => {
                     href={item.path}
                     onClick={() => setOpen(false)}
                     className={`text-sm font-medium transition-colors px-2 py-2 rounded
-          hover:bg-gray-300 dark:hover:text-primary/80
-          ${isActive(item.path)
-                        ? "bg-gray-200 text-primary dark:bg-primary/10"
-                        : "text-gray-800 dark:text-muted-foreground"
+                      hover:bg-gray-300 dark:hover:text-primary/80
+                      ${
+                        isActive(item.path)
+                          ? "bg-gray-200 text-primary dark:bg-primary/10"
+                          : "text-gray-800 dark:text-muted-foreground"
                       }`}
                   >
                     {item.label}
                   </Link>
                 ))}
               </div>
-
-              {status === "authenticated" && (
-                <div className="flex flex-col gap-2 border-t border-gray-300 dark:border-gray-700 mt-4 pt-2">
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    className="w-full flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20 py-2 rounded-xl transition-colors"
-                  >
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>to admin panel</span>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="w-full rounded-xl flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 hover:bg-white/20"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                  </Button>
-                </div>
-              )}
             </SheetContent>
-
           </Sheet>
 
-          {status === "authenticated" && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="hidden md:flex rounded"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="ml-2">Logout</span>
-            </Button>
-          )}
-
+          {/* Theme Toggle */}
           {mounted && (
             <Button
               variant="ghost"
@@ -250,7 +179,6 @@ const Navbar = () => {
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
             </Button>
           )}
         </div>

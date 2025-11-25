@@ -1,31 +1,39 @@
 // next.config.mjs
-import path from 'node:path'; // ← 꼭 import
-// __dirname 대신 process.cwd() 사용 (ESM에서 안전)
+import path from "node:path";
 const projectRoot = process.cwd();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   images: {
-    // 둘 중 편한 방식으로 하나만 쓰면 됨
-    // 1) domains
-    domains: ['webrefactor.s3.ap-northeast-2.amazonaws.com'],
-remotePatterns: [
-      // 필요 도메인만 추가 (예시들)
-      { protocol: 'https', hostname: 'ssil.khu.ac.kr' },
-    
-      // 개발 중 임시로 로컬 파일서버 쓴다면:
-      { protocol: 'http', hostname: 'localhost' },
-      { protocol: 'http', hostname: '127.0.0.1' },
+  images: {
+    domains: ["webrefactor.s3.ap-northeast-2.amazonaws.com"],
+    remotePatterns: [
+      { protocol: "https", hostname: "ssil.khu.ac.kr" },
+      { protocol: "http", hostname: "localhost" },
+      { protocol: "http", hostname: "127.0.0.1" },
     ],
-    // 2) remotePatterns (더 정교)
-    // remotePatterns: [
-    //   { protocol: 'https', hostname: 'webrefactor.s3.ap-northeast-2.amazonaws.com' },
-    // ],
   },
+
+  // 🔥 핵심: FFmpeg WASM Worker 오류 해결
   webpack(config) {
-    // tsconfig의 "@/..."를 webpack에도 동일하게 매핑
-    config.resolve.alias['@'] = path.resolve(projectRoot, 'src');
+    config.resolve.alias["@"] = path.resolve(projectRoot, "src");
+
+    // ffmpeg worker path override
+    config.resolve.alias["worker"] = false; // dynamic worker import 방지
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      worker_threads: false,
+      fs: false,
+      path: false,
+      os: false,
+    };
+
     return config;
+  },
+
+  // Turbopack Web Worker 에러 방지 (Next.js 15 필수)
+  experimental: {
+    workerThreads: false,
+    serverComponentsExternalPackages: ["@ffmpeg/ffmpeg"],
   },
 };
 

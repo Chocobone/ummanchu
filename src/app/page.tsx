@@ -1,5 +1,5 @@
 import Header from "@/components/Navbar";
-import CTASection from "@/components/CTASection";
+
 import Footer from "@/components/Footer";
 
 import { unstable_noStore as noStore } from "next/cache";
