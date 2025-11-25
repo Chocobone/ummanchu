@@ -12,18 +12,18 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata = {
   title: {
-    default: "경희대학교 우주탑재체 연구실 SSIL | Space Science & Instrumentation Laboratory",
-    template: "%s | SSIL Lab",
+    default: " 음만추 | 음악을 만들어주는 서비스",
+    template: "%s | ummanchu",
   },
   description:
-    "경희대학교 응용과학대학 우주탑재체 연구실(SSIL, Space Science & Instrumentation Laboratory)은 위성 및 우주관측기기 개발을 중심으로 연구를 수행하고 있습니다. 연구 주제, 논문, 구성원, 장비 정보를 제공합니다.",
+    "AI Hackathon 영상에 맞는 분위기의 음악 만들어주는 서비스",
   keywords: [
-    "경희대학교",
-    "우주탑재체 연구실",
-    "SSIL",
-    "Space Science and Instrumentation Laboratory",
-    "우주과학과",
-    "경희대 우주과학",
+    "음만추",
+    "도미넌트",
+    "ummanchu",
+    "ummanchu",
+    "",
+    "",
   ],
   authors: [{ name: "음만추" }],
   openGraph: {

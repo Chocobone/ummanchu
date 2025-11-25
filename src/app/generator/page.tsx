@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ export default function GeneratorPage() {
   const [fileName, setFileName] = useState("");
   const [progress, setProgress] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+const router = useRouter();
   const uploadFile = (file: File) => {
     setFileName(file.name);
     setProgress(0);
@@ -58,7 +58,9 @@ export default function GeneratorPage() {
           </button>
         </div>
 
-        {/* 콘텐츠 영역 */}
+        {/* -------------------------- */}
+        {/*         YouTube 탭         */}
+        {/* -------------------------- */}
         {activeTab === "youtube" && (
           <div className="text-center">
             <p className="text-gray-500 mb-3">
@@ -77,8 +79,12 @@ export default function GeneratorPage() {
           </div>
         )}
 
+        {/* -------------------------- */}
+        {/*         Upload 탭          */}
+        {/* -------------------------- */}
         {activeTab === "upload" && (
           <div className="text-center">
+
             {/* Upload Box */}
             <div
               className={`mt-6 p-10 border-2 border-dashed rounded-xl transition ${
@@ -101,7 +107,7 @@ export default function GeneratorPage() {
               }}
             >
               <Image
-                src="/images/icons.png"
+                src="/images/icon.png"
                 alt="upload icon"
                 width={48}
                 height={48}
@@ -109,9 +115,7 @@ export default function GeneratorPage() {
               />
 
               <p className="text-lg font-semibold">Drag & Drop Your Video Here</p>
-              <p className="text-sm text-gray-500">
-                Supports MP4, MOV. Max 500MB.
-              </p>
+              <p className="text-sm text-gray-500">Supports MP4, MOV. Max 500MB.</p>
 
               <button
                 className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700"
@@ -132,7 +136,7 @@ export default function GeneratorPage() {
             </div>
 
             {/* Progress Bar */}
-            {fileName && (
+            {fileName && progress < 100 && (
               <div className="mt-8 text-left">
                 <p className="text-sm text-gray-700">
                   Uploading: <span className="float-right">{progress}%</span>
@@ -146,6 +150,32 @@ export default function GeneratorPage() {
                 </div>
 
                 <p className="text-xs mt-2 text-gray-600">{fileName}</p>
+              </div>
+            )}
+
+            {/* 업로드 완료 UI */}
+            {progress >= 100 && (
+              <div className="mt-10">
+                <h2 className="text-2xl font-bold text-center mb-6">
+                  업로드 완료 🎉
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                  <button
+                    onClick={() => router.push("/generator/generating")}
+                    className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                  >
+                    가사 없이 생성하기
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/generator/generating?lyrics=on")}
+                    className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                  >
+                    가사 넣고 생성하기
+                  </button>
+                </div>
               </div>
             )}
           </div>
