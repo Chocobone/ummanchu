@@ -1,35 +1,30 @@
 import os
 import pymongo
 from pymongo.errors import DuplicateKeyError
-from bson.objectid import ObjectId
 from datetime import datetime
 import hashlib
 from dotenv import load_dotenv
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 
 # .env 파일 로드
 load_dotenv()
 
-client = MongoClient(os.getenv("MONGO_URI"), server_api=ServerApi('1'))
-
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-
-class AccountManager:
+class userManager:
     def __init__(self):
         # 환경 변수에서 설정 불러오기
         self.uri = os.getenv("MONGO_URI")
-        self.db_name = os.getenv("DB_NAME")
-        self.col_name = os.getenv("COLLECTION_NAME")
+        self.db_name = os.getenv("USER_DB_NAME")
+        self.col_name = os.getenv("USER_COLLECTION_NAME")
         
         # 클라이언트 및 DB 연결
         self.client = pymongo.MongoClient(self.uri)
         self.db = self.client[self.db_name]
         self.collection = self.db[self.col_name]
+
+        try:
+            self.client.admin.command('ping')
+            print("Pinged your deployment. You successfully connected to MongoDB!")
+        except Exception as e:
+            print(e)
         
         # 인덱스 설정 (이메일 중복 방지 등)
         self._setup_indexes()

@@ -1,8 +1,8 @@
-from db_manager import AccountManager
+from user_manager import userManager
 
 ## test code
-def main():
-    manager = AccountManager()
+def user_test():
+    manager = userManager()
     
     print("=== 1. 계정 생성 테스트 ===")
     success, message = manager.create_user("김철수", "chulsoo@example.com", "password123", age=25)
@@ -30,11 +30,13 @@ def main():
         print("정보 수정 완료")
         print("수정 후 정보:", manager.get_user_by_email("chulsoo@example.com"))
 
-    # print("\n=== 5. 계정 삭제 테스트 ===")
-    # if manager.delete_user("chulsoo@example.com"):
-    #     print("계정 삭제 완료")
-    # else:
-    #     print("삭제할 계정이 없습니다.")
+    print("\n=== 5. 계정 삭제 테스트 ===")
+    if manager.delete_user("chulsoo@example.com"):
+        print("계정 삭제 완료")
+    else:
+        print("삭제할 계정이 없습니다.")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+
+user_test()
