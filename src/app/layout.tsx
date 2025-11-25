@@ -4,6 +4,8 @@ import "quill/dist/quill.snow.css";
 import Providers from "./providers";
 import "@/styles/font.css";
 import { FontProvider } from "@/context/FontContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -23,12 +25,12 @@ export const metadata = {
     "우주과학과",
     "경희대 우주과학",
   ],
-  authors: [{ name: "SSIL Lab, Kyung Hee University" }],
+  authors: [{ name: "음만추" }],
   openGraph: {
-    title: "경희대학교 우주탑재체 연구실 SSIL",
+    title: "음만추",
     description:
-      "경희대학교 응용과학대학 우주탑재체 연구실(SSIL)의 연구 및 프로젝트를 소개합니다.",
-    url: "https://ssil.khu.ac.kr",
+      "AI Hackathon 음악 만들어주는 서비스",
+    url: "https://ummanchu.co.kr",
     siteName: "SSIL Lab",
     locale: "ko_KR",
     type: "website",
@@ -64,7 +66,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {/* ✅ FontProvider로 전역 감싸기 */}
           <FontProvider>
-            {children}
+            {/* 🔥 공통 네비게이션 */}
+            <Navbar />
+
+            {/* 🔥 페이지별 내용 */}
+            <main className="min-h-screen pt-[100px]">
+              {children}
+            </main>
+
+            {/* 🔥 공통 푸터 */}
+            <Footer />
+
           </FontProvider>
         </Providers>
       </body>

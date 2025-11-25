@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://ssil.khu.ac.kr",
+  siteUrl: "https://ummanchu.co.kr",
   generateRobotsTxt: true,
   sitemapSize: 5000,
   changefreq: "monthly",
@@ -11,6 +11,6 @@ module.exports = {
       { userAgent: "*", allow: "/" },
       { userAgent: "Googlebot", allow: "/" },
     ],
-    additionalSitemaps: ["https://ssil.khu.ac.kr/sitemap.xml"],
+    additionalSitemaps: ["https://ummanchu.co.kr/sitemap.xml"],
   },
 };

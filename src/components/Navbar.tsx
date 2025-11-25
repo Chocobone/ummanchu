@@ -77,13 +77,13 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About" },
-    { path: "/research", label: "Research" },
-    { path: "/publications", label: "Publications" },
-    { path: "/news", label: "News" },
-    { path: "/people", label: "People" },
-    { path: "/contact", label: "Contact" },
+    { path: "/", label: "소개" },
+    { path: "/generator", label: "제네레이터" },
+    { path: "/price", label: "가격" },
+    { path: "/my", label: "내 계정" },
+    { path: "/login", label: "로그인" },
+    { path: "/start", label: "시작하기" },
+    
   ];
 
   const isActive = (path: string) =>
@@ -113,8 +113,8 @@ const Navbar = () => {
                 key={resolvedTheme}
                 src={
                   resolvedTheme === "dark"
-                    ? "/main/logo_trans_03.png"
-                    : "/main/logo_trans_01.png"
+                    ? "/main/logo_trans_03.png?v=1"
+                    : "/main/logo_trans_01.png?v=1"
                 }
                 alt="SSIL Logo"
                 width={160}
@@ -124,7 +124,7 @@ const Navbar = () => {
             )}
           </Link>
 
-          <div className="hidden md:flex flex items-center h-[72px] gap-8">
+        <div className="hidden md:flex items-center h-[72px] gap-8 ml-20">
             {navItems.map((item) =>
               item.label !== "Research" ? (
                 <Link
