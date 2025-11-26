@@ -96,13 +96,11 @@ const Navbar = () => {
                     : "/main/logo_trans_01.png?v=1"
                 }
                 alt="Logo"
-                width={80}
-                height={80}
+                width={180}
+                height={180}
                 priority
               />
-                 <span className="ml-3 text-2xl font-bold tracking-tight">
-        음만추
-      </span>
+          
     </>
             )}
           </Link>

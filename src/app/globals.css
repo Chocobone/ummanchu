@@ -253,3 +253,16 @@ body {
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before { content: 'Poppins'; }
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="open-sans"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="open-sans"]::before { content: 'Open Sans'; }
+
+
+html.font-small {
+  font-size: 90%;
+}
+
+html.font-normal {
+  font-size: 100%;
+}
+
+html.font-large {
+  font-size: 110%;
+}

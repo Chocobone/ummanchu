@@ -46,7 +46,7 @@ export default function StartPage() {
           placeholder="아이디"
           value={id}
           onChange={(e) => setId(e.target.value)}
-          className="w-full p-2 mb-3 rounded bg-gray-800 border border-gray-700"
+          className="w-full p-2 mb-3 rounded bg-white border border-gray-700"
         />
 
         <input
@@ -54,7 +54,7 @@ export default function StartPage() {
           placeholder="비밀번호"
           value={pw}
           onChange={(e) => setPw(e.target.value)}
-          className="w-full p-2 mb-4 rounded bg-gray-800 border border-gray-700"
+          className="w-full p-2 mb-4 rounded bg-white border border-gray-700"
         />
 
         {error && (

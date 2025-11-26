@@ -25,18 +25,21 @@ const sendToN8N = async ({
   instrumenttarget?: boolean;
   
 }) => {
+   console.log("instrumenttarget 값:", instrumenttarget);
+  console.log("폼데이터에 넣을 값(문자열):", instrumenttarget ? "1" : "0");
   const formData = new FormData();
 
   if (file) formData.append("file", file);
   if (youtubeUrl) formData.append("youtube_url", youtubeUrl);
-  formData.append("instrumenttarget", instrumenttarget ? "0" : "1");
+  formData.append("instrumenttarget", instrumenttarget ? "1" : "0");
 
-  const res = await fetch("http://49.50.139.233:8000/api/analyze-video", {
+  const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/analyze-video", {
     method: "POST",
     body: formData,
   });
 
   const data = await res.json();
+  router.push(`/generator/generating?task_id=${data.task_id}`);
   console.log("n8n 응답:", data);
 };
 
@@ -98,29 +101,31 @@ const uploadFile = (file: File) => {
               유튜브 링크를 입력하면 AI가 음악을 생성합니다.
             </p>
 
-            <input
-              type="text font-bold"
-              placeholder="https://youtu.be/xxxx 또는 https://youtube.com/watch?v=xxx"
-              className="w-full border rounded-md px-4 py-3 mb-4 bg-gray-100 dark:bg-neutral-800"
-            />
+           <input
+  id="yt-input"
+  type="text"
+  placeholder="https://youtu.be/xxxx 또는 https://youtube.com/watch?v=xxx"
+  className="w-full border rounded-md px-4 py-3 mb-4 bg-gray-100 dark:bg-neutral-800"
+/>
 
 <button
   onClick={async () => {
     const url = (document.querySelector("#yt-input") as HTMLInputElement)?.value;
-    
+
+    if (!url || url.trim() === "") {
+      alert("유튜브 링크를 입력해주세요!");
+      return;
+    }
 
     await sendToN8N({
       youtubeUrl: url,
       instrumenttarget: false,
-    
     });
-
-    router.push("/generator/generating");
   }}
   className="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700"
 >
-              음악 생성하기
-            </button>
+  음악 생성하기
+</button>
           </div>
         )}
 
@@ -210,13 +215,13 @@ const uploadFile = (file: File) => {
   onClick={async () => {
     if (!uploadedFile) return alert("파일이 없습니다.");
 
-    await sendToN8N({
+  
+
+     await sendToN8N({
       file: uploadedFile,
       instrumenttarget: false,
-    
     });
-
-    router.push("/generator/generating");
+    console.log("가사 없이 생성하기 클릭됨");
   }}
   className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
 >
@@ -227,13 +232,14 @@ const uploadFile = (file: File) => {
   onClick={async () => {
     if (!uploadedFile) return alert("파일이 없습니다.");
 
-    await sendToN8N({
-      file: uploadedFile,
-      instrumenttarget: true,
     
-    });
 
-    router.push("/generator/generating");
+      await sendToN8N({
+      file: uploadedFile,
+      instrumenttarget: false,
+    });
+    console.log("가사 넣고 생성하기 클릭됨");
+  
   }}
   className="w-full py-4 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
 >

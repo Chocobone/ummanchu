@@ -1,31 +1,42 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function GeneratingPage() {
-  const [checking, setChecking] = useState(true);
+ const router = useRouter();
+  const params = useSearchParams();
+  const taskId = params.get("task_id"); // ← 여기서 task_id 가져옴
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        // 서버에서 생성된 음악 파일 존재 확인 (HEAD로 가볍게 체크)
-        const res = await fetch("http://49.50.139.233:8000/output/music1.mp3", {
-          method: "HEAD",
-          cache: "no-cache",
-        });
+ useEffect(() => {
+  if (!taskId) return;
 
-        if (res.ok) {
-          console.log("파일 생성됨!");
-          clearInterval(interval);
-          window.location.href = "/generator/results";
-        }
-      } catch (e) {
-        console.log("아직 파일 없음");
-      }
-    }, 3000); // 3초마다 체크
+  const interval = setInterval(async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/status/${taskId}`);
+    const data = await res.json();
 
-    return () => clearInterval(interval);
-  }, []);
+    console.log("현재 상태:", data.status);
+
+    // 1) 음악 생성이 끝났으면 → results로 이동
+    if (data.status === "music_ready") {
+      clearInterval(interval);
+      router.push(`/generator/results?task_id=${taskId}`);
+    }
+
+    // 2) 처리 중 (processing, analyzing_video, generating_music) → 계속 대기
+    // 아무것도 안 해도 됨
+
+    // 3) 실패한 경우
+    if (data.status === "failed") {
+      clearInterval(interval);
+      alert("음악 생성 실패!");
+      router.push("/generator");
+    }
+  }, 2000);
+
+  return () => clearInterval(interval);
+}, [taskId]);
+
 
   return (
     <div className="flex flex-col items-center justify-center h-[80vh] text-center px-4">
@@ -36,7 +47,10 @@ export default function GeneratingPage() {
         영상 분석 및 배경 음악 생성 중입니다. 잠시만 기다려 주세요.
       </p>
 
-      <button className="mt-10 px-6 py-3 bg-gray-700 rounded-lg">
+      <button
+        className="mt-10 px-6 py-3 rounded-lg border border-purple-500 text-purple-600"
+        onClick={() => router.push("/generator")}
+      >
         Cancel
       </button>
     </div>
