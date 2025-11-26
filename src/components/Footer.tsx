@@ -12,19 +12,8 @@ const DEFAULT_CONTACT: Contact = {
   addressKo: "서울시 동작구 상도로",
 };
 
-async function getContact(): Promise<Contact> {
-  try {
-    const res = await fetch("/api/contact", { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to fetch contact");
-    const data = (await res.json()) as Partial<Contact>;
-    return { ...DEFAULT_CONTACT, ...data };
-  } catch {
-    return DEFAULT_CONTACT;
-  }
-}
-
 export default async function Footer() {
-  const contact = await getContact();
+ 
 
   return (
     <footer className="bg-[#0f0f0f] text-white py-14 px-4">
@@ -36,7 +25,6 @@ export default async function Footer() {
         <div className="mb-6">
           <h3 className="text-primary font-semibold">서비스명</h3>
           <p className="text-lg">
-            {contact.labNameKo} ({contact.labNameEn})
           </p>
         </div>
 
@@ -44,7 +32,7 @@ export default async function Footer() {
         <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-primary font-semibold mb-1">주소 (KOR)</h3>
-            <p className="whitespace-pre-line text-white/90">{contact.addressKo}</p>
+            <p className="whitespace-pre-line text-white/90"></p>
           </div>
         </div>
 

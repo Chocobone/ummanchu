@@ -17,19 +17,21 @@ const router = useRouter();
 const sendToN8N = async ({
   file,
   youtubeUrl,
-  withLyrics,
+  instrumenttarget,
+ 
 }: {
   file?: File;
   youtubeUrl?: string;
-  withLyrics?: boolean;
+  instrumenttarget?: boolean;
+  
 }) => {
   const formData = new FormData();
 
-  if (file) formData.append("video", file);
+  if (file) formData.append("file", file);
   if (youtubeUrl) formData.append("youtube_url", youtubeUrl);
-  formData.append("with_lyrics", withLyrics ? "1" : "0");
+  formData.append("instrumenttarget", instrumenttarget ? "0" : "1");
 
-  const res = await fetch("https://YOUR_N8N_URL/webhook/video-upload", {
+  const res = await fetch("http://49.50.139.233:8000/api/analyze-video", {
     method: "POST",
     body: formData,
   });
@@ -54,7 +56,7 @@ const uploadFile = (file: File) => {
 
 
   return (
-    <div className="max-w-4xl mx-auto py-16 px-4">
+    <div className="max-w-6xl mx-auto py-16 px-4 font-bold" >
       <h1 className="text-4xl font-bold text-center mb-10">
         영상에 맞는 완벽한 음악을 만들어드립니다!
       </h1>
@@ -92,12 +94,12 @@ const uploadFile = (file: File) => {
         {/* -------------------------- */}
         {activeTab === "youtube" && (
           <div className="text-center">
-            <p className="text-gray-500 mb-3">
+            <p className="text-gray-500 font-bold mb-3">
               유튜브 링크를 입력하면 AI가 음악을 생성합니다.
             </p>
 
             <input
-              type="text"
+              type="text font-bold"
               placeholder="https://youtu.be/xxxx 또는 https://youtube.com/watch?v=xxx"
               className="w-full border rounded-md px-4 py-3 mb-4 bg-gray-100 dark:bg-neutral-800"
             />
@@ -109,7 +111,8 @@ const uploadFile = (file: File) => {
 
     await sendToN8N({
       youtubeUrl: url,
-      withLyrics: false,
+      instrumenttarget: false,
+    
     });
 
     router.push("/generator/generating");
@@ -129,7 +132,7 @@ const uploadFile = (file: File) => {
 
             {/* Upload Box */}
             <div
-              className={`mt-6 p-10 border-2 border-dashed rounded-xl transition ${
+              className={`mt-6 p-10  min-h-[300px] border-2 border-dashed rounded-xl transition ${
                 dragActive ? "border-purple-500 bg-purple-50" : "border-gray-300"
               }`}
               onDragEnter={(e) => {
@@ -151,13 +154,13 @@ const uploadFile = (file: File) => {
               <Image
                 src="/images/icon.png"
                 alt="upload icon"
-                width={48}
-                height={48}
+                width={20}
+                height={20}
                 className="mx-auto mb-4 opacity-60"
               />
 
-              <p className="text-lg font-semibold">Drag & Drop Your Video Here</p>
-              <p className="text-sm text-gray-500">Supports MP4, MOV. Max 500MB.</p>
+              <p className="text-lg font-bold">비디오를 끌어다 놓아 주세요</p>
+              <p className="text-sm font-bold">MP4, MOV. 형식의 파일 가능합니다. </p>
 
               <button
                 className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700"
@@ -199,7 +202,7 @@ const uploadFile = (file: File) => {
             {progress >= 100 && (
               <div className="mt-10">
                 <h2 className="text-2xl font-bold text-center mb-6">
-                  업로드 완료 🎉
+                  업로드 완료 
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -209,7 +212,8 @@ const uploadFile = (file: File) => {
 
     await sendToN8N({
       file: uploadedFile,
-      withLyrics: false,
+      instrumenttarget: false,
+    
     });
 
     router.push("/generator/generating");
@@ -225,7 +229,8 @@ const uploadFile = (file: File) => {
 
     await sendToN8N({
       file: uploadedFile,
-      withLyrics: true,
+      instrumenttarget: true,
+    
     });
 
     router.push("/generator/generating");

@@ -1,9 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "quill/dist/quill.snow.css";
+import { ThemeProvider } from "next-themes";
+import "../styles/font.css";
 
-import "@/styles/font.css";
-import { FontProvider } from "@/context/FontContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -15,70 +15,31 @@ export const metadata = {
     default: " 음만추 | 음악을 만들어주는 서비스",
     template: "%s | ummanchu",
   },
-  description:
-    "AI Hackathon 영상에 맞는 분위기의 음악 만들어주는 서비스",
-  keywords: [
-    "음만추",
-    "도미넌트",
-    "ummanchu",
-    "ummanchu",
-    "",
-    "",
-  ],
-  authors: [{ name: "음만추" }],
-  openGraph: {
-    title: "음만추",
-    description:
-      "AI Hackathon 음악 만들어주는 서비스",
-    url: "https://ummanchu.co.kr",
-    siteName: "SSIL Lab",
-    locale: "ko_KR",
-    type: "website",
-  },
-  icons: { icon: "/favicon.ico" },
+  description: "AI Hackathon 영상에 맞는 분위기의 음악 만들어주는 서비스",
+  icons: { icon: "/favicon.png" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        <meta name="color-scheme" content="dark light" />
-        <style
-          id="__theme_preload"
-          dangerouslySetInnerHTML={{ __html: "html{background:#0a0a0a;color:#ededed}" }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-(function () {
-  var doc = document.documentElement;
-  try {
-    var stored = localStorage.getItem('theme');
-    if (stored === 'light') doc.classList.remove('dark');
-    else doc.classList.add('dark');
-  } catch (e) { doc.classList.add('dark'); }
-})();`,
-          }}
-        />
-      </head>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable}`}
+    >
+      <body className="antialiased">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <Navbar />
 
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-       
-          {/* ✅ FontProvider로 전역 감싸기 */}
-          <FontProvider>
-            {/* 🔥 공통 네비게이션 */}
-            <Navbar />
+          <main className="min-h-screen pt-[100px]">
+            {children}
+          </main>
 
-            {/* 🔥 페이지별 내용 */}
-            <main className="min-h-screen pt-[100px]">
-              {children}
-            </main>
-
-            {/* 🔥 공통 푸터 */}
-            <Footer />
-
-          </FontProvider>
-        
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

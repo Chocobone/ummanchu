@@ -9,11 +9,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 
-type ResearchNavItem = {
-  label: string;
-  href: string;
-  cat: "Current" | "Completed";
-};
+
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -27,8 +23,7 @@ const Navbar = () => {
 
   const [researchOpen, setResearchOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [researchNav, setResearchNav] = useState<ResearchNavItem[]>([]);
-
+ 
   const openNow = () => {
     if (closeTimer.current) {
       clearTimeout(closeTimer.current);
@@ -42,19 +37,7 @@ const Navbar = () => {
     closeTimer.current = setTimeout(() => setResearchOpen(false), 3000);
   };
 
-  // Research nav fetch
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/research-nav");
-        const data: ResearchNavItem[] = await res.json();
-        setResearchNav(data);
-      } catch {
-        setResearchNav([]);
-      }
-    })();
-  }, []);
-
+ 
   useEffect(() => setMounted(true), []);
 
   // navbar hide/show on scroll
@@ -104,6 +87,7 @@ const Navbar = () => {
           {/* LOGO */}
           <Link href="/" aria-label="Home" className="flex items-center justify-center">
             {mounted && (
+              <>
               <Image
                 key={resolvedTheme}
                 src={
@@ -112,20 +96,24 @@ const Navbar = () => {
                     : "/main/logo_trans_01.png?v=1"
                 }
                 alt="Logo"
-                width={160}
-                height={70}
+                width={80}
+                height={80}
                 priority
               />
+                 <span className="ml-3 text-2xl font-bold tracking-tight">
+        음만추
+      </span>
+    </>
             )}
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center h-[72px] gap-8 ml-20">
+          <div className="hidden md:flex items-center h-[72px] gap-12 ml-20">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
-                className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
+                className={`flex items-center text-xl font-medium transition-colors hover:text-primary ${
                   isActive(item.path) ? "text-primary" : ""
                 }`}
               >
@@ -141,7 +129,7 @@ const Navbar = () => {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden rounded-xl">
-                <Menu className="h-5 w-5" />
+                <Menu className="h-3 w-3" />
               </Button>
             </SheetTrigger>
 
